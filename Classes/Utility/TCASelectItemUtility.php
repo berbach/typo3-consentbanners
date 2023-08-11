@@ -10,11 +10,11 @@ class TCASelectItemUtility
     {
         $groups = BackendUtility::getPagesTSconfig(0)['mod.']['wizards.']['newContentElement.']['wizardItems.'];
 
-        foreach ($groups as $group) {
-            $params['items'][] = [$group['header'], '--div--'];
+        foreach ($groups as $key => $group) {
+            $params['items'][] = ['label' => $group['header'], 'value' => '--div--', 'group' => $key];
 
             foreach ($group['elements.'] as $element) {
-                $params['items'][] = [$element['title'], $element['tt_content_defValues.']['CType'], $element['iconIdentifier']];
+                $params['items'][] = ['label' => $element['title'], 'value' => $element['tt_content_defValues.']['CType'], 'icon' => $element['iconIdentifier'], 'group' => $key];
             }
         }
 

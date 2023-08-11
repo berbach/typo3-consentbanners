@@ -107,7 +107,7 @@ return [
                 'renderType' => 'selectSingle',
                 'default' => 0,
                 'items' => [
-                    ['', 0],
+                    ['label' => '', 'value' => 0],
                 ],
                 'foreign_table' => 'tx_consentbanners_domain_model_settings',
                 'foreign_table_where' => 'AND {#tx_consentbanners_domain_model_settings}.{#pid}=###CURRENT_PID### AND {#tx_consentbanners_domain_model_settings}.{#sys_language_uid} IN (-1,0)',
@@ -133,9 +133,8 @@ return [
                 'renderType' => 'checkboxToggle',
                 'items' => [
                     [
-                        0 => '',
-                        1 => '',
-                        'invertStateDisplay' => true
+                        'label' => '',
+                        'invertStateDisplay' => true,
                     ]
                 ],
             ],
