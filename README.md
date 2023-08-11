@@ -10,7 +10,7 @@ In der Root composer des TYPO3-Projekts das Repository angeben:
         },
         {
             "type": "vcs",
-            "url":  "https://github.com/berbach/bb-typo3-consentbanners.git"
+            "url":  "https://github.com/berbach/typo3-consentbanners.git"
         }
     ],
 ~~~
