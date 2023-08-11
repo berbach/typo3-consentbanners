@@ -1,0 +1,18 @@
+<form class="bb-cookie-popup">
+    <div class="bb-cookie-category">
+        <label class="bb-toggle-label">
+            <input type="checkbox" checked disabled>
+            <span class="bb-toggle"></span>
+            {f:translate(key:'LLL:EXT:cookiebanner/Resources/Private/Language/locallang.xlf:tx_cookiebanner.necessary_category')}
+        </label>
+    </div>
+    <c:cookiecategories>
+        <div class="bb-cookie-category">
+            <label class="bb-toggle-label">
+                {category.name}
+                <input type="checkbox" name="{category.uid}">
+                <span class="bb-toggle"></span>
+            </label>
+        </div>
+    </c:cookiecategories>
+</form>

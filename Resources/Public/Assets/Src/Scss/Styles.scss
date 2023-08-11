@@ -1,0 +1,52 @@
+@charset "utf-8";
+/*
+Helper functions and non–output snippets only (font-face imports, reusable mixins, global variables, colors, etc.)
+One @import per line
+*/
+//Import Abstracts files
+@import 'abstracts/variables';
+@import 'abstracts/unit';
+@import 'abstracts/breakpoint';
+@import 'abstracts/mixins';
+
+*, *::before, *::after {
+	box-sizing: inherit;
+}
+html{
+	box-sizing: border-box;
+}
+/*
+All 3rd-party vendor tools (frameworks, libraries, helpers)
+One @import per line
+*/
+//Import Vendor files
+
+
+
+/*
+Global styles (reset import, normalize import, global Typography import, grid imports)
+One @import per line
+ */
+//Import Base files
+
+/*
+header, navigation, canvas. footer, cookie, main...
+One @import per line
+*/
+//Import Layout files
+
+/*
+Micro level reusable components are imported here
+One @import per line
+*/
+//Import Component files
+@import "components/form";
+@import "components/cookiebanner";
+@import "components/placeholder";
+
+/*
+Have a single scss for each specific page
+One @import per line
+*/
+//Import pages files
+

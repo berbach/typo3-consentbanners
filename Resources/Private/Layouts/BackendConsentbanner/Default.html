@@ -1,0 +1,43 @@
+<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
+      xmlns:be="http://typo3.org/ns/TYPO3/CMS/Backend/ViewHelpers"
+      data-namespace-typo3-fluid="true">
+
+<div class="module {moduleClass}" data-module-id="{moduleId}" data-module-name="{moduleName}">
+    <f:if condition="{formTag}">
+        <f:then>
+            <f:format.raw>{formTag}</f:format.raw>
+        </f:then>
+    </f:if>
+
+    <f:if condition="{docHeader.enabled}">
+        <f:render partial="DocHeader" arguments="{docHeader:docHeader}" />
+    </f:if>
+
+    <div class="module-body t3js-module-body">
+        <f:debug>{_all}</f:debug>
+        <div class="bb-cb--settings">
+            <div class="bb-cb--settings-navigation">
+                <f:if condition="{asideMenu}">
+                    <ul class="bb-cb--menu">
+                        <f:for each="{asideMenu}" as="menuItem">
+                            <li><a href="{menuItem.uri}" class="bb-cb--menu-link{f:if(condition: menuItem.isActive, then: ' bb-active')}">{menuItem.title}</a></li>
+                        </f:for>
+                    </ul>
+                </f:if>
+            </div>
+            <div class="bb-cb--settings-content">
+                <f:render section="Headline" />
+                <f:render section="Content" />
+            </div>
+        </div>
+
+    </div>
+    <f:if condition="{formTag}">
+        <f:then>
+            </form>
+        </f:then>
+    </f:if>
+</div>
+
+
+</html>

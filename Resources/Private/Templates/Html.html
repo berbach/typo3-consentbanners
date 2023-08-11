@@ -1,0 +1,10 @@
+<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
+      xmlns:cb="http://typo3.org/ns/Bb/Consentbanners/ViewHelpers" data-namespace-typo3-fluid="true">
+<f:layout name="Default"/>
+<f:section name="Header"/>
+<f:section name="Main">
+    <cb:allowCookie class="bb-consentbanner-placeholder-variable-height">
+        <f:format.raw>{data.bodytext}</f:format.raw>
+    </cb:allowCookie>
+</f:section>
+</html>

@@ -1,0 +1,57 @@
+$prefix: 'bb-';
+
+$breakpoints: (
+        's': 0,
+        'm': 640px,
+        'l': 1024px,
+        'xl': 1200px,
+        'xxl': 1440px
+);
+
+$font-style-types: (
+
+);
+
+/* - Fonts Path - */
+$fontPath : '../Fonts/';
+
+// FORM
+$toogleColor: #ffffff;
+$toogleBgColor: #69696B;
+$toogleBorderColor: #69696B;
+
+$toogleActiveBgColor: #4B9327; 
+
+$toogleDisabledBgColor: rgba(200,210,220,.6);
+$toogleDisabledBorderColor: #69696B;
+
+$toogleProgressBgColor: #A7BABA;
+
+$lineColor: #6D97C7;
+
+// COOKIEBANNER - BUTTON
+$consentBannerBgColor: #EAEAEA;
+$consentBannerBgColorHover: #223B53;
+
+// BUTTONS
+$buttonBgColor: #EAEAEA;
+$buttonColor: #000000;
+$buttonAltColor: #223B53;
+$buttonAltBorderColor: #223B53;
+$buttonBgColorHover: #223B53;
+$buttonColorHover: #FFFFFF;
+$buttonBorderColorHover: #223B53;
+
+// Modals
+$modalOverviewBgColor: rgb(0, 0, 0, .3);
+$modalBgColor: #FFFFFF;
+$modalAltBgColor: #FFFFFF;
+
+$linkDeviderColor: #6D97C7;
+$buttonCloseColor: #223B53;
+
+$linkColor: #6D97C7;
+$linkColorHover: #000000;
+
+// PLACEHOLDER
+$placeholderBorderColor: #223B53;

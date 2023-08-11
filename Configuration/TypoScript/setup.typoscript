@@ -1,0 +1,74 @@
+plugin.tx_consentbanners {
+    view {
+        templateRootPaths {
+            0 = EXT:consentbanners/Resources/Private/Templates/
+            10 = {$plugin.tx_consentbanners.view.templateRootPath}
+        }
+        partialRootPaths {
+            0 = EXT:consentbanners/Resources/Private/Partials/
+            10 = {$plugin.tx_consentbanners.view.partialRootPath}
+        }
+        layoutRootPaths {
+            0 = EXT:consentbanners/Resources/Private/Layouts/
+            10 = {$plugin.tx_consentbanners.view.layoutRootPath}
+        }
+    }
+    persistence {
+
+    }
+    features {
+        #skipDefaultArguments = 1
+        # if set to 1, the enable fields are ignored in BE context
+        ignoreAllEnableFieldsInBe = 0
+        # Should be on by default, but can be disabled if all action in the plugin are uncached
+        requireCHashArgumentForActionArguments = 1
+    }
+
+    mvc {
+        callDefaultActionIfActionCantBeResolved = 1
+    }
+
+    settings {
+
+    }
+}
+
+lib.consentbanners = COA_INT
+lib.consentbanners {
+    10 = FLUIDTEMPLATE
+    10 {
+        templateName = ConsentBanner
+
+        templateRootPaths < plugin.tx_consentbanners.view.templateRootPaths
+        partialRootPaths < plugin.tx_consentbanners.view.partialRootPaths
+        layoutRootPaths < plugin.tx_consentbanners.view.layoutRootPaths
+
+        settings < plugin.tx_consentbanners.settings
+
+        dataProcessing {
+            10 = Bb\Consentbanners\DataProcessing\ConsentBannerProcessor
+        }
+    }
+}
+
+page {
+
+    1633505733 < lib.consentbanners
+
+    includeCSS {
+        consentbanner = EXT:consentbanners/Resources/Public/Dist/Css/CookieBanner.css
+    }
+
+    includeJSFooter {
+        consentbanner = EXT:consentbanners/Resources/Public/Dist/JavaScript/BaseCookieBanner.js
+        consentbanner.async = 1
+    }
+}
+
+tt_content.html {
+    templateRootPaths {
+        200 = EXT:consentbanners/Resources/Private/Templates/
+    }
+}
+
+<INCLUDE_TYPOSCRIPT: source="FILE:EXT:consentbanners/Configuration/TypoScript/Helper/ElementCacheOverride.typoscript">

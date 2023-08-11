@@ -1,0 +1,21 @@
+services:
+  _defaults:
+    autowire: true
+    autoconfigure: true
+    public: false
+
+  Bb\Consentbanners\:
+    resource: '../Classes/*'
+
+  Bb\Consentbanners\Controller\BackendConsentbannerController:
+    public: true
+    tags: ['backend.controller']
+
+  Bb\Consentbanners\EventListener\TypoScriptModifier:
+    tags:
+      - name: event.listener
+        identifier: 'TypoScriptModifier/NewAndEdit'
+        event: TYPO3\CMS\Backend\Controller\Event\BeforeFormEnginePageInitializedEvent
+      - name: event.listener
+        identifier: 'TypoScriptModifier'
+        event: TYPO3\CMS\Extbase\Event\Mvc\BeforeActionCallEvent

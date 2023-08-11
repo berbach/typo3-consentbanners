@@ -1,0 +1,124 @@
+.module-body{
+    padding-left: 0 !important;
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+    height: calc(100% - 65px);
+}
+.module-docheader{
+    padding-left: 324px;
+    border-left: 1px solid #cccccc;
+}
+.module-docheader:before{
+    display: block;
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 298px;
+    background-color: transparent;
+    border-left: 1px solid #cccccc;
+    height: 100%;
+    width: 1px;
+}
+.bb-cb--settings {
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+}
+.bb-cb--settings-navigation{
+    width: 300px;
+    background-color: #F5F5F5;
+    border-right: 1px solid #cccccc;
+    padding: 5px;
+}
+.bb-cb--settings-content{
+    padding-left: 24px;
+    padding-top: 24px;
+    padding-bottom: 24px;
+    width: calc(100% - 300px);
+}
+.bb-cb--menu{
+    list-style: none;
+    padding: 0;
+}
+.bb-cb--menu .bb-cb--menu-link{
+    margin-top: 1px;
+    font-size: 16px;
+    padding: 4px 15px;
+    display: flex;
+    align-items: center;
+    min-height: 40px;
+    text-align: left;
+    border: 1px solid #F5F5F5;
+    border-radius: 4px;
+
+}
+.bb-cb--menu-link.bb-active{
+    background-color: #ededed;
+    border: 1px solid #d7d7d7;
+}
+.bb-cb--menu-link:hover{
+    background-color: #FFFFFF;
+    border: 1px solid #d7d7d7;
+    text-decoration: none;
+}
+.layout-two-columns {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 0 18px;
+    align-items: start;
+}
+.layout-one-columns {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-gap: 0 18px;
+    align-items: start;
+}
+
+.col-label {
+    width: 150px;
+}
+
+.col-content {
+    width: calc(50% - 150px);
+}
+
+.col-label span {
+    padding: 5px 10px;
+    display: inline-block;
+}
+
+.col-half {
+    width: 50%;
+}
+.col-icon {
+    width: 40px;
+}
+th.col-icon {
+    height: 40.5px;
+}
+.col-icon .icon-overlay{
+    position: static;
+    width: 100%;
+    height: 100%;
+}
+.col-check {
+    text-align: center;
+    max-width: 50px;
+}
+
+.separate.btn, .btn-group .btn + .separate.btn {
+    margin-left: 5px;
+}
+
+.panel-default .content {
+    background-color: #fafafa;
+    padding: 15px 12px 3px;
+}
+
+.tab-content {
+    border-top: none;
+}
+
+input:not(:valid) + button.close {
+    visibility: hidden;
+}

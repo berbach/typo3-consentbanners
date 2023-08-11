@@ -1,0 +1,46 @@
+{
+    "name": "bb/consentbanners",
+    "type": "typo3-cms-extension",
+    "description": "Consent Banner Extension with Javascript and non-Javascript.",
+    "homepage": "https://berbach.com/",
+    "version": "1.0.0",
+    "license": ["GPL-2.0-or-later"],
+    "keywords": [
+        "TYPO3",
+        "CMS",
+        "typo3",
+        "Extension"
+    ],
+    "require": {
+        "typo3/cms-core": "^11.5.24 || ^12",
+        "php": ">= 7.4 < 8.3",
+        "ext-pdo": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "Bb\\Consentbanners\\": "Classes/"
+        }
+    },
+    "prefer-stable": true,
+    "config": {
+        "vendor-dir": ".build/vendor",
+        "bin-dir": ".build/bin",
+        "sort-packages": true,
+        "allow-plugins": {
+            "typo3/class-alias-loader": true,
+            "typo3/cms-composer-installers": true
+        }
+    },
+    "scripts": {
+        "post-autoload-dump": [
+            "TYPO3\\TestingFramework\\Composer\\ExtensionTestEnvironment::prepare"
+        ]
+    },
+    "extra": {
+        "typo3/cms": {
+            "app-dir": ".build",
+            "web-dir": ".build/public",
+            "extension-key": "consentbanners"
+        }
+    }
+}

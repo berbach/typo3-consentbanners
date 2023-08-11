@@ -1,0 +1,121 @@
+<html
+        xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
+        xmlns:core="http://typo3.org/ns/TYPO3/CMS/Core/ViewHelpers"
+        xmlns:be="http://typo3.org/ns/TYPO3/CMS/Backend/ViewHelpers"
+        data-namespace-typo3-fluid="true">
+
+<f:layout name="BackendConsentbanner/Default"/>
+
+<f:section name="Headline">
+    <h1><f:translate key="LLL:EXT:consentbanners/Resources/Private/Language/locallang_mod.xlf:categories.headline"/></h1>
+</f:section>
+
+<f:section name="Content">
+    <f:flashMessages/>
+
+    <f:if condition="{data.categories}">
+        <f:then>
+            <div class="layout-one-columns">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <span>Categories</span>
+                    </div>
+                    <table class="table table-striped table-hover">
+                        <thead>
+                            <tr>
+                                <th class="col-icon nowrap">
+                                    <f:if condition="{defaultLanguageId} == {currentLanguageId}">
+                                        <a href="{be:uri.newRecord(table: 'tx_consentbanners_domain_model_category', pid: currentRootPageId)}"
+                                           class="btn btn-default"
+                                           title="{f:translate(key: 'LLL:EXT:consentbanners/Resources/Private/Language/locallang_mod.xlf:action.categories.new.title')}">
+                                            <core:icon identifier="actions-add" size="small"/>
+                                        </a>
+                                    </f:if>
+                                </th>
+                                <th class="col-check nowrap">&nbsp;</th>
+                                <th class="col-md-4 col-responsive nowrap">
+                                    <span>Name</span>
+                                </th>
+                                <th class="col-md-6 col-responsive nowrap">
+                                    <span>Modules</span>
+                                </th>
+                                <th class="col-control col-responsive nowrap">&nbsp;</th>
+                            </tr>
+                        </thead>
+                        <f:if condition="{data.categories}">
+                            <tbody>
+                                <f:for each="{data.categories}" as="category">
+                                    <tr>
+                                        <td class="col-icon nowrap">
+                                            <f:if condition="{category.hidden}">
+                                                <span class="t3js-icon icon icon-size-small icon-state-default">
+                                                    <span class="icon-markup">{category.uid}</span>
+
+                                                    <span class="icon-overlay icon-overlay-hidden">
+                                                        <svg class="icon-color" role="img">
+                                                            <use xlink:href="/typo3/sysext/core/Resources/Public/Icons/T3Icons/sprites/overlay.svg#overlay-hidden"></use>
+                                                        </svg>
+                                                    </span>
+                                                </span>
+                                            </f:if>
+                                            <span>#{category.uid}</span>
+                                        </td>
+                                        <td class="col-check nowrap">
+                                            <f:if condition="{category.lockedAndActive}">
+                                                <f:then>
+                                                    <span title="{f:translate(key: 'LLL:EXT:consentbanners/Resources/Private/Language/locallang_mod.xlf:field.locked_and_active')}"><i class="t3-icon fa fa-check text-success" aria-hidden="true"></i></span>
+                                                </f:then>
+                                                <f:else>
+                                                    <span title="{f:translate(key: 'LLL:EXT:consentbanners/Resources/Private/Language/locallang_mod.xlf:field.locked_and_active')}"><i class="t3-icon fa fa-times" aria-hidden="true"></i></span>
+                                                </f:else>
+                                            </f:if>
+
+                                        </td>
+                                        <td class="col-md-4 col-responsive nowrap">
+                                            <span>{category.name}</span>
+                                        </td>
+                                        <td class="col-md-6 col-responsive nowrap">
+                                            <f:if condition="{category.modules}">
+                                                <span>
+                                                     <f:for each="{category.modules}" as="module" iteration="i">
+                                                         {module.name}<f:if condition="!{i.isLast}">, </f:if>
+                                                     </f:for>
+                                                </span>
+                                            </f:if>
+                                        </td>
+                                        <td class="col-control col-responsive nowrap">
+                                            <div class="btn-group">
+                                                <a href="{be:uri.editRecord(uid: category.uid, table: 'tx_consentbanners_domain_model_category')}" class="btn btn-default" title="Edit {category.name} Category">
+                                                    <core:icon identifier="actions-open" size="small"/>
+                                                </a>
+                                                <f:if condition="{category.hidden}">
+                                                    <f:then>
+                                                        <a href="{category.showUri}" class="btn btn-default" title="Show Category">
+                                                            <core:icon identifier="actions-edit-unhide" size="small"/>
+                                                        </a>
+                                                    </f:then>
+                                                    <f:else>
+                                                        <a href="{category.showUri}" class="btn btn-default" title="Hide Category">
+                                                            <core:icon identifier="actions-edit-hide" size="small"/>
+                                                        </a>
+                                                    </f:else>
+                                                </f:if>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </f:for>
+                            </tbody>
+                        </f:if>
+                    </table>
+                </div>
+            </div>
+        </f:then>
+        <f:else>
+            <a href="{be:uri.newRecord(table: 'tx_consentbanners_domain_model_category', pid: currentRootPageId)}" class="btn btn-default" title="{f:translate(key: 'LLL:EXT:consentbanners/Resources/Private/Language/locallang_mod.xlf:action.categories.new.title')}">
+                <core:icon identifier="actions-add" size="small"/>
+                <f:translate key="LLL:EXT:consentbanners/Resources/Private/Language/locallang_mod.xlf:action.categories.new.title" />
+            </a>
+        </f:else>
+    </f:if>
+</f:section>
+</html>

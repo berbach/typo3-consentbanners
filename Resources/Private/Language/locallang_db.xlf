@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<xliff version="1.0">
+	<file source-language="en" datatype="plaintext" original="messages" date="2017-07-22T22:40:20Z" product-name="consentbanners">
+		<header/>
+		<body>
+			<trans-unit id="field.layoutType">
+				<source>Layout Type</source>
+			</trans-unit>
+			<trans-unit id="field.categories">
+                <source>Categories</source>
+            </trans-unit>
+			<trans-unit id="field.layoutType.overlay">
+                <source>Overlay Banner</source>
+            </trans-unit>
+            <trans-unit id="field.layoutType.fullWidthBottom">
+                <source>Full Width Bottom Banner</source>
+            </trans-unit>
+
+            <trans-unit id="tab.consentbanner">
+                <source>Consent Banner</source>
+            </trans-unit>
+            <trans-unit id="field.consentbanner.module">
+                <source>Module</source>
+            </trans-unit>
+		</body>
+	</file>
+</xliff>

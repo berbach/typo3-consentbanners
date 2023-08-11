@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<xliff version="1.0">
+	<file source-language="en" target-language="de" datatype="plaintext" original="messages" date="2019-08-12T13:45:24Z" product-name="consentbanners">
+		<header/>
+		<body>
+			<trans-unit id="cookiebanner.saveAndClose">
+				<target>Speichern &amp; schließen</target>
+			</trans-unit>
+			<trans-unit id="cookiebanner.confirmSelection">
+				<target>Auswahl bestätigen</target>
+			</trans-unit>
+			<trans-unit id="cookiebanner.acceptAll">
+				<target>Alle akzeptieren</target>
+			</trans-unit>
+			<trans-unit id="cookiebanner.reject">
+				<target>Ablehnen</target>
+			</trans-unit>
+			<trans-unit id="cookiebanner.advancedSettings">
+				<target>Erweiterte Einstellungen</target>
+			</trans-unit>
+		</body>
+	</file>
+</xliff>

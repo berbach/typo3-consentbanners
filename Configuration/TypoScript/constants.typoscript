@@ -1,0 +1,25 @@
+plugin.tx_consentbanners {
+    settings {
+
+    }
+
+    view {
+        # cat=Consentbanner Config/file; type=string; label=Path to template root (FE)
+        templateRootPath = EXT:consentbanners/Resources/Private/Templates/
+        # cat=Consentbanner Config/file; type=string; label=Path to template partials (FE)
+        partialRootPath = EXT:consentbanners/Resources/Private/Partials/
+        # cat=Consentbanner Config/file; type=string; label=Path to template layouts (FE)
+        layoutRootPath = EXT:consentbanners/Resources/Private/Layouts/
+    }
+}
+
+module.tx_consentbanners {
+    view {
+        # cat=Module Consentbanner Config/file; type=string; label=Path to template root (BE)
+        templateRootPath = EXT:consentbanners/Resources/Private/Backend/Templates/
+        # cat=Module Consentbanner Config/file; type=string; label=Path to template partials (BE)
+        partialRootPath = EXT:consentbanners/Resources/Private/Backend/Partials/
+        # cat=Module Consentbanner Config/file; type=string; label=Path to template layouts (BE)
+        layoutRootPath = EXT:consentbanners/Resources/Private/Backend/Layouts/
+    }
+}

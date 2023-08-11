@@ -1,0 +1,528 @@
+@use "sass:math";
+@use "sass:map";
+@use "sass:list";
+@use "sass:selector";
+
+$prefix: "bb-" !default;
+$gray95: #F5F5F5 !default;
+$gray: #A7BABA !default;
+
+$breakpoints: (
+        small: 0,
+        medium: 768px,
+        large: 1024px
+);
+$container-gutter: (
+        small: 20px 12px 12px,
+        medium: 40px 20px 20px
+);
+$container-max-width: bb-calc-rem(1440) !default;
+$min-padding: 16px !default;
+$max-width: $container-max-width !default;
+
+.#{$prefix}consentbanner {
+    $self: &;
+
+    left: 0;
+    z-index: 99;
+    position: fixed;
+    display: none;
+
+    @at-root .#{$prefix}cb-overlay#{&} {
+        background: $modalOverviewBgColor;
+        align-items: center;
+        justify-content: center;
+        top: 0;
+        height: 100vh;
+        width: 100vw;
+        @media screen and (min-width: bb-calc-rem(map.get($breakpoints, "medium"))) {
+            padding-left: 20px;
+            padding-right: 20px;
+        }
+    }
+
+    @at-root .#{$prefix}cb-bottom#{&} {
+        background: $modalAltBgColor;
+        align-items: flex-end;
+        width: 100vw;
+        max-height: min(100vh, 700px);
+        bottom: 0;
+    }
+
+    &.visible {
+        display: flex;
+    }
+
+    &-body {
+        position: relative;
+        flex: 1;
+
+        padding: bb-calc-rem(map.get($container-gutter, "small"));
+
+        @media screen and (min-width: bb-calc-rem(map.get($breakpoints, "medium"))) {
+            padding: bb-calc-rem(map.get($container-gutter, "medium"));
+        }
+
+        .#{$prefix}cb-bottom & {
+            display: flex;
+            flex-direction: column;
+            flex-wrap: nowrap;
+            align-items: stretch;
+            justify-content: flex-start;
+            align-content: center;
+
+
+            @media screen and (min-width: bb-calc-rem(map.get($breakpoints, "large"))) {
+                flex-direction: row;
+                flex-wrap: wrap;
+                max-width: $container-max-width;
+                margin: 0 auto;
+            }
+        }
+
+        .#{$prefix}cb-overlay & {
+            max-width: bb-calc-rem(map.get($breakpoints, "medium"));
+            background: $modalBgColor;
+            display: flex;
+            flex-direction: column;
+            flex-wrap: nowrap;
+            align-items: stretch;
+            justify-content: flex-start;
+            align-content: center;
+            margin: 0 auto;
+        }
+
+        #{$self}-header {
+            width: 100%;
+
+            .#{$prefix}cb-bottom & {
+                #{$self}-close {
+                    display: none !important;
+                }
+            }
+        }
+
+        #{$self}-content {
+            width: 100%;
+
+            .#{$prefix}cb-bottom & {
+                position: relative;
+                align-items: stretch;
+                align-content: stretch;
+                justify-content: flex-start;
+                flex-direction: column;
+                flex-wrap: nowrap;
+                padding-bottom: bb-calc-rem(15);
+
+                &.is-categories {
+                    padding-bottom: bb-calc-rem(15);
+                    @media screen and (min-width: bb-calc-rem(map.get($breakpoints, "medium"))) {
+                        padding-bottom: bb-calc-rem(50);
+                        margin-bottom: 15px;
+                    }
+                    @media screen and (min-width: bb-calc-rem(map.get($breakpoints, "large"))) {
+                        margin-bottom: 0;
+                    }
+                }
+
+                @media screen and (min-width: bb-calc-rem(map.get($breakpoints, "large"))) {
+                    width: 70%;
+                }
+
+                #{$self}-categories {
+                    display: flex;
+                    flex-direction: column;
+                    flex-wrap: nowrap;
+                    align-items: stretch;
+                    margin-top: 15px;
+
+                    @media screen and (min-width: bb-calc-rem(map.get($breakpoints, "medium"))) {
+                        flex-direction: row;
+                        justify-content: flex-start;
+                        align-items: center;
+                        flex-wrap: wrap;
+                        position: absolute;
+                        height: bb-calc-rem(45);
+                        left: 0;
+                        right: 0;
+                        bottom: 0;
+                    }
+                }
+
+                #{$self}-category {
+                    border: none;
+                    padding: 0;
+
+                    &--modules,
+                    #{$self}-description {
+                        display: none;
+                    }
+                }
+            }
+
+            #{$self}-category {
+                &-modules {
+                    &.hidden {
+                        display: none;
+                    }
+                }
+            }
+        }
+
+        #{$self}-footer {
+            width: 100%;
+
+            #{$self}-buttons {
+                display: flex;
+
+                > .#{$prefix}button {
+                    cursor: pointer;
+
+                    &.hidden {
+                        display: none !important;
+                    }
+                }
+            }
+
+            .#{$prefix}cb-bottom & {
+                width: 100%;
+                display: flex;
+                flex-direction: column;
+                flex-wrap: nowrap;
+                align-items: center;
+                justify-content: space-between;
+
+                @media screen and (min-width: bb-calc-rem(map.get($breakpoints, "large"))) {
+                    width: 30%;
+
+                }
+
+                #{$self}-buttons {
+                    width: 100%;
+                    flex-direction: column;
+
+                    @media screen and (min-width: bb-calc-rem(map.get($breakpoints, "medium"))) {
+                        width: 100%;
+                        flex-direction: row;
+                        flex-wrap: nowrap;
+                    }
+
+                    @media screen and (min-width: bb-calc-rem(map.get($breakpoints, "large"))) {
+                        width: 75%;
+                        flex-direction: column;
+                        align-items: stretch;
+                        flex-wrap: nowrap;
+                    }
+                }
+
+                #{$self}-links {
+                    height: bb-calc-rem(45);
+                    width: 100%;
+                    text-align: left;
+                    @media screen and (min-width: bb-calc-rem(map.get($breakpoints, "large"))) {
+                        text-align: center;
+                    }
+
+                    #{$self}--link {
+                        flex: 1;
+                        display: inline-block;
+                        padding: bb-calc-rem(10.5 10 10.5 10);
+                        position: relative;
+
+                        &:first-of-type {
+                            padding-left: bb-calc-rem(5);
+                        }
+
+                        &:after {
+                            content: "";
+                            background-color: $linkDeviderColor;
+                            width: 2px;
+                            position: absolute;
+                            top: bb-calc-rem(12.5);
+                            bottom: bb-calc-rem(10.5);
+                            right: -1px;
+
+                            opacity: .7;
+                        }
+
+                        &:only-child:after {
+                            content: none;
+                        }
+
+                        &:last-of-type {
+                            padding-right: bb-calc-rem(5);
+
+                            &:after {
+                                display: none;
+                            }
+                        }
+                    }
+                }
+            }
+
+            .#{$prefix}cb-overlay & {
+                padding-top: bb-calc-rem(8);
+
+                #{$self}-buttons {
+                    flex-direction: column;
+                    align-items: center;
+                    justify-content: center;
+                    @media screen and (min-width: bb-calc-rem(map.get($breakpoints, "medium"))) {
+                        flex-direction: row;
+                        &.is-categories,
+                        &.not-categories{
+                            flex-direction: row-reverse;
+                            .#{$prefix}button {
+                                @media screen and (min-width: bb-calc-rem(map.get($breakpoints, "medium"))) {
+                                    margin-right: 9px;
+                                    margin-left: 0;
+                                    margin-bottom: 0;
+                                    &:first-child{
+                                        margin-right: 0;
+                                    }
+                                }
+
+                            }
+                        }
+                    }
+
+                    .#{$prefix}button {
+                        flex: 1;
+                        width: 100%;
+                        @media screen and (min-width: bb-calc-rem(map.get($breakpoints, "medium"))) {
+                            width: auto;
+                        }
+                    }
+                }
+
+                #{$self}-links {
+                    $small-paddings-index: 1;
+                    $medium-paddings-index: 1;
+                    @if list.length(map.get($container-gutter, "small")) > 2 {
+                        $small-paddings-index: 3;
+                    }
+                    @if list.length(map.get($container-gutter, "medium")) > 2 {
+                        $medium-paddings-index: 3;
+                    }
+
+                    $visual-center-ratio: .8;
+                    margin-top: bb-calc-rem(list.nth(map.get($container-gutter, "small"), $small-paddings-index)) * $visual-center-ratio;
+
+                    @media screen and (min-width: bb-calc-rem(map.get($breakpoints, "medium"))) {
+                        margin-top: bb-calc-rem(list.nth(map.get($container-gutter, "medium"), $medium-paddings-index)) * $visual-center-ratio;
+                    }
+                    text-align: center;
+                }
+            }
+        }
+    }
+
+    &-header {
+        #{$self}-close {
+            position: absolute;
+            right: 0;
+            top: 0;
+
+            margin: 0;
+            padding: 0;
+
+            $size: 40px;
+
+            height: bb-calc-rem($size);
+            width: bb-calc-rem($size);
+
+            appearance: none;
+            background: none;
+            border: none;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            cursor: pointer;
+
+            $icon-height: $size * .5;
+
+            &:before, &:after {
+                content: '';
+                display: block;
+                position: absolute;
+
+                width: 1px;
+                height: $icon-height;
+
+                background: $buttonCloseColor;
+                transform: translateY(#{-$icon-height * .5}) rotate(45deg);
+
+                @supports not (display: -ms-flexbox) {
+                    transform: rotate(45deg);
+                }
+            }
+
+            &:after {
+                transform: translateY(#{-$icon-height * .5}) rotate(-45deg);
+                @supports not (display: -ms-flexbox) {
+                    transform: rotate(-45deg);
+                }
+            }
+        }
+
+        #{$self}--heading {
+            font-weight: bold;
+
+            .#{$prefix}cb-bottom & {
+                text-align: left;
+            }
+
+            .#{$prefix}cb-overlay & {
+                text-align: center;
+            }
+
+            margin-bottom: bb-calc-rem(6);
+        }
+    }
+
+    &-content {
+        #{$self}--text {
+            margin-bottom: bb-calc-rem(2);
+        }
+
+        #{$self}--link {
+            text-decoration: underline;
+            color: $linkColor;
+
+            cursor: pointer;
+
+            &:hover {
+                color: $linkColorHover;
+            }
+        }
+    }
+
+    &-footer {
+        position: relative;
+    }
+
+    &-footer #{$self}-buttons {
+
+
+        .#{$prefix}button {
+            outline: none;
+            padding: 0.625rem;
+            border: 0.125rem solid transparent;
+            display: inline-block;
+            font-size: bb-calc-rem(16);
+
+            &.#{$prefix}btn {
+                &--typeP {
+                    margin: 0;
+
+                    background: $buttonBgColor;
+                    color: $buttonColor;
+                }
+
+                &--typeS {
+                    margin: 0;
+
+                    background: transparent;
+                    color: $buttonAltColor;
+                    border-color: $buttonAltBorderColor;
+                }
+
+                &--typeS, &--typeP {
+                    &:hover {
+                        border-color: $buttonBorderColorHover;
+                        background: $buttonBgColorHover;
+                        color: $buttonColorHover;
+                    }
+                }
+            }
+
+            .#{$prefix}cb-overlay & {
+                margin-bottom: 9px;
+                @media screen and (min-width: bb-calc-rem(map.get($breakpoints, "medium"))) {
+                    margin-right: 9px;
+                    margin-bottom: 0;
+                }
+                &:last-child {
+                    margin: 0;
+                }
+            }
+
+            .#{$prefix}cb-bottom & {
+                margin-bottom: 9px;
+                @media screen and (min-width: bb-calc-rem(map.get($breakpoints, "medium"))) {
+                    margin-bottom: 0;
+                    margin-left: 5px;
+                    margin-right: 5px;
+                    flex: 1 0 auto;
+                }
+
+                @media screen and (min-width: bb-calc-rem(map.get($breakpoints, "large"))) {
+                    margin-bottom: 9px;
+                    margin-left: 0;
+                    margin-right: 0;
+                }
+
+                &:first-child {
+                    margin-bottom: 9px;
+                    @media screen and (min-width: bb-calc-rem(map.get($breakpoints, "medium"))) {
+                        margin-bottom: 0;
+                        margin-left: 0;
+                    }
+                    @media screen and (min-width: bb-calc-rem(map.get($breakpoints, "large"))) {
+                        margin-bottom: 9px;
+                    }
+                }
+
+                &:last-child {
+                    margin-bottom: 0;
+                    @media screen and (min-width: bb-calc-rem(map.get($breakpoints, "medium"))) {
+                        margin-right: 0;
+                    }
+                }
+            }
+
+
+
+
+        }
+    }
+
+    &-button.#{$prefix}widget {
+        position: fixed;
+        left: 12px;
+        bottom: 12px;
+
+        width: 50px;
+        height: 50px;
+
+        border-radius: 50%;
+
+        background: url('../Image/checkbox.svg') no-repeat center, $consentBannerBgColor;
+        background-size: 18px;
+        box-shadow: 0 1px 8px rgba(0, 0, 0, .1);
+
+        cursor: pointer;
+
+        z-index: 50;
+
+        &:hover {
+            background-color: $consentBannerBgColorHover;
+        }
+
+        &.hidden {
+            display: none;
+        }
+    }
+
+    .hidden {
+        display: none !important;
+    }
+}
+
+@mixin unify-parent($child) {
+    @at-root #{selector.unify(&, $child)} {
+        @content;
+    }
+}

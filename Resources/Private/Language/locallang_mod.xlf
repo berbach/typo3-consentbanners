@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+	<file source-language="en" datatype="plaintext" original="EXT:consentbanners/Resources/Private/Language/locallang_mod.xlf" date="2021-07-29T16:10:22Z" product-name="consentbanners">
+		<header/>
+		<body>
+			<trans-unit id="mlang_labels_tablabel">
+				<source>Consent Banner</source>
+			</trans-unit>
+			<trans-unit id="mlang_labels_tabdescr">
+				<source>Admin consent banner</source>
+			</trans-unit>
+			<trans-unit id="module.label">
+				<source>Consent Banners</source>
+			</trans-unit>
+			<trans-unit id="settings.headline">
+                <source>Settings Consent Banner</source>
+            </trans-unit>
+            <trans-unit id="categories.headline">
+                <source>Consent Banner Categories</source>
+            </trans-unit>
+            <trans-unit id="modules.headline">
+                <source>Consent Banner Modules</source>
+            </trans-unit>
+			<trans-unit id="action.settings.title">
+                <source>Settings Banner</source>
+            </trans-unit>
+            <trans-unit id="action.categories.title">
+                <source>Categories</source>
+            </trans-unit>
+            <trans-unit id="action.modules.title">
+                <source>Modules</source>
+            </trans-unit>
+            <trans-unit id="action.settings.new.title">
+                <source>New Consent Banner</source>
+            </trans-unit>
+            <trans-unit id="action.categories.new.title">
+                <source>New Category</source>
+            </trans-unit>
+            <trans-unit id="action.modules.new.title">
+                <source>New Module</source>
+            </trans-unit>
+
+            <trans-unit id="tab.javascript">
+                <source>JavaScripts</source>
+            </trans-unit>
+
+            <trans-unit id="tab.buttons">
+                <source>Buttons</source>
+            </trans-unit>
+
+            <trans-unit id="palette.buttonsDisplayName">
+                <source>Buttons display name</source>
+            </trans-unit>
+            <trans-unit id="palette.privacyPage">
+                <source>Privacy Data</source>
+            </trans-unit>
+            <trans-unit id="field.title">
+                <source>Title</source>
+            </trans-unit>
+            <trans-unit id="field.privacy_page_label">
+                <source>Custom display name</source>
+            </trans-unit>
+            <trans-unit id="field.accept_all">
+                <source>Accept all</source>
+            </trans-unit>
+            <trans-unit id="field.confirm_selection">
+                <source>Confirm selection</source>
+            </trans-unit>
+            <trans-unit id="field.save_and_close">
+                <source>Save &amp; close</source>
+            </trans-unit>
+            <trans-unit id="field.advanced_settings">
+                <source>Advanced settings</source>
+            </trans-unit>
+            <trans-unit id="field.reject">
+                <source>Reject</source>
+            </trans-unit>
+            <trans-unit id="field.show_categories">
+                <source>Show Categories</source>
+            </trans-unit>
+            <trans-unit id="field.name">
+                <source>Name</source>
+            </trans-unit>
+            <trans-unit id="field.description">
+                <source>Description</source>
+            </trans-unit>
+            <trans-unit id="field.target">
+                <source>Target</source>
+            </trans-unit>
+            <trans-unit id="field.placeholder_headline">
+                <source>Placeholder Headline</source>
+            </trans-unit>
+            <trans-unit id="field.placeholder">
+                <source>Placeholder</source>
+            </trans-unit>
+            <trans-unit id="field.rejected_script">
+                <source>Rejected Script</source>
+            </trans-unit>
+            <trans-unit id="field.modules">
+                <source>Modules</source>
+            </trans-unit>
+            <trans-unit id="field.privacy_page">
+                <source>Privacy page</source>
+            </trans-unit>
+            <trans-unit id="field.confirm_duration">
+                <source>Confirmation duration</source>
+            </trans-unit>
+            <trans-unit id="field.confirm_duration.l10days">
+                <source>10 Days</source>
+            </trans-unit>
+            <trans-unit id="field.confirm_duration.l20days">
+                <source>20 Days</source>
+            </trans-unit>
+            <trans-unit id="field.confirm_duration.l30days">
+                <source>30 Days</source>
+            </trans-unit>
+            <trans-unit id="field.locked_and_active">
+                <source>locked and always active</source>
+            </trans-unit>
+            <trans-unit id="field.unique_name">
+                <source>Unique name</source>
+            </trans-unit>
+            <trans-unit id="field.banner">
+                <source>Banner</source>
+            </trans-unit>
+            <trans-unit id="field.layoutType">
+                <source>Layout Type</source>
+            </trans-unit>
+            <trans-unit id="field.categories">
+                <source>Categories</source>
+            </trans-unit>
+            <trans-unit id="field.category">
+                <source>Category</source>
+            </trans-unit>
+            <trans-unit id="field.layoutType.overlay">
+                <source>Overlay Banner</source>
+            </trans-unit>
+            <trans-unit id="field.layoutType.fullWidthBottom">
+                <source>Full Width Bottom Banner</source>
+            </trans-unit>
+		</body>
+	</file>
+</xliff>

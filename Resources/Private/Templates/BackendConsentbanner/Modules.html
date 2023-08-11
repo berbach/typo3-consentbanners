@@ -1,0 +1,85 @@
+<html
+        xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
+        xmlns:core="http://typo3.org/ns/TYPO3/CMS/Core/ViewHelpers"
+        xmlns:be="http://typo3.org/ns/TYPO3/CMS/Backend/ViewHelpers"
+        data-namespace-typo3-fluid="true">
+
+<f:layout name="BackendConsentbanner/Default"/>
+
+<f:section name="Headline">
+    <h1><f:translate key="LLL:EXT:consentbanners/Resources/Private/Language/locallang_mod.xlf:modules.headline"/></h1>
+</f:section>
+
+<f:section name="Content">
+    <f:flashMessages/>
+
+    <f:if condition="{data.modules}">
+        <f:then>
+            <div class="layout-one-columns">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <span>Consent Category Modules</span>
+                    </div>
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th class="col-icon nowrap">
+                                    <f:if condition="{defaultLanguageId} == {currentLanguageId}">
+                                        <a href="{be:uri.newRecord(table: 'tx_consentbanners_domain_model_module', pid: currentRootPageId)}" class="btn btn-default" title="{f:translate(key: 'LLL:EXT:consentbanners/Resources/Private/Language/locallang_mod.xlf:action.modules.new.title')}">
+                                            <core:icon identifier="actions-add" size="small"/>
+                                        </a>
+                                    </f:if>
+                                </th>
+                                <th class="col-md-4 col-responsive nowrap">
+                                    <span>Name</span>
+                                </th>
+                                <th class="col-control col-responsive nowrap">&nbsp;</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <f:for each="{data.modules}" as="module">
+                                <tr>
+                                    <td class="col-icon nowrap">
+                                        <span>#{module.uid}</span>
+                                    </td>
+                                    <td class="col-md-4 col-responsive nowrap">
+                                        <span>{module.name}</span>
+                                        <f:if condition="{module.target}">
+                                            <code>[{module.target}]</code>
+                                        </f:if>
+                                    </td>
+                                    <td class="col-control col-responsive nowrap">
+                                        <div class="btn-group">
+                                            <a href="{be:uri.editRecord(uid: module.uid, table: 'tx_consentbanners_domain_model_module')}" class="btn btn-default" title="Edit Module">
+                                                <core:icon identifier="actions-open" size="small"/>
+                                            </a>
+                                            <f:if condition="{module.hidden}">
+                                                <f:then>
+                                                    <a href="{module.showUri}" class="btn btn-default" title="Show Module">
+                                                        <core:icon identifier="actions-edit-unhide" size="small"/>
+                                                    </a>
+                                                </f:then>
+                                                <f:else>
+                                                    <a href="{module.showUri}" class="btn btn-default" title="Hide Module">
+                                                        <core:icon identifier="actions-edit-hide" size="small"/>
+                                                    </a>
+                                                </f:else>
+                                            </f:if>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </f:for>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </f:then>
+        <f:else>
+            <a href="{be:uri.newRecord(table: 'tx_consentbanners_domain_model_module', pid: currentRootPageId)}" class="btn btn-default" title="{f:translate(key: 'LLL:EXT:consentbanners/Resources/Private/Language/locallang_mod.xlf:action.modules.new.title')}">
+                <core:icon identifier="actions-add" size="small"/>
+                <f:translate key="LLL:EXT:consentbanners/Resources/Private/Language/locallang_mod.xlf:action.modules.new.title" />
+            </a>
+        </f:else>
+    </f:if>
+</f:section>
+</html>
