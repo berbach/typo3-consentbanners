@@ -6,13 +6,15 @@
 <f:layout name="Default"/>
 
 <f:section name="Main">
-    <f:if condition="{data.consentBanner.consentAccepted}">
-        <f:then>
-            <div class="bb-widget bb-consentbanner-button" data-module-cb="ConsentBanner"></div>
-        </f:then>
-        <f:else>
-            <div class="bb-consentbanner {data.consentBanner.layoutType}" data-module-cb="ConsentBanner"></div>
-        </f:else>
+    <f:if condition="{data.consentBanner}">
+        <f:if condition="{data.consentBanner.consentAccepted}">
+            <f:then>
+                <div class="bb-widget bb-consentbanner-button" data-module-cb="ConsentBanner"></div>
+            </f:then>
+            <f:else>
+                <div class="bb-consentbanner {data.consentBanner.layoutType}" data-module-cb="ConsentBanner"></div>
+            </f:else>
+        </f:if>
     </f:if>
 </f:section>
 </html>
