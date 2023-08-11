@@ -2,14 +2,12 @@
 
 namespace Bb\Consentbanners\EventListener;
 
+use Bb\Consentbanners\Domain\Model\Module;
 use Bb\Consentbanners\Domain\Repository\ModuleRepository;
-use Doctrine\DBAL\DBALException;
-use Doctrine\DBAL\Driver\Exception;
+use Doctrine\DBAL\Exception;
 use TYPO3\CMS\Backend\Controller\Event\BeforeFormEnginePageInitializedEvent;
 use TYPO3\CMS\Extbase\Event\Mvc\BeforeActionCallEvent;
-use TYPO3\CMS\Core\Core\Environment;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Utility\DebuggerUtility;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 
 class TypoScriptModifier
@@ -20,8 +18,8 @@ class TypoScriptModifier
     protected int $globalPid = 1;
 
     /**
+     * @param $event
      * @throws Exception
-     * @throws DBALException
      */
     public function __invoke($event): void
     {
@@ -42,6 +40,7 @@ class TypoScriptModifier
         }
         // compare old and new "target" values
         [$oldTarget, $newTarget] = $this->getTargetChange($event);
+
         if ($newTarget === $oldTarget) {
             return;
         }
@@ -53,8 +52,6 @@ class TypoScriptModifier
     /**
      * @param BeforeFormEnginePageInitializedEvent $event
      * @return array
-     * @throws DBALException
-     * @throws Exception
      */
     private function getTargetChange(BeforeFormEnginePageInitializedEvent $event): array
     {
@@ -66,17 +63,21 @@ class TypoScriptModifier
         $moduleRepo = GeneralUtility::makeInstance(ModuleRepository::class);
 
         $oldModule = is_numeric($updatedKey)
-            ? $moduleRepo->findModules($updatedKey)
+            ? $moduleRepo->findByUid($updatedKey)
             : false;
 
-        $this->readPid($oldModule);
+        if($oldModule instanceof Module) {
+            $this->readGlobalPid($oldModule);
+            return [$oldModule->getModuleTarget(), $updatedData['module_target']];
+        }
 
-        return [$oldModule['module_target'] ?? false, $updatedData['module_target']];
+        return [false, $updatedData['module_target']];
     }
 
     /**
+     * @param $oldTarget
+     * @param $newTarget
      * @throws Exception
-     * @throws DBALException
      */
     private function updateTypoScript($oldTarget, $newTarget): void
     {
@@ -101,35 +102,32 @@ class TypoScriptModifier
         $this->overrideFile($typoScript);
     }
 
-    private function readPid($module): void
+    private function readGlobalPid(Module $module): void
     {
-        if (!isset($module['pid'])) {
-            return;
-        }
-        $this->globalPid = $module['pid'];
+        $this->globalPid = $module->getPid();
     }
 
     /**
      * @throws Exception
-     * @throws DBALException
      */
     private function janitor(): void
     {
         $moduleRepo = GeneralUtility::makeInstance(ModuleRepository::class);
-        $modules = $moduleRepo->findModules();
+        $modules = $moduleRepo->findAll();
+
         if(isset($modules[0])) {
-            $this->readPid($modules[0]);
+            $this->readGlobalPid($modules[0]);
         }
-        $elements = array_map(static function ($module) {
-            return explode(',', $module['module_target']);
-        }, $modules);
+        $elements = array_map(static function (Module $module) {
+            return explode(',', $module->getModuleTarget());
+        }, $modules->toArray());
         $elements = flattenArray($elements);
 
         $typoScript = $this->readFile();
 
         preg_match_all('/# START ([^ ]+) #/', $typoScript, $matches);
 
-        foreach ($matches[1] as $elementName) {
+        foreach (array_unique($matches[1]) as $elementName) {
             if (in_array($elementName, $elements, true)) {
                 continue;
             }
@@ -140,35 +138,35 @@ class TypoScriptModifier
     }
 
     /**
+     * @return string
      * @throws Exception
-     * @throws DBALException
      */
     private function readFile(): string
     {
         $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable('sys_template');
 
         $contents = $queryBuilder
-            ->select('config')
+            ->select('*')
             ->from('sys_template')
             ->where(
                 $queryBuilder->expr()->eq('pid', $queryBuilder->createNamedParameter($this->globalPid, \PDO::PARAM_INT))
             )
-            ->execute()
+            ->executeQuery()
             ->fetchAssociative();
 
-        if (!isset($contents[0])) {
-            $contents[0]['config'] = '';
+        if (!isset($contents)) {
+            $contents['config'] = '';
         }
 
-        if (!isset($contents[0]['config'])) {
-            $contents[0]['config'] = '';
+        if (!isset($contents['config'])) {
+            $contents['config'] = '';
         }
 
-        return $contents[0]['config'];
+        return $contents['config'];
     }
 
     /**
-     * @throws DBALException
+     * @param $typoScript
      */
     private function overrideFile($typoScript): void
     {
@@ -180,7 +178,7 @@ class TypoScriptModifier
                 $queryBuilder->expr()->eq('t.pid', $queryBuilder->createNamedParameter($this->globalPid, \PDO::PARAM_INT))
             )
             ->set('t.config', $typoScript)
-            ->execute();
+            ->executeStatement();
     }
 
     private function addElement(string &$typoScript, string $elementName): void
