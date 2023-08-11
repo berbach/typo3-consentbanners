@@ -2,7 +2,7 @@
     padding-left: 0 !important;
     padding-top: 0 !important;
     padding-bottom: 0 !important;
-    height: calc(100% - 65px);
+    height: calc(100% - var(--module-docheader-height));
 }
 .module-docheader{
     padding-left: 324px;
