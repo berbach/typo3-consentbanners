@@ -11,19 +11,13 @@ class TCASelectItemUtility
     {
         $groups = BackendUtility::getPagesTSconfig(0)['mod.']['wizards.']['newContentElement.']['wizardItems.'];
         $removeItems = GeneralUtility::trimExplode(',',BackendUtility::getPagesTSconfig(0)['TCEFORM.']['tt_content.']['CType.']['removeItems']);
-        $temp = [];
         foreach ($groups as $key => $group) {
-            $temp['cTypeItems']['group'] = ['label' => $group['header'], 'value' => '--div--', 'group' => $key];
-
+            $params['items'][] = ['label' => $group['header'], 'value' => '--div--', 'group' => rtrim($key, '.')];
             foreach ($group['elements.'] as $element) {
-                if(!in_array($element['tt_content_defValues.']['CType'], $removeItems, true)) {
-                    $temp['cTypeItems']['items'][] = ['label' => $element['title'], 'value' => $element['tt_content_defValues.']['CType'], 'icon' => $element['iconIdentifier'], 'group' => $key];
-                }
-            }
 
-            if(isset($temp['cTypeItems']['items'])) {
-                $params['items'][] = $temp['cTypeItems']['group'];
-                $params['items'][] = $temp['cTypeItems']['items'];
+                if(!in_array($element['tt_content_defValues.']['CType'], $removeItems, true)) {
+                    $params['items'][] = ['label' => $element['title'], 'value' => $element['tt_content_defValues.']['CType'], 'icon' => $element['iconIdentifier'], 'group' => rtrim($key, '.')];
+                }
             }
         }
 
