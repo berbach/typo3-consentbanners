@@ -19,7 +19,7 @@ class TCASelectItemUtility
         }
 
         $params['items'] = array_filter($params['items'], static function ($item) {
-            return isset($item[1]);
+            return isset($item['value']);
         });
     }
 }
