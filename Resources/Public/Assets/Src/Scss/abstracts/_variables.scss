@@ -1,11 +1,11 @@
 $prefix: 'bb-';
 
 $breakpoints: (
-        's': 0,
-        'm': 640px,
-        'l': 1024px,
-        'xl': 1200px,
-        'xxl': 1440px
+    's': 0,
+    'm': 640px,
+    'l': 1024px,
+    'xl': 1200px,
+    'xxl': 1440px
 );
 
 $font-style-types: (
@@ -15,43 +15,44 @@ $font-style-types: (
 /* - Fonts Path - */
 $fontPath : '../Fonts/';
 
-// FORM
-$toogleColor: #ffffff;
-$toogleBgColor: #69696B;
-$toogleBorderColor: #69696B;
+/* - Theme Colors - */
+$white: #fff;
+$black: #000;
 
-$toogleActiveBgColor: #4B9327; 
+/* - Cyan - */
+$darkCyan: #016882;
+$darkCyan70: #016782;
+$darkCyan60: #729BA9;
+$darkCyan50: #C2CFD0;
+$darkCyan20: #D0DDDD;
+$darkCyan10: #E9EEF2;
 
-$toogleDisabledBgColor: rgba(200,210,220,.6);
-$toogleDisabledBorderColor: #69696B;
+/* - Gray - */
+$gray: #A7BABA;
+$gray95: #F2F2F2;
+$gray50: #D2DCDD;
+$gray35: #FBE6EF;
+$gray30: #E5EBEB;
+$darkGray: #444346;
+$darkGray80: #69696B;
+$lightGray: #DADADA;
+$blackGray: #1d1d1b;
 
-$toogleProgressBgColor: #A7BABA;
+/* - Magenta - */
+$magenta: #D6075C;
+$magenta10: #FBE6EF;
 
-$lineColor: #6D97C7;
+/* - Alumni - */
+$alumniColor: #C8AF73;
 
-// COOKIEBANNER - BUTTON
-$consentBannerBgColor: #EAEAEA;
-$consentBannerBgColorHover: #223B53;
+/* - Lime - */
+$lightGreen: #B6E152;
+$darkGreen: #7DB64A;
 
-// BUTTONS
-$buttonBgColor: #EAEAEA;
-$buttonColor: #000000;
-$buttonAltColor: #223B53;
-$buttonAltBorderColor: #223B53;
-$buttonBgColorHover: #223B53;
-$buttonColorHover: #FFFFFF;
-$buttonBorderColorHover: #223B53;
+$dark: #414141;
+$lightGray: rgba(200, 210, 220, 0.6);
+$darkBlue: #00419b;
+$gold: #ca9912;
 
-// Modals
-$modalOverviewBgColor: rgb(0, 0, 0, .3);
-$modalBgColor: #FFFFFF;
-$modalAltBgColor: #FFFFFF;
-
-$linkDeviderColor: #6D97C7;
-$buttonCloseColor: #223B53;
-
-$linkColor: #6D97C7;
-$linkColorHover: #000000;
-
-// PLACEHOLDER
-$placeholderBorderColor: #223B53;
+$primaryDarker: #00419b;
+$secondary: #ca9912;
