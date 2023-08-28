@@ -22,9 +22,9 @@ call_user_func(static function () {
     );
 
     \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addPageTSConfig(
-'mod{
+        'mod{
             web_list {
-                allowedNewTables = tx_consentbanners_domain_model_settings,tx_consentbanners_domain_model_category,tx_consentbanners_domain_model_module
+                allowedNewTables := addToList(tx_consentbanners_domain_model_settings,tx_consentbanners_domain_model_category,tx_consentbanners_domain_model_module)
             }
         }
         '
