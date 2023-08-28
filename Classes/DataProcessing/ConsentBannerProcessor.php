@@ -49,7 +49,7 @@ class ConsentBannerProcessor implements DataProcessorInterface
             $privacyPage = [];
 
             if (MathUtility::canBeInterpretedAsInteger($banner->getPrivacyPage())) {
-                $privacyPage['uri'] = $cObj->getTypoLink_URL($banner->getPrivacyPage());
+                $privacyPage['uri'] = $cObj->createUrl($banner->getPrivacyPage());
                 $privacyPage['module_target'] = $settings['module_target'] ?? "";
 
                 if (!empty($banner->getPrivacyPageLabel())) {
