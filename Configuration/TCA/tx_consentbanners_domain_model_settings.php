@@ -64,7 +64,7 @@ return [
         ],
         'language' => [
             'showitem' => '
-                sys_language_uid;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:sys_language_uid_formlabel,
+                sys_language_uid,
                 l10n_parent
             ',
         ],
@@ -86,7 +86,7 @@ return [
         ],
         'hidden' => [
             'showitem' => '
-                hidden;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:field.default.hidden
+                hidden
             ',
         ],
     ],

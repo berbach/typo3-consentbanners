@@ -43,13 +43,13 @@ return [
     'palettes' => [
         'language' => [
             'showitem' => '
-                sys_language_uid;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:sys_language_uid_formlabel,
-                l10n_parent;LLL:EXT:core/Resources/Private/Language/locallang_general.xlf:LGL.l18n_parent
+                sys_language_uid,
+                l10n_parent
             ',
         ],
         'hidden' => [
             'showitem' => '
-                hidden;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:field.default.hidden
+                hidden
             ',
         ],
     ],
