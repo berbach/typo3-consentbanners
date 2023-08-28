@@ -6,7 +6,6 @@ return [
         'sortby' => 'sorting',
         'tstamp' => 'tstamp',
         'crdate' => 'crdate',
-        'cruser_id' => 'cruser_id',
         'delete' => 'deleted',
         'adminOnly' => true,
         'versioningWS' => false,
@@ -109,7 +108,8 @@ return [
             'config' => [
                 'type' => 'input',
                 'size' => 50,
-                'eval' => 'trim,required'
+                'eval' => 'trim',
+                'required' => true
             ],
         ],
 
