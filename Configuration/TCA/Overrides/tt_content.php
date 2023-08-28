@@ -10,7 +10,9 @@ $GLOBALS['TCA']['tt_content']['columns'] = array_replace_recursive(
             'config' => [
                 'type' => 'select',
                 'renderType' => 'selectSingle',
-                'items' => [['Select a module']],
+                'items' => [
+                    ['label' => 'Select a module', 'value' => '']
+                ],
                 'itemsProcFunc' => Bb\Consentbanners\Utility\TCASelectModuleUtility::class . '->getHtmlModules',
             ],
         ],

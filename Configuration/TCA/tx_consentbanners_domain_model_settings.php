@@ -170,8 +170,8 @@ return [
                 'type' => 'select',
                 'renderType' => 'selectSingle',
                 'items' => [
-                    ['LLL:EXT:consentbanners/Resources/Private/Language/locallang_mod.xlf:field.layoutType.overlay', 'bb-cb-overlay'],
-                    ['LLL:EXT:consentbanners/Resources/Private/Language/locallang_mod.xlf:field.layoutType.fullWidthBottom', 'bb-cb-bottom']
+                    ['label' => 'LLL:EXT:consentbanners/Resources/Private/Language/locallang_mod.xlf:field.layoutType.overlay', 'value' => 'bb-cb-overlay'],
+                    ['label' => 'LLL:EXT:consentbanners/Resources/Private/Language/locallang_mod.xlf:field.layoutType.fullWidthBottom', 'value' => 'bb-cb-bottom']
                 ],
                 'default' => 'bb-cb-overlay',
             ],
@@ -211,9 +211,9 @@ return [
                 'renderType' => 'selectSingle',
                 'default' => 20,
                 'items' => [
-                    ['LLL:EXT:consentbanners/Resources/Private/Language/locallang_mod.xlf:field.confirm_duration.l10days', 10],
-                    ['LLL:EXT:consentbanners/Resources/Private/Language/locallang_mod.xlf:field.confirm_duration.l20days', 20],
-                    ['LLL:EXT:consentbanners/Resources/Private/Language/locallang_mod.xlf:field.confirm_duration.l30days', 30],
+                    ['label' => 'LLL:EXT:consentbanners/Resources/Private/Language/locallang_mod.xlf:field.confirm_duration.l10days', 'value' => 10],
+                    ['label' => 'LLL:EXT:consentbanners/Resources/Private/Language/locallang_mod.xlf:field.confirm_duration.l20days', 'value' => 20],
+                    ['label' => 'LLL:EXT:consentbanners/Resources/Private/Language/locallang_mod.xlf:field.confirm_duration.l30days', 'value' => 30],
                 ],
             ],
         ],
@@ -287,8 +287,7 @@ return [
                 'renderType' => 'checkboxToggle',
                 'items' => [
                     [
-                        0 => '',
-                        1 => '',
+                        'label' =>  '',
                         'labelChecked' => 'Enabled',
                         'labelUnchecked' => 'Disabled',
                     ],
