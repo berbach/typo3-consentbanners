@@ -49,14 +49,20 @@ class ConsentBannerProcessor implements DataProcessorInterface
             $privacyPage = [];
 
             if (MathUtility::canBeInterpretedAsInteger($banner->getPrivacyPage())) {
-                $privacyPage['uri'] = $cObj->createUrl($banner->getPrivacyPage());
+                $privacyPage['uri'] = $cObj->createUrl(['parameter' => $banner->getPrivacyPage()]);
                 $privacyPage['module_target'] = $settings['module_target'] ?? "";
 
                 if (!empty($banner->getPrivacyPageLabel())) {
                     $privacyPage['label'] = $banner->getPrivacyPageLabel();
                 } else {
                     $pageRecord = $this->getRecord('pages', $banner->getPrivacyPage(), 'uid, pid, ' . $GLOBALS['TCA']['pages']['ctrl']['languageField'] . ', nav_title, title');
-                    $privacyPage['label'] = $pageRecord['nav_title'] ?? ($pageRecord['title'] ?? "");
+                    if(!empty($pageRecord['nav_title'])){
+                        $privacyPage['label'] = $pageRecord['nav_title'];
+                    }elseif (!empty($pageRecord['title'])){
+                        $privacyPage['label'] = $pageRecord['title'];
+                    }else{
+                        $privacyPage['label'] = "";
+                    }
                 }
             }
 
