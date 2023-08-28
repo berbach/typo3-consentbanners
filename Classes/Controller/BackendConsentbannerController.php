@@ -215,7 +215,6 @@ class BackendConsentbannerController extends ActionController
                                     'defVals' => [
                                         SettingsRepository::$tableName => [
                                             $GLOBALS['TCA'][SettingsRepository::$tableName]['ctrl']['languageField'] => $language->getLanguageId(),
-                                            $GLOBALS['TCA'][SettingsRepository::$tableName]['ctrl']['transOrigPointerField'] => $settingsInDefaultLanguage['uid']
                                         ]
                                     ],
                                     'returnUrl' => $returnUrl
@@ -245,7 +244,6 @@ class BackendConsentbannerController extends ActionController
                         'defVals' => [
                             SettingsRepository::$tableName => [
                                 $GLOBALS['TCA'][SettingsRepository::$tableName]['ctrl']['languageField'] => $defaultLanguage->getLanguageId(),
-                                $GLOBALS['TCA'][SettingsRepository::$tableName]['ctrl']['transOrigPointerField'] => 0
                             ]
                         ],
                         'returnUrl' => $this->getBuildRoute($this->moduleName, ['tx_consentbanners_site_consentbanners' => ['action' => $current_action, 'controller' => $current_controller], 'SET' => ['language' => $defaultLanguage->getLanguageId()], 'sysLanguageUid' => $defaultLanguage->getLanguageId(), 'rootPageId' => $rootPageSite->getRootPageId()])
@@ -263,7 +261,6 @@ class BackendConsentbannerController extends ActionController
                     'defVals' => [
                         SettingsRepository::$tableName => [
                             $GLOBALS['TCA'][SettingsRepository::$tableName]['ctrl']['languageField'] => $defaultLanguage->getLanguageId(),
-                            $GLOBALS['TCA'][SettingsRepository::$tableName]['ctrl']['transOrigPointerField'] => 0
                         ]
                     ],
                     'returnUrl' => $this->getBuildRoute($this->moduleName, ['tx_consentbanners_site_consentbanners' => ['action' => $current_action, 'controller' => $current_controller], 'SET' => ['language' => $defaultLanguage->getLanguageId()], 'sysLanguageUid' => $defaultLanguage->getLanguageId(), 'rootPageId' => $rootPageSite->getRootPageId()])
