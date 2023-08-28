@@ -70,5 +70,3 @@ tt_content.html {
         200 = EXT:consentbanners/Resources/Private/Templates/
     }
 }
-
-<INCLUDE_TYPOSCRIPT: source="FILE:EXT:consentbanners/Configuration/TypoScript/Helper/ElementCacheOverride.typoscript">

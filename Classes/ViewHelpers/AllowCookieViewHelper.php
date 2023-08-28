@@ -54,6 +54,7 @@ class AllowCookieViewHelper extends AbstractViewHelper
 
         $cookie = json_decode(CookieUtility::getCookieValue('BbConsentPreference'));
         $moduleName = $renderingContext->getVariableProvider()->get('data')['CType'];
+
         if (!$moduleName) {
             $baseRenderingContext = $renderingContext->getViewHelperVariableContainer()->getView()->getRenderingContext();
             $moduleName = $baseRenderingContext->getVariableProvider()->get('data')['CType'];
@@ -67,19 +68,20 @@ class AllowCookieViewHelper extends AbstractViewHelper
             ->from('tx_consentbanners_domain_model_module')
             ->where($queryBuilder->expr()->inSet('module_target', $queryBuilder->createNamedParameter($moduleName)));
 
-        if ($moduleName === 'html')
+        if ($moduleName === 'html') {
             $res = $res
                 ->where($queryBuilder->expr()->inSet('uid',
                     $queryBuilder->createNamedParameter(
                         $renderingContext->getVariableProvider()->get('data')['ce_consent_module']
                     )
                 ));
+        }
 
         $res = $res
             ->execute()
             ->fetchAssociative();
 
-        if (!is_null($cookie) && $cookie->{$res['uid']}) {
+        if (!is_null($cookie) && isset($res['uid']) && $cookie->{$res['uid']}) {
             return $renderChildrenClosure();
         }
 
@@ -136,17 +138,10 @@ class AllowCookieViewHelper extends AbstractViewHelper
         $compiler->disable();
     }
 
-    /*protected static function serializeTagParameters(array $arguments): string
-    {
-        // array(param1 -> value1, param2 -> value2) --> param1="value1" param2="value2" for typolink.ATagParams
-        $extraAttributes = [];
-        $additionalAttributes = $arguments['additionalAttributes'] ?? [];
-        foreach ($additionalAttributes as $attributeName => $attributeValue) {
-            $extraAttributes[] = $attributeName . '="' . htmlspecialchars($attributeValue) . '"';
-        }
-        return implode(' ', $extraAttributes);
-    }*/
-
+    /**
+     * @param array $tsArray
+     * @return array
+     */
     public function convertTypoScriptArrayToPlainArray(array $tsArray): array
     {
         foreach ($tsArray as $key => $value) {

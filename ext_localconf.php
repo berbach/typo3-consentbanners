@@ -8,8 +8,7 @@ defined('TYPO3') || die('Access denied.');
 call_user_func(static function () {
     // Add module configuration
     ExtensionManagementUtility::addTypoScriptSetup(
-        '
-        module.tx_consentbanners {
+        'module.tx_consentbanners {
             settings {
                 storagePid = 999
             }
@@ -21,12 +20,11 @@ call_user_func(static function () {
         }'
     );
 
-    \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addPageTSConfig(
+   ExtensionManagementUtility::addPageTSConfig(
         'mod{
             web_list {
                 allowedNewTables := addToList(tx_consentbanners_domain_model_settings,tx_consentbanners_domain_model_category,tx_consentbanners_domain_model_module)
             }
-        }
-        '
+        }'
     );
 });
