@@ -17,6 +17,7 @@ return [
         'enablecolumns' => [
             'disabled' => 'hidden',
         ],
+        'transOrigPointerField' => 'l10n_parent',
         'languageField' => 'sys_language_uid',
         'transOrigDiffSourceField' => 'l10n_diffsource',
         'copyAfterDuplFields' => 'sys_language_uid',
