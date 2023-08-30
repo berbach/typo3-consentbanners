@@ -5,7 +5,8 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
 const fileHelper = require('./fileHelper');
 
-const productionMode = process.env.NODE_ENV === 'production';
+const isDevelopment = process.env.npm_lifecycle_event.includes('dev');
+
 const config = {
     target: "web",
     entry: fileHelper.getEntries([
@@ -40,24 +41,24 @@ const config = {
                     {
                         loader: "css-loader",
                         options: {
-                            // importLoaders: 1,
-                            sourceMap: !productionMode,
+                            importLoaders: 1,
+                            sourceMap: isDevelopment,
                             //publicPath: '../Css'
                         }
                     },
                     {
                         loader: "postcss-loader",
                         options: {
-                            sourceMap: !productionMode,
+                            sourceMap: isDevelopment,
                         }
                     },
                     {
                         loader: "sass-loader",
                         options: {
-                            sourceMap: !productionMode,
-                            // sassOptions: {
-                            //     outputStyle: 'compressed',
-                            // },
+                            sourceMap: isDevelopment,
+                            sassOptions: {
+                                outputStyle: 'compressed',
+                            },
                         }
                     }
                 ]
@@ -88,25 +89,31 @@ const config = {
         chunkIds: 'named',
         mergeDuplicateChunks: false,
         removeEmptyChunks: false,
-        minimize: productionMode,
+        minimize: !isDevelopment,
         minimizer: [
             new CssMinimizerPlugin({
-                test: /\.css$/i,
-                minimizerOptions: {
+                parallel: 4,
+                minimizerOptions: [{
                     level: {
                         1: {
-                            roundingPrecision: "all=3,px=5",
+                            roundingPrecision: "all=3",
                         },
+                        2: {},
                     },
+                }, {
                     preset: [
                         "default",
                         {
-                            discardComments: { removeAll: true },
-                        },
-                    ],
-                },
-                minify: CssMinimizerPlugin.cleanCssMinify,
-            }),
+                            discardComments: {removeAll: true}
+                        }
+                    ]
+                }],
+                minify: [
+                    CssMinimizerPlugin.cleanCssMinify,
+                    CssMinimizerPlugin.cssnanoMinify,
+                    CssMinimizerPlugin.cssoMinify,
+                ],
+            })
         ]
     },
     resolve: {
@@ -123,14 +130,9 @@ const config = {
             ignoreOrder: true,
         }),
         new CleanWebpackPlugin({
-            cleanOnceBeforeBuildPatterns: [
-                path.join(__dirname + '/Resources/Public/Dist/', './Css/*.css'),
-                path.join(__dirname + '/Resources/Public/Dist/', './Css/*.css.map')
-            ],
-            cleanAfterEveryBuildPatterns: [
-                path.join(__dirname + '/Resources/Public/Dist/', './Css/CookieBanner.js'),
-                path.join(__dirname + '/Resources/Public/Dist/', './Css/CookieBanner.js.map')
-            ]
+            protectWebpackAssets: false,
+            leanOnceBeforeBuildPatterns: ['Css/**/*.css', 'Css/**/*.css.map'],
+            cleanAfterEveryBuildPatterns: ['Css/**/CookieBanner.js.map', 'Css/**/CookieBanner.js']
         }),
     ],
 
@@ -138,6 +140,7 @@ const config = {
 module.exports = (env, argv) => {
 
     if (argv.mode === 'development') {
+        config.mode = 'development';
         config.devtool = 'source-map';
     }
 

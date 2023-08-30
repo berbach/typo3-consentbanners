@@ -356,18 +356,13 @@ $max-width: $container-max-width !default;
         height: $icon-height;
 
         background: $darkBlue;
-        transform: translateY(#{-$icon-height * .5}) rotate(45deg);
 
-        @supports not (display: -ms-flexbox) {
-          transform: rotate(45deg);
-        }
+	    transform: rotate(45deg);
+
       }
 
       &:after {
-        transform: translateY(#{-$icon-height * .5}) rotate(-45deg);
-        @supports not (display: -ms-flexbox) {
-          transform: rotate(-45deg);
-        }
+	    transform: rotate(-45deg);
       }
     }
 
