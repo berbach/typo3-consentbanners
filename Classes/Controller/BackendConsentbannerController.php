@@ -40,15 +40,15 @@ class BackendConsentbannerController extends ActionController
     /**
      * @var int
      */
-    protected int $current_root_pid;
+    protected int $current_root_pid = 0;
     /**
      * @var int
      */
-    protected int $current_sys_language;
+    protected int $current_sys_language = 0;
     /**
      * @var int
      */
-    protected int $default_sys_language;
+    protected int $default_sys_language = 0;
     /**
      * @var string
      */
@@ -135,10 +135,10 @@ class BackendConsentbannerController extends ActionController
     {
         $params = $this->request->getQueryParams();
 
-        if (isset($params['rootPageId'], $params['sysLanguageUid'])) {
-            $this->current_root_pid = (int)$params['rootPageId'];
-            $this->current_sys_language = (int)$params['sysLanguageUid'];
-        }
+//        if (isset($params['rootPageId'], $params['sysLanguageUid'])) {
+//            $this->current_root_pid = (int)$params['rootPageId'];
+//            $this->current_sys_language = (int)$params['sysLanguageUid'];
+//        }
 
         if (isset($params['tx_consentbanners_site_consentbanners']) && is_array($params['tx_consentbanners_site_consentbanners'])) {
             $current_action = $params['tx_consentbanners_site_consentbanners']['action'] ?? 'settings';
