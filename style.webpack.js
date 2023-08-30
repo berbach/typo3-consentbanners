@@ -65,20 +65,18 @@ const config = {
             },
             {
                 test: /\.(svg|png|jpe?g|gif)$/i,
-                loader: 'file-loader',
-                options: {
-                    name: '[name].[ext]',
-                    outputPath: 'Images',
-                    publicPath: '../Images'
+                type: 'asset/resource',
+                generator: {
+                    filename: 'Images/[name][ext]',
+                    // publicPath: '../',
                 },
             },
             {
                 test: /\.(woff|woff2|eot|ttf|otf)$/,
-                loader : 'file-loader',
-                options: {
-                    name: '[name].[ext]',
-                    outputPath: 'Fonts',
-                    publicPath: '../Fonts'
+                type: 'asset/resource',
+                generator: {
+                    filename: 'Fonts/[name][ext]',
+                    // publicPath: '../',
                 },
 
             },
