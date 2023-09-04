@@ -19,12 +19,4 @@ call_user_func(static function () {
             }
         }'
     );
-
-   ExtensionManagementUtility::addPageTSConfig(
-        'mod{
-            web_list {
-                allowedNewTables := addToList(tx_consentbanners_domain_model_settings,tx_consentbanners_domain_model_category,tx_consentbanners_domain_model_module)
-            }
-        }'
-    );
 });
