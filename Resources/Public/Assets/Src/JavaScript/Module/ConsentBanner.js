@@ -377,9 +377,9 @@ function ConsentBanner(node) {
         // show more-LINK only in bottom layout, otherwise button (see above)
         const linkContainer = _el('div', {className: cbPrefix + 'links'})
         if (this.isBottomLayout) {
-            this.moreButton = _el('a', {
+            this.moreButton = _el('button', {
                 className: [cbPrefix + '-link'].join(' '),
-                href: 'javascript:void(0);',
+                type: 'button',
                 title: displayNames.advancedSettings,
                 innerText: displayNames.advancedSettings,
             }, linkContainer)
