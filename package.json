@@ -37,7 +37,7 @@
         "file-loader": "^6.2.0",
         "mini-css-extract-plugin": "^2.7.6",
         "path": "^0.12.7",
-        "postcss": "^8.4.29",
+        "postcss": "^8.4.31",
         "postcss-loader": "^4.3.0",
         "postinstall": "^0.8.0",
         "resolve-url-loader": "^5.0.0",
