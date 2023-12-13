@@ -389,8 +389,7 @@ function ConsentBanner(node) {
             className: cbPrefix + '-link',
             title: this.bbConsentBanner.privacyPage.label,
             innerText: this.bbConsentBanner.privacyPage.label,
-            href: this.bbConsentBanner.privacyPage.uri,
-            target: this.bbConsentBanner.privacyPage.target,
+            href: this.bbConsentBanner.privacyPage.uri
         }, linkContainer)
 
         formFooter.appendChild(linkContainer)

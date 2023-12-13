@@ -229,6 +229,8 @@ $max-width: $container-max-width !default;
 
           #{$self}--link {
             flex: 1;
+            font-size: bb-calc-rem(16);
+            border: 0;
             display: inline-block;
             padding: bb-calc-rem(10.5 10 10.5 10);
             position: relative;
