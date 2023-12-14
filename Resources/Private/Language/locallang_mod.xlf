@@ -93,9 +93,6 @@
             <trans-unit id="field.placeholder">
                 <source>Placeholder</source>
             </trans-unit>
-            <trans-unit id="field.accepted_script">
-                <source>Accepted Script</source>
-            </trans-unit>
             <trans-unit id="field.rejected_script">
                 <source>Rejected Script</source>
             </trans-unit>

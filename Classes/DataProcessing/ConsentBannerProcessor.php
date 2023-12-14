@@ -44,25 +44,21 @@ class ConsentBannerProcessor implements DataProcessorInterface
             $consentAccepted = true;
         }
 
-        $tempBanner = [];
+        $tempBanner = [
+            'cName'                 => self::$cName,
+        ];
         if($banner && $banner->getCategories()){
             $privacyPage = [];
 
             if (MathUtility::canBeInterpretedAsInteger($banner->getPrivacyPage())) {
-                $privacyPage['uri'] = $cObj->createUrl(['parameter' => $banner->getPrivacyPage()]);
+                $privacyPage['uri'] = $cObj->getTypoLink_URL($banner->getPrivacyPage());
                 $privacyPage['module_target'] = $settings['module_target'] ?? "";
 
                 if (!empty($banner->getPrivacyPageLabel())) {
                     $privacyPage['label'] = $banner->getPrivacyPageLabel();
                 } else {
                     $pageRecord = $this->getRecord('pages', $banner->getPrivacyPage(), 'uid, pid, ' . $GLOBALS['TCA']['pages']['ctrl']['languageField'] . ', nav_title, title');
-                    if(!empty($pageRecord['nav_title'])){
-                        $privacyPage['label'] = $pageRecord['nav_title'];
-                    }elseif (!empty($pageRecord['title'])){
-                        $privacyPage['label'] = $pageRecord['title'];
-                    }else{
-                        $privacyPage['label'] = "";
-                    }
+                    $privacyPage['label'] = $pageRecord['nav_title'] ?? ($pageRecord['title'] ?? "");
                 }
             }
 
@@ -119,6 +115,14 @@ class ConsentBannerProcessor implements DataProcessorInterface
                 ->addInlineJavaScript(
                     'consent_data',
                     'var bbConsentBanner=' . json_encode($tempBanner) . ';'.$tempRejectedScript,
+                    [],
+                    ['priority' => true]
+                );
+        }else{
+            GeneralUtility::makeInstance(AssetCollector::class)
+                ->addInlineJavaScript(
+                    'consent_data',
+                    'var bbConsentBanner=' . json_encode($tempBanner) . ';',
                     [],
                     ['priority' => true]
                 );

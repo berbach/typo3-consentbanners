@@ -54,7 +54,6 @@ class AllowCookieViewHelper extends AbstractViewHelper
 
         $cookie = json_decode(CookieUtility::getCookieValue('BbConsentPreference'));
         $moduleName = $renderingContext->getVariableProvider()->get('data')['CType'];
-
         if (!$moduleName) {
             $baseRenderingContext = $renderingContext->getViewHelperVariableContainer()->getView()->getRenderingContext();
             $moduleName = $baseRenderingContext->getVariableProvider()->get('data')['CType'];
@@ -76,10 +75,13 @@ class AllowCookieViewHelper extends AbstractViewHelper
                     )
                 ));
         }
-
         $res = $res
             ->execute()
             ->fetchAssociative();
+
+        if($res === false){
+            return $renderChildrenClosure();
+        }
 
         if (!is_null($cookie) && isset($res['uid'], $cookie->{$res['uid']}) && $cookie->{$res['uid']} === true) {
             return $renderChildrenClosure();
@@ -138,10 +140,17 @@ class AllowCookieViewHelper extends AbstractViewHelper
         $compiler->disable();
     }
 
-    /**
-     * @param array $tsArray
-     * @return array
-     */
+    /*protected static function serializeTagParameters(array $arguments): string
+    {
+        // array(param1 -> value1, param2 -> value2) --> param1="value1" param2="value2" for typolink.ATagParams
+        $extraAttributes = [];
+        $additionalAttributes = $arguments['additionalAttributes'] ?? [];
+        foreach ($additionalAttributes as $attributeName => $attributeValue) {
+            $extraAttributes[] = $attributeName . '="' . htmlspecialchars($attributeValue) . '"';
+        }
+        return implode(' ', $extraAttributes);
+    }*/
+
     public function convertTypoScriptArrayToPlainArray(array $tsArray): array
     {
         foreach ($tsArray as $key => $value) {

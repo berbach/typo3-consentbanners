@@ -6,6 +6,7 @@ return [
         'sortby' => 'sorting',
         'tstamp' => 'tstamp',
         'crdate' => 'crdate',
+        'cruser_id' => 'cruser_id',
         'delete' => 'deleted',
         'adminOnly' => true,
         'versioningWS' => false,
@@ -17,15 +18,12 @@ return [
         'enablecolumns' => [
             'disabled' => 'hidden',
         ],
-        'transOrigPointerField' => 'l10n_parent',
         'languageField' => 'sys_language_uid',
+        'transOrigPointerField' => 'l10n_parent',
         'transOrigDiffSourceField' => 'l10n_diffsource',
         'copyAfterDuplFields' => 'sys_language_uid',
         'useColumnsForDefaultValues' => 'sys_language_uid',
-        'translationSource' => 'l10n_source',
-        'security' => [
-            'ignorePageTypeRestriction' => true,
-        ],
+        'translationSource' => 'l10n_source'
     ],
     'types' => [
         '0' => [
@@ -42,13 +40,13 @@ return [
     'palettes' => [
         'language' => [
             'showitem' => '
-                sys_language_uid,
-                l10n_parent
+                sys_language_uid;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:sys_language_uid_formlabel,
+                l10n_parent;LLL:EXT:core/Resources/Private/Language/locallang_general.xlf:LGL.l18n_parent
             ',
         ],
         'hidden' => [
             'showitem' => '
-                hidden
+                hidden;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:field.default.hidden
             ',
         ],
     ],
@@ -62,13 +60,14 @@ return [
         ],
         'l10n_parent' => [
             'displayCond' => 'FIELD:sys_language_uid:>:0',
+            'exclude' => true,
             'label' => 'LLL:EXT:core/Resources/Private/Language/locallang_general.xlf:LGL.l18n_parent',
             'config' => [
                 'type' => 'select',
                 'renderType' => 'selectSingle',
                 'default' => 0,
                 'items' => [
-                    ['label' => '', 'value' => 0],
+                    ['', 0],
                 ],
                 'foreign_table' => 'tx_consentbanners_domain_model_category',
                 'foreign_table_where' => 'AND {#tx_consentbanners_domain_model_category}.{#pid}=###CURRENT_PID### AND {#tx_consentbanners_domain_model_category}.{#sys_language_uid} IN (-1,0)',
@@ -94,8 +93,9 @@ return [
                 'renderType' => 'checkboxToggle',
                 'items' => [
                     [
-                        'label' => '',
-                        'invertStateDisplay' => true,
+                        0 => '',
+                        1 => '',
+                        'invertStateDisplay' => true
                     ]
                 ],
             ],
@@ -107,8 +107,7 @@ return [
             'config' => [
                 'type' => 'input',
                 'size' => 50,
-                'eval' => 'trim',
-                'required' => true
+                'eval' => 'trim,required'
             ],
         ],
 
@@ -133,7 +132,8 @@ return [
                 'renderType' => 'checkboxToggle',
                 'items' => [
                     [
-                        'label' => '',
+                        0 => '',
+                        1 => '',
                         'labelChecked' => 'Enabled',
                         'labelUnchecked' => 'Disabled',
                     ],

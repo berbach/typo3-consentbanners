@@ -20,14 +20,12 @@ $EM_CONF[$_EXTKEY] = [
     'dependencies' => 'extbase,fluid',
     'state' => 'stable',
     'clearCacheOnLoad' => '1',
-    'version' => '1.0.0',
-    'constraints' => [
-        'depends' => [
-            'typo3' => '11.5.19-12.9.99',
-            'extbase' => '11.5.19-12.9.99',
-            'fluid' => '11.5.19-12.9.99',
-            'php' => '7.4.0-8.2.99',
-        ],
-        'conflicts' => []
-    ]
+    'version' => '0.1.0',
+    'constraints' => array(
+        'depends' => array(
+            'typo3' => '9.5.0-11.9.999',
+            'extbase' => '1.0.0-11.9.999',
+            'fluid' => '1.0.0-11.9.999',
+        )
+    )
 ];

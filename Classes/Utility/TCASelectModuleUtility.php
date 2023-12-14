@@ -27,9 +27,9 @@ class TCASelectModuleUtility
             ->execute()
             ->fetchAllAssociative();
 
-        $params['items'][] = ['label' => 'No Module', 'value' => 0];
+        $params['items'][] = ['No Module', '0'];
         foreach ($modules as $module) {
-            $params['items'][] = ['label' => $module['name'], 'value' => $module['uid']];
+            $params['items'][] = [$module['name'], $module['uid']];
         }
     }
 }

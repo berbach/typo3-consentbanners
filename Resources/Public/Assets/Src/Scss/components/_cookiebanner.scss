@@ -9,13 +9,13 @@ $gray95: #F5F5F5 !default;
 $gray: #A7BABA !default;
 
 $breakpoints: (
-    small: 0,
-    medium: 768px,
-    large: 1024px
+        small: 0,
+        medium: 768px,
+        large: 1024px
 );
 $container-gutter: (
-    small: 20px 12px 12px,
-    medium: 40px 20px 20px
+        small: 20px 12px 12px,
+        medium: 40px 20px 20px
 );
 $background-overlay: rgb(0, 0, 0, .3) !default;
 $background-full-width: #f0f0f0 !default;
@@ -50,7 +50,6 @@ $max-width: $container-max-width !default;
         width: 100vw;
         max-height: min(100vh, 700px);
         bottom: 0;
-        border-top: 8px solid $secondary;
     }
 
     &.visible {
@@ -222,25 +221,20 @@ $max-width: $container-max-width !default;
                 #{$self}-links {
                     height: bb-calc-rem(45);
                     width: 100%;
-                    display: flex;
-                    justify-content: center;
-                    text-align: center;
+                    text-align: left;
+                    @media screen and (min-width: bb-calc-rem(map.get($breakpoints, "large"))) {
+                        text-align: center;
+                    }
 
                     #{$self}--link {
-                        flex: 1 0 auto;
-                        @media screen and (min-width: bb-calc-rem(map.get($breakpoints, "large"))) {
-                            flex: 0 0 auto;
-                        }
-                        font-size: bb-calc-rem(16);
-                        line-height: 1.5;
-                        border: 0;
+                        flex: 1;
                         display: inline-block;
                         padding: bb-calc-rem(10.5 10 10.5 10);
                         position: relative;
 
-                        //&:first-child {
-                        //  padding-left: bb-calc-rem(5);
-                        //}
+                        &:first-of-type {
+                            padding-left: bb-calc-rem(5);
+                        }
 
                         &:after {
                             content: "";
@@ -250,11 +244,16 @@ $max-width: $container-max-width !default;
                             top: bb-calc-rem(12.5);
                             bottom: bb-calc-rem(10.5);
                             right: -1px;
+
                             opacity: .7;
                         }
 
-                        &:last-child {
-                            //padding-right: bb-calc-rem(5);
+                        &:only-child:after {
+                            content: none;
+                        }
+
+                        &:last-of-type {
+                            padding-right: bb-calc-rem(5);
 
                             &:after {
                                 display: none;
@@ -274,15 +273,14 @@ $max-width: $container-max-width !default;
                     @media screen and (min-width: bb-calc-rem(map.get($breakpoints, "medium"))) {
                         flex-direction: row;
                         &.is-categories,
-                        &.not-categories {
+                        &.not-categories{
                             flex-direction: row-reverse;
-
                             .#{$prefix}button {
                                 @media screen and (min-width: bb-calc-rem(map.get($breakpoints, "medium"))) {
                                     margin-right: 9px;
                                     margin-left: 0;
                                     margin-bottom: 0;
-                                    &:first-child {
+                                    &:first-child{
                                         margin-right: 0;
                                     }
                                 }
@@ -357,13 +355,18 @@ $max-width: $container-max-width !default;
                 height: $icon-height;
 
                 background: $darkBlue;
+                transform: translateY(#{-$icon-height * .5}) rotate(45deg);
 
-                transform: rotate(45deg);
-
+                @supports not (display: -ms-flexbox) {
+                    transform: rotate(45deg);
+                }
             }
 
             &:after {
-                transform: rotate(-45deg);
+                transform: translateY(#{-$icon-height * .5}) rotate(-45deg);
+                @supports not (display: -ms-flexbox) {
+                    transform: rotate(-45deg);
+                }
             }
         }
 
@@ -444,7 +447,6 @@ $max-width: $container-max-width !default;
                     margin-right: 9px;
                     margin-bottom: 0;
                 }
-
                 &:last-child {
                     margin: 0;
                 }
@@ -483,6 +485,8 @@ $max-width: $container-max-width !default;
                     }
                 }
             }
+
+
 
 
         }

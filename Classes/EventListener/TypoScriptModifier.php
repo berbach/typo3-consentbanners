@@ -4,10 +4,13 @@ namespace Bb\Consentbanners\EventListener;
 
 use Bb\Consentbanners\Domain\Model\Module;
 use Bb\Consentbanners\Domain\Repository\ModuleRepository;
-use Doctrine\DBAL\Exception;
+use Doctrine\DBAL\DBALException;
+use Doctrine\DBAL\Driver\Exception;
 use TYPO3\CMS\Backend\Controller\Event\BeforeFormEnginePageInitializedEvent;
 use TYPO3\CMS\Extbase\Event\Mvc\BeforeActionCallEvent;
+use TYPO3\CMS\Core\Core\Environment;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Utility\DebuggerUtility;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 
 class TypoScriptModifier
@@ -18,8 +21,8 @@ class TypoScriptModifier
     protected int $globalPid = 1;
 
     /**
-     * @param $event
      * @throws Exception
+     * @throws DBALException
      */
     public function __invoke($event): void
     {
@@ -40,7 +43,6 @@ class TypoScriptModifier
         }
         // compare old and new "target" values
         [$oldTarget, $newTarget] = $this->getTargetChange($event);
-
         if ($newTarget === $oldTarget) {
             return;
         }
@@ -52,6 +54,8 @@ class TypoScriptModifier
     /**
      * @param BeforeFormEnginePageInitializedEvent $event
      * @return array
+     * @throws DBALException
+     * @throws Exception
      */
     private function getTargetChange(BeforeFormEnginePageInitializedEvent $event): array
     {
@@ -71,13 +75,12 @@ class TypoScriptModifier
             return [$oldModule->getModuleTarget(), $updatedData['module_target']];
         }
 
-        return [false, $updatedData['module_target']];
+        return [false, $updatedData['module_target'] ?? ''];
     }
 
     /**
-     * @param $oldTarget
-     * @param $newTarget
      * @throws Exception
+     * @throws DBALException
      */
     private function updateTypoScript($oldTarget, $newTarget): void
     {
@@ -109,6 +112,7 @@ class TypoScriptModifier
 
     /**
      * @throws Exception
+     * @throws DBALException
      */
     private function janitor(): void
     {
@@ -118,6 +122,7 @@ class TypoScriptModifier
         if(isset($modules[0])) {
             $this->readGlobalPid($modules[0]);
         }
+
         $elements = array_map(static function (Module $module) {
             return explode(',', $module->getModuleTarget());
         }, $modules->toArray());
@@ -138,8 +143,8 @@ class TypoScriptModifier
     }
 
     /**
-     * @return string
      * @throws Exception
+     * @throws DBALException
      */
     private function readFile(): string
     {
@@ -151,22 +156,19 @@ class TypoScriptModifier
             ->where(
                 $queryBuilder->expr()->eq('pid', $queryBuilder->createNamedParameter($this->globalPid, \PDO::PARAM_INT))
             )
-            ->executeQuery()
+            ->execute()
             ->fetchAssociative();
 
-        if (!isset($contents)) {
-            $contents['config'] = '';
+        $value = '';
+        if ($contents !== false && isset($contents['config'])) {
+            $value = '';
         }
 
-        if (!isset($contents['config'])) {
-            $contents['config'] = '';
-        }
-
-        return $contents['config'];
+        return $value;
     }
 
     /**
-     * @param $typoScript
+     * @throws DBALException
      */
     private function overrideFile($typoScript): void
     {
@@ -178,7 +180,7 @@ class TypoScriptModifier
                 $queryBuilder->expr()->eq('t.pid', $queryBuilder->createNamedParameter($this->globalPid, \PDO::PARAM_INT))
             )
             ->set('t.config', $typoScript)
-            ->executeStatement();
+            ->execute();
     }
 
     private function addElement(string &$typoScript, string $elementName): void
@@ -202,7 +204,7 @@ class TypoScriptModifier
 
 function flattenArray(array $array): array
 {
-    $return = array();
+    $return = [];
     array_walk_recursive($array, static function ($a) use (&$return) {
         $return[] = $a;
     });

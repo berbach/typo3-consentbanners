@@ -1,5 +1,5 @@
 <?php
-defined('TYPO3') || die();
+defined('TYPO3_MODE') || die();
 
 $GLOBALS['TCA']['tt_content']['columns'] = array_replace_recursive(
     $GLOBALS['TCA']['tt_content']['columns'],
@@ -10,9 +10,7 @@ $GLOBALS['TCA']['tt_content']['columns'] = array_replace_recursive(
             'config' => [
                 'type' => 'select',
                 'renderType' => 'selectSingle',
-                'items' => [
-                    ['label' => 'Select a module', 'value' => '']
-                ],
+                'items' => [['Select a module']],
                 'itemsProcFunc' => Bb\Consentbanners\Utility\TCASelectModuleUtility::class . '->getHtmlModules',
             ],
         ],

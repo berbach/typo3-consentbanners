@@ -1,8 +1,8 @@
 .module-body{
-    padding-left: 0 !important;
+    padding-left: 0;
     padding-top: 0 !important;
-    padding-bottom: 0 !important;
-    height: calc(100% - var(--module-docheader-height));
+    padding-bottom: 0;
+    height: calc(100% - 65px);
 }
 .module-docheader{
     padding-left: 324px;

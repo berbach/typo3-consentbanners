@@ -9,6 +9,7 @@ return [
         'sortby' => 'sorting',
         'tstamp' => 'tstamp',
         'crdate' => 'crdate',
+        'cruser_id' => 'cruser_id',
         'delete' => 'deleted',
         'adminOnly' => true,
         'versioningWS' => false,
@@ -20,15 +21,12 @@ return [
         'enablecolumns' => [
             'disabled' => 'hidden',
         ],
-        'transOrigPointerField' => 'l10n_parent',
         'languageField' => 'sys_language_uid',
+        'transOrigPointerField' => 'l10n_parent',
         'transOrigDiffSourceField' => 'l10n_diffsource',
         'copyAfterDuplFields' => 'sys_language_uid',
         'useColumnsForDefaultValues' => 'sys_language_uid',
-        'translationSource' => 'l10n_source',
-        'security' => [
-            'ignorePageTypeRestriction' => true,
-        ],
+        'translationSource' => 'l10n_source'
     ],
     'types' => [
         '0' => [
@@ -63,7 +61,7 @@ return [
         ],
         'language' => [
             'showitem' => '
-                sys_language_uid,
+                sys_language_uid;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:sys_language_uid_formlabel,
                 l10n_parent
             ',
         ],
@@ -85,7 +83,7 @@ return [
         ],
         'hidden' => [
             'showitem' => '
-                hidden
+                hidden;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:field.default.hidden
             ',
         ],
     ],
@@ -99,13 +97,14 @@ return [
         ],
         'l10n_parent' => [
             'displayCond' => 'FIELD:sys_language_uid:>:0',
+            'exclude' => true,
             'label' => 'LLL:EXT:core/Resources/Private/Language/locallang_general.xlf:LGL.l18n_parent',
             'config' => [
                 'type' => 'select',
                 'renderType' => 'selectSingle',
                 'default' => 0,
                 'items' => [
-                    ['label' => '', 'value' => 0],
+                    ['', 0],
                 ],
                 'foreign_table' => 'tx_consentbanners_domain_model_settings',
                 'foreign_table_where' => 'AND {#tx_consentbanners_domain_model_settings}.{#pid}=###CURRENT_PID### AND {#tx_consentbanners_domain_model_settings}.{#sys_language_uid} IN (-1,0)',
@@ -131,8 +130,9 @@ return [
                 'renderType' => 'checkboxToggle',
                 'items' => [
                     [
-                        'label' => '',
-                        'invertStateDisplay' => true,
+                        0 => '',
+                        1 => '',
+                        'invertStateDisplay' => true
                     ]
                 ],
             ],
@@ -144,8 +144,7 @@ return [
             'config' => [
                 'type' => 'input',
                 'size' => 50,
-                'eval' => 'trim',
-                'required' => true
+                'eval' => 'trim,required'
             ],
         ],
 
@@ -169,8 +168,8 @@ return [
                 'type' => 'select',
                 'renderType' => 'selectSingle',
                 'items' => [
-                    ['label' => 'LLL:EXT:consentbanners/Resources/Private/Language/locallang_mod.xlf:field.layoutType.overlay', 'value' => 'bb-cb-overlay'],
-                    ['label' => 'LLL:EXT:consentbanners/Resources/Private/Language/locallang_mod.xlf:field.layoutType.fullWidthBottom', 'value' => 'bb-cb-bottom']
+                    ['LLL:EXT:consentbanners/Resources/Private/Language/locallang_mod.xlf:field.layoutType.overlay', 'bb-cb-overlay'],
+                    ['LLL:EXT:consentbanners/Resources/Private/Language/locallang_mod.xlf:field.layoutType.fullWidthBottom', 'bb-cb-bottom']
                 ],
                 'default' => 'bb-cb-overlay',
             ],
@@ -182,6 +181,7 @@ return [
             'label' => 'LLL:EXT:consentbanners/Resources/Private/Language/locallang_mod.xlf:field.privacy_page',
             'config' => [
                 'type' => 'group',
+                'internal_type' => 'db',
                 'allowed' => 'pages',
                 'maxitems' => 1,
                 'minitems' => 0,
@@ -210,9 +210,9 @@ return [
                 'renderType' => 'selectSingle',
                 'default' => 20,
                 'items' => [
-                    ['label' => 'LLL:EXT:consentbanners/Resources/Private/Language/locallang_mod.xlf:field.confirm_duration.l10days', 'value' => 10],
-                    ['label' => 'LLL:EXT:consentbanners/Resources/Private/Language/locallang_mod.xlf:field.confirm_duration.l20days', 'value' => 20],
-                    ['label' => 'LLL:EXT:consentbanners/Resources/Private/Language/locallang_mod.xlf:field.confirm_duration.l30days', 'value' => 30],
+                    ['LLL:EXT:consentbanners/Resources/Private/Language/locallang_mod.xlf:field.confirm_duration.l10days', 10],
+                    ['LLL:EXT:consentbanners/Resources/Private/Language/locallang_mod.xlf:field.confirm_duration.l20days', 20],
+                    ['LLL:EXT:consentbanners/Resources/Private/Language/locallang_mod.xlf:field.confirm_duration.l30days', 30],
                 ],
             ],
         ],
@@ -286,7 +286,8 @@ return [
                 'renderType' => 'checkboxToggle',
                 'items' => [
                     [
-                        'label' =>  '',
+                        0 => '',
+                        1 => '',
                         'labelChecked' => 'Enabled',
                         'labelUnchecked' => 'Disabled',
                     ],

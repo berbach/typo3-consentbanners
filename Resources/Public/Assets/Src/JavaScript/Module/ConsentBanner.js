@@ -377,9 +377,9 @@ function ConsentBanner(node) {
         // show more-LINK only in bottom layout, otherwise button (see above)
         const linkContainer = _el('div', {className: cbPrefix + 'links'})
         if (this.isBottomLayout) {
-            this.moreButton = _el('button', {
+            this.moreButton = _el('a', {
                 className: [cbPrefix + '-link'].join(' '),
-                type: 'button',
+                href: 'javascript:void(0);',
                 title: displayNames.advancedSettings,
                 innerText: displayNames.advancedSettings,
             }, linkContainer)
@@ -389,7 +389,8 @@ function ConsentBanner(node) {
             className: cbPrefix + '-link',
             title: this.bbConsentBanner.privacyPage.label,
             innerText: this.bbConsentBanner.privacyPage.label,
-            href: this.bbConsentBanner.privacyPage.uri
+            href: this.bbConsentBanner.privacyPage.uri,
+            target: this.bbConsentBanner.privacyPage.target,
         }, linkContainer)
 
         formFooter.appendChild(linkContainer)

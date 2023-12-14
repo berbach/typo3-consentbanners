@@ -5,8 +5,7 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
 const fileHelper = require('./fileHelper');
 
-const isDevelopment = process.env.npm_lifecycle_event.includes('dev');
-
+const productionMode = process.env.NODE_ENV === 'production';
 const config = {
     target: "web",
     entry: fileHelper.getEntries([
@@ -41,42 +40,44 @@ const config = {
                     {
                         loader: "css-loader",
                         options: {
-                            importLoaders: 1,
-                            sourceMap: isDevelopment,
+                            // importLoaders: 1,
+                            sourceMap: !productionMode,
                             //publicPath: '../Css'
                         }
                     },
                     {
                         loader: "postcss-loader",
                         options: {
-                            sourceMap: isDevelopment,
+                            sourceMap: !productionMode,
                         }
                     },
                     {
                         loader: "sass-loader",
                         options: {
-                            sourceMap: isDevelopment,
-                            sassOptions: {
-                                outputStyle: 'compressed',
-                            },
+                            sourceMap: !productionMode,
+                            // sassOptions: {
+                            //     outputStyle: 'compressed',
+                            // },
                         }
                     }
                 ]
             },
             {
                 test: /\.(svg|png|jpe?g|gif)$/i,
-                type: 'asset/resource',
-                generator: {
-                    filename: 'Images/[name][ext]',
-                    // publicPath: '../',
+                loader: 'file-loader',
+                options: {
+                    name: '[name].[ext]',
+                    outputPath: 'Images',
+                    publicPath: '../Images'
                 },
             },
             {
                 test: /\.(woff|woff2|eot|ttf|otf)$/,
-                type: 'asset/resource',
-                generator: {
-                    filename: 'Fonts/[name][ext]',
-                    // publicPath: '../',
+                loader : 'file-loader',
+                options: {
+                    name: '[name].[ext]',
+                    outputPath: 'Fonts',
+                    publicPath: '../Fonts'
                 },
 
             },
@@ -87,31 +88,25 @@ const config = {
         chunkIds: 'named',
         mergeDuplicateChunks: false,
         removeEmptyChunks: false,
-        minimize: !isDevelopment,
+        minimize: productionMode,
         minimizer: [
             new CssMinimizerPlugin({
-                parallel: 4,
-                minimizerOptions: [{
+                test: /\.css$/i,
+                minimizerOptions: {
                     level: {
                         1: {
-                            roundingPrecision: "all=3",
+                            roundingPrecision: "all=3,px=5",
                         },
-                        2: {},
                     },
-                }, {
                     preset: [
                         "default",
                         {
-                            discardComments: {removeAll: true}
-                        }
-                    ]
-                }],
-                minify: [
-                    CssMinimizerPlugin.cleanCssMinify,
-                    CssMinimizerPlugin.cssnanoMinify,
-                    CssMinimizerPlugin.cssoMinify,
-                ],
-            })
+                            discardComments: { removeAll: true },
+                        },
+                    ],
+                },
+                minify: CssMinimizerPlugin.cleanCssMinify,
+            }),
         ]
     },
     resolve: {
@@ -128,9 +123,14 @@ const config = {
             ignoreOrder: true,
         }),
         new CleanWebpackPlugin({
-            protectWebpackAssets: false,
-            leanOnceBeforeBuildPatterns: ['Css/**/*.css', 'Css/**/*.css.map'],
-            cleanAfterEveryBuildPatterns: ['Css/**/CookieBanner.js.map', 'Css/**/CookieBanner.js']
+            cleanOnceBeforeBuildPatterns: [
+                path.join(__dirname + '/Resources/Public/Dist/', './Css/*.css'),
+                path.join(__dirname + '/Resources/Public/Dist/', './Css/*.css.map')
+            ],
+            cleanAfterEveryBuildPatterns: [
+                path.join(__dirname + '/Resources/Public/Dist/', './Css/CookieBanner.js'),
+                path.join(__dirname + '/Resources/Public/Dist/', './Css/CookieBanner.js.map')
+            ]
         }),
     ],
 
@@ -138,7 +138,6 @@ const config = {
 module.exports = (env, argv) => {
 
     if (argv.mode === 'development') {
-        config.mode = 'development';
         config.devtool = 'source-map';
     }
 

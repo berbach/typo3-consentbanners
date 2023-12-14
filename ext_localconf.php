@@ -3,12 +3,13 @@ use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Imaging\IconRegistry;
 use TYPO3\CMS\Core\Imaging\IconProvider\SvgIconProvider;
-defined('TYPO3') || die('Access denied.');
+defined('TYPO3_MODE') || die('Access denied.');
 
 call_user_func(static function () {
     // Add module configuration
     ExtensionManagementUtility::addTypoScriptSetup(
-        'module.tx_consentbanners {
+        '
+        module.tx_consentbanners {
             settings {
                 storagePid = 999
             }
@@ -18,5 +19,12 @@ call_user_func(static function () {
                 layoutRootPaths.0 = EXT:consentbanners/Resources/Private/Backend/Layouts/
             }
         }'
+    );
+
+    $iconRegistry = GeneralUtility::makeInstance(IconRegistry::class);
+    $iconRegistry->registerIcon(
+        'module-cookie',
+        SvgIconProvider::class,
+        ['source' => 'EXT:consentbanners/Resources/Public/Icons/module_icon.svg']
     );
 });

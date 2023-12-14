@@ -1,0 +1,21 @@
+<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
+      xmlns:be="http://typo3.org/ns/TYPO3/CMS/Backend/ViewHelpers"
+      data-namespace-typo3-fluid="true">
+
+    <div class="bb-cb--settings">
+        <div class="bb-cb--settings-navigation">
+            <f:if condition="{asideMenu}">
+                <ul class="bb-cb--menu">
+                    <f:for each="{asideMenu}" as="menuItem">
+                        <li><a href="{menuItem.uri}" class="bb-cb--menu-link{f:if(condition: menuItem.isActive, then: ' bb-active')}">{menuItem.title}</a></li>
+                    </f:for>
+                </ul>
+            </f:if>
+        </div>
+        <div class="bb-cb--settings-content">
+            <f:render section="Headline" />
+            <f:render section="Content" />
+        </div>
+    </div>
+
+</html>

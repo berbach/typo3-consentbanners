@@ -87,11 +87,11 @@ ModulesManager.prototype.getModuleNodes = function () {
             let moduleArr = module.split(" ");
             moduleArr.forEach((value) => {
                 if (!!window.MSInputMethodContext && !!document.DOCUMENT_NODE) {
-                    self.loadScript(`./Module/${value}.js`, () => {
+                    self.loadScript(`/typo3conf/ext/consentbanners/Resources/Public/Dist/JavaScript/Module/${value}.js`, () => {
                         BbModule[value].init(el, mOptions);
                     });
                 } else {
-                    self.importModule(`./Module/${value}.js`)
+                    self.importModule(`/typo3conf/ext/consentbanners/Resources/Public/Dist/JavaScript/Module/${value}.js`)
                         .then(() => {
                             BbModule[value].init(el, mOptions);
                         });
