@@ -92,15 +92,18 @@ function ConsentBanner(node) {
         node = createElementWithAttrs('div', {
             className: ['bb-consentbanner', `${this.bbConsentBanner.layoutType}`].join(' ')
         })
-    } else
-        if (node.classList.contains(cbPrefix + '-text-link')) {
-            this.widget = node
+    } else if(node.classList.contains('bb-widget') && node.classList.contains(cbPrefix + '-text-link')) {
+        this.widget = node
+        document.querySelector('.bb-widget.bb-consentbanner-button').remove()
+    }else {
+        if(document.querySelector('.bb-widget.bb-consentbanner--text-link')){
             document.querySelector('.bb-widget.bb-consentbanner-button').remove()
         }else {
             this.widget = createElementWithAttrs('div', {
                 className: ['bb-widget', cbPrefix + 'button'].join(' ')
             })
         }
+    }
     this.preferences = JSON.parse(cookieUtils.get(this.cookieName));
 
     this.isBottomLayout = node.classList.contains('bb-cb-bottom')
