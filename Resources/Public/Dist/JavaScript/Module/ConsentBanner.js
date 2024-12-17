@@ -199,12 +199,16 @@ function ConsentBanner(node) {
   this.moreButton = null;
   this.confirmButton = null;
   this.rejectButton = null;
-  console.log(node.classList.contains('bb-widget') || node.classList.contains(cbPrefix + '-text-link'));
-  if (node.classList.contains('bb-widget') || node.classList.contains(cbPrefix + '-text-link')) {
+  console.log(node.classList.contains('bb-widget') && node.classList.contains(cbPrefix + '-text-link'));
+  if (node.classList.contains('bb-widget') && node.classList.contains(cbPrefix + 'button')) {
     this.widget = node;
     node = createElementWithAttrs('div', {
       className: ['bb-consentbanner', `${this.bbConsentBanner.layoutType}`].join(' ')
     });
+    console.log(node.classList);
+  } else if (node.classList.contains('bb-widget') && node.classList.contains(cbPrefix + '-text-link')) {
+    this.widget = node;
+    document.querySelector('.bb-widget.bb-consentbanner-button').remove();
     console.log(node.classList);
   } else {
     this.widget = createElementWithAttrs('div', {
@@ -212,11 +216,6 @@ function ConsentBanner(node) {
     });
     console.log(node.classList);
   }
-
-  // else if(node.classList.contains('bb-widget') && node.classList.contains(cbPrefix + '-text-link')) {
-  //         this.widget = node
-  //         document.querySelector('.bb-widget.bb-consentbanner-button').remove()
-  //     }
   this.preferences = JSON.parse(cookieUtils.get(this.cookieName));
   this.isBottomLayout = node.classList.contains('bb-cb-bottom');
   this.init = () => {
