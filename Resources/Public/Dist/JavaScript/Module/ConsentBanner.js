@@ -1,1 +1,526 @@
-(function e(t,n){if(typeof exports==="object"&&typeof module==="object")module.exports=n();else if(typeof define==="function"&&define.amd)define([],n);else if(typeof exports==="object")exports["BbModule"]=n();else t["BbModule"]=t["BbModule"]||{},t["BbModule"]["ConsentBanner"]=n()})(self,(function(){return function(){var e={"./Resources/Public/Assets/Src/JavaScript/Lib/cookie.js":function(e){let t={};t.exdays=30;t.check=function(e){let t=this.get(e);return t!==""};t.set=function(e,t,n){n=n?n:this.exdays;let o=new Date;o.setTime(o.getTime()+n*24*60*60*1e3);let s="expires="+o.toGMTString();document.cookie=e+"="+t+";"+s+";path=/"};t.get=function(e){let t=e+"=",n=decodeURIComponent(document.cookie),o=n.split(";");for(let e=0;e<o.length;e++){let n=o[e];while(n.charAt(0)===" "){n=n.substring(1)}if(n.indexOf(t)===0){return n.substring(t.length,n.length)}}return"{}"};e.exports=t}};var t={};function n(o){var s=t[o];if(s!==undefined){return s.exports}var i=t[o]={exports:{}};e[o](i,i.exports,n);return i.exports}!function(){n.d=function(e,t){for(var o in t){if(n.o(t,o)&&!n.o(e,o)){Object.defineProperty(e,o,{enumerable:true,get:t[o]})}}}}();!function(){n.o=function(e,t){return Object.prototype.hasOwnProperty.call(e,t)}}();!function(){n.r=function(e){if(typeof Symbol!=="undefined"&&Symbol.toStringTag){Object.defineProperty(e,Symbol.toStringTag,{value:"Module"})}Object.defineProperty(e,"__esModule",{value:true})}}();var o={};!function(){"use strict";n.r(o);n.d(o,{init:function(){return c}});const e=n("./Resources/Public/Assets/Src/JavaScript/Lib/cookie.js");const t="bb-consentbanner-";const s="bb-consentbanner-";if(!("from"in Array))Array.from=function(e){const t=[];for(let n=0;n<e.length;n++)t.push(e[n]);return t};if(!("includes"in Array.prototype))Array.prototype.includes=function(e,t){return this.indexOf(e,t)!==-1};if(!("fromEntries"in Object))Object.fromEntries=function(e){const t={};Array.from(e).forEach((e=>{t[e[0]]=e[1]}));return t};bbConsentBanner=bbConsentBanner||null;let i="";function r(n){const o=(e,t,n)=>typeof e===t&&e!==n;this.bbConsentBanner=o(bbConsentBanner,"object","")?bbConsentBanner:null;this.cookieName=o(this.bbConsentBanner.cName,"string","")?bbConsentBanner.cName:"BbConsentPreference";i=this.cookieName;this.confirmDuration=o(this.bbConsentBanner.confirmDuration,"number",0)?this.bbConsentBanner.confirmDuration:20;this.categories=typeof bbConsentBanner.categories==="object"&&bbConsentBanner.categories.length!==0?bbConsentBanner.categories:null;this.modules=typeof bbConsentBanner.modules==="object"&&bbConsentBanner.modules.length!==0?bbConsentBanner.modules:null;this.form=null;this.acceptButton=null;this.saveButton=null;this.moreButton=null;this.confirmButton=null;this.rejectButton=null;if(n.classList.contains("bb-widget")){this.widget=n;n=l("div",{className:["bb-consentbanner",`${this.bbConsentBanner.layoutType}`].join(" ")})}else if(n.classList.contains("bb-widget")&&n.classList.contains(t+"-text-link")){this.widget=n;document.querySelector(".bb-widget.bb-consentbanner-button").remove()}else{if(document.querySelector(".bb-widget.bb-consentbanner--text-link")){document.querySelector(".bb-widget.bb-consentbanner-button").remove()}else{this.widget=l("div",{className:["bb-widget",t+"button"].join(" ")})}}this.preferences=JSON.parse(e.get(this.cookieName));this.isBottomLayout=n.classList.contains("bb-cb-bottom");this.init=()=>{if(this.bbConsentBanner===null||this.categories===null||this.modules===null){let e="";if(this.bbConsentBanner===null)e+="Consent banner, ";if(this.categories===null)e+="Categories ";if(this.modules===null)e+="and Modules ";e+="data empty, Consent Banner not initialised!";console.warn(e);return false}this.widget.addEventListener("click",(()=>{if(this.form===null)this.generateBanner();else this.form.parentElement.classList.add("visible");this.moreButton.click();Object.keys(this.preferences).forEach((e=>{const n=this.form.querySelector(`.${t}module input[name="${e}"]`);if(this.preferences[e]!==n.checked)n.click()}))}));if(Object.keys(this.preferences).length===0)this.generateBanner();else n.insertAdjacentElement("afterend",this.widget)};this.attachBannerEventListeners=()=>{this.form?.addEventListener("submit",(e=>{e.preventDefault()}));this.saveButton?.addEventListener("click",(()=>r(o())));this.confirmButton?.addEventListener("click",(()=>r(o())));this.acceptButton?.addEventListener("click",(()=>r(i(true))));this.rejectButton?.addEventListener("click",(()=>r(i(false))));this.moreButton?.addEventListener("click",(()=>{this.moreButton.remove();this.confirmButton?.remove();this.saveButton.classList.remove("hidden");n.classList.remove("bb-cb-bottom");n.classList.add("bb-cb-overlay");const e=e=>{e?.classList.remove("bb-btn--typeP");e?.classList.add("bb-btn--typeS")};e(this.acceptButton);e(this.rejectButton);this.form.querySelector(`.${t}content`).classList.remove("bb-type-dynamic");this.form.querySelector(`.${t}content`).classList.add("bb-type-scroll");Array.from(this.form.querySelectorAll(`.${t}category-modules.hidden`)).forEach((e=>{e.classList.remove("hidden")}));this.form.querySelector(`.${t}categories`).classList.remove("hidden");this.form.querySelector(`.${t}buttons`).classList.remove("not-categories");this.form.querySelector(`.${t}buttons`).classList.add("is-categories")}));this.form.querySelector(`.${t}close`)?.addEventListener("click",(()=>{if(Object.keys(this.preferences).length===0)r(i(false));else this.form.parentElement.classList.remove("visible")}));const o=()=>Object.fromEntries(Array.from(this.form.querySelectorAll(`.${t}module input:not(:disabled)`)).map((e=>[e.name,e.checked])));const i=e=>{const t=o();for(let n of Object.keys(t))t[n]=e;r(t);return t};const r=t=>{e.set(this.cookieName,JSON.stringify(t)+";secure;samesite=strict",this.confirmDuration);window.location.reload()};Array.from(this.form.querySelectorAll(`.${t}module input:not(:disabled)`)).forEach((e=>{e.addEventListener(document.documentMode===11?"change":"input",(()=>{const n=e.dataset.category;const o=Array.from(document.querySelectorAll(`.${t}module input`)).filter((e=>e.dataset.category===n)).map((e=>e.checked));const i=document.querySelector(`.${t}category input[name="${s+n}"]`);i.indeterminate=false;if(!o.includes(true))i.checked=false;else if(!o.includes(false))i.checked=true;else i.indeterminate=true}))}));Array.from(this.form.querySelectorAll(`.${t}category input[name^=${s}]:not(:disabled)`)).forEach((e=>{e.addEventListener(document.documentMode===11?"change":"input",(()=>{const n=e.name.replace(s,"");Array.from(document.querySelectorAll(`.${t}module input`)).filter((e=>e.dataset.category===n)).forEach((t=>t.checked=e.checked))}))}))};this.generateBanner=()=>{this.widget.insertAdjacentElement("beforebegin",n);const e=l;this.form=e("form",{className:[t+"body"].join(" ")});const o=e("div",{className:t+"header"});e("button",{className:t+"close"},o);if(this.bbConsentBanner.title!==""){e("h3",{className:t+"-heading",innerText:this.bbConsentBanner.title},o)}this.form.appendChild(o);const i=e("div",{className:[t+"content",!this.isBottomLayout?"bb-type-scroll":"bb-type-dynamic",this.bbConsentBanner.showCategories?"is-categories":undefined].join(" ")});if(this.bbConsentBanner.description!==""){e("p",{className:t+"-text",innerHTML:this.bbConsentBanner.description},i)}if(typeof this.bbConsentBanner.categories==="object"&&this.bbConsentBanner.categories.length>0){const n=e("div",{className:[t+"categories",this.bbConsentBanner.showCategories?undefined:"hidden"].join(" ")});this.bbConsentBanner.categories?.forEach((o=>{const i=e("div",{className:[t+"category-modules","hidden"].join(" ")});const r=this.bbConsentBanner.modules?.filter((e=>e.category.uid===o.uid));r?.forEach((e=>{i.appendChild(b(false,e.name,e.uid,e.description,{"data-category":e.category.uid,checked:!!o.lockedAndActive,disabled:!!o.lockedAndActive}))}));n.appendChild(b(true,o.name,s+o.uid,o.description,{checked:!!o.lockedAndActive,disabled:!!o.lockedAndActive},typeof r==="object"&&i.children.length>0?i:null))}));i.appendChild(n)}this.form.appendChild(i);const r=e("div",{className:t+"footer"});const a=e("div",{className:[t+"buttons",this.bbConsentBanner.showCategories?"is-categories":"not-categories"].join(" ")});const c=this.bbConsentBanner.buttonsDisplayNames;this.acceptButton=e("button",{className:["bb-button","bb-btn--typeP"].join(" "),type:"submit",title:c.acceptAll,innerText:c.acceptAll},a);this.saveButton=e("button",{className:["bb-button","bb-btn--typeP","hidden"].join(" "),type:"submit",title:c.saveAndClose,innerText:c.saveAndClose},a);if(!this.isBottomLayout)this.moreButton=e("button",{className:["bb-button","bb-btn--typeS"].join(" "),type:"button",title:c.advancedSettings,innerText:c.advancedSettings},a);if(this.isBottomLayout&&this.bbConsentBanner.showCategories)this.confirmButton=e("button",{className:["bb-button","bb-btn--typeS"].join(" "),type:"submit",title:c.confirmSelection,innerText:c.confirmSelection},a);if(!this.bbConsentBanner.showCategories)this.rejectButton=e("button",{className:["bb-button","bb-btn--typeP"].join(" "),type:"button",title:c.reject,innerText:c.reject},a);r.appendChild(a);const d=e("div",{className:t+"links"});if(this.isBottomLayout){this.moreButton=e("button",{className:[t+"-link"].join(" "),type:"button",title:c.advancedSettings,innerText:c.advancedSettings},d)}e("a",{className:t+"-link",title:this.bbConsentBanner.privacyPage.label,innerText:this.bbConsentBanner.privacyPage.label,href:this.bbConsentBanner.privacyPage.uri},d);r.appendChild(d);this.form.appendChild(r);this.attachBannerEventListeners();document.querySelector(".bb-consentbanner").appendChild(this.form);document.querySelector(".bb-consentbanner").classList.add("visible")}}let a=false;function c(t){let n=new r(t);n.init();if(a)return;a=true;document.querySelectorAll("[data-cookiebanner-module]").forEach((t=>{t.querySelector("input").addEventListener("click",(()=>{document.querySelectorAll(`[data-cookiebanner-module="${t.dataset.cookiebannerModule}"] input`).forEach((e=>e.checked=true));const n=JSON.parse(e.get(i));n[t.dataset.cookiebannerModule]=true;e.set(i,JSON.stringify(n)+";secure;samesite=strict",this.confirmDuration);setTimeout((()=>window.location.reload()),100)}))}))}function l(e,t,n){const o=document.createElement(e);for(const e in t){if(!t.hasOwnProperty(e))continue;if(e==="innerText")o.innerText=t[e];else if(e==="innerHTML")o.innerHTML=t[e];else{if(e in o)o[e]=t[e];else o.setAttribute(e==="className"?"class":e,t[e])}}if(n)n.appendChild(o);return o}function b(e,n,o,s,i,r){e=e??false;n=n??"";o=o??"";s=s??"";i=i??{};r=r??false;const a=l;const c=a("div",{className:[t+(e?"category":"module")].join(" ")});const b=a("label",{className:"bb-control-checkbox","aria-label":n});b.appendChild(a("span",{className:["bb-control-label",e?"bb-label-category":"bb-label-module"].join(" "),innerText:n}));b.appendChild(a("input",{...i,type:"checkbox",name:o}));b.appendChild(a("span",{className:"bb-toggle"}));c.appendChild(b);if(s)c.appendChild(a("p",{className:t+"description",innerText:s}));if(r)c.appendChild(r);return c}}();return o}()}));
+(function webpackUniversalModuleDefinition(root, factory) {
+	if(typeof exports === 'object' && typeof module === 'object')
+		module.exports = factory();
+	else if(typeof define === 'function' && define.amd)
+		define([], factory);
+	else if(typeof exports === 'object')
+		exports["BbModule"] = factory();
+	else
+		root["BbModule"] = root["BbModule"] || {}, root["BbModule"]["ConsentBanner"] = factory();
+})(self, function() {
+return /******/ (function() { // webpackBootstrap
+/******/ 	var __webpack_modules__ = ({
+
+/***/ "./Resources/Public/Assets/Src/JavaScript/Lib/cookie.js":
+/*!**************************************************************!*\
+  !*** ./Resources/Public/Assets/Src/JavaScript/Lib/cookie.js ***!
+  \**************************************************************/
+/***/ (function(module) {
+
+let _cookie = {};
+_cookie.exdays = 30;
+_cookie.check = function (cname) {
+  let sitename = this.get(cname);
+  return sitename !== "";
+};
+_cookie.set = function (cname, cvalue, exdays) {
+  exdays = exdays ? exdays : this.exdays;
+  let d = new Date();
+  d.setTime(d.getTime() + exdays * 24 * 60 * 60 * 1000);
+  let expires = "expires=" + d.toGMTString();
+  document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+};
+_cookie.get = function (cname) {
+  let name = cname + "=",
+    decodedCookie = decodeURIComponent(document.cookie),
+    ca = decodedCookie.split(';');
+  for (let i = 0; i < ca.length; i++) {
+    let c = ca[i];
+    while (c.charAt(0) === ' ') {
+      c = c.substring(1);
+    }
+    if (c.indexOf(name) === 0) {
+      return c.substring(name.length, c.length);
+    }
+  }
+  return "{}";
+};
+module.exports = _cookie;
+
+/***/ })
+
+/******/ 	});
+/************************************************************************/
+/******/ 	// The module cache
+/******/ 	var __webpack_module_cache__ = {};
+/******/ 	
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/ 		// Check if module is in cache
+/******/ 		var cachedModule = __webpack_module_cache__[moduleId];
+/******/ 		if (cachedModule !== undefined) {
+/******/ 			return cachedModule.exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = __webpack_module_cache__[moduleId] = {
+/******/ 			// no module.id needed
+/******/ 			// no module.loaded needed
+/******/ 			exports: {}
+/******/ 		};
+/******/ 	
+/******/ 		// Execute the module function
+/******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
+/******/ 	
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/ 	
+/************************************************************************/
+/******/ 	/* webpack/runtime/define property getters */
+/******/ 	!function() {
+/******/ 		// define getter functions for harmony exports
+/******/ 		__webpack_require__.d = function(exports, definition) {
+/******/ 			for(var key in definition) {
+/******/ 				if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
+/******/ 					Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
+/******/ 				}
+/******/ 			}
+/******/ 		};
+/******/ 	}();
+/******/ 	
+/******/ 	/* webpack/runtime/hasOwnProperty shorthand */
+/******/ 	!function() {
+/******/ 		__webpack_require__.o = function(obj, prop) { return Object.prototype.hasOwnProperty.call(obj, prop); }
+/******/ 	}();
+/******/ 	
+/******/ 	/* webpack/runtime/make namespace object */
+/******/ 	!function() {
+/******/ 		// define __esModule on exports
+/******/ 		__webpack_require__.r = function(exports) {
+/******/ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 			}
+/******/ 			Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 		};
+/******/ 	}();
+/******/ 	
+/************************************************************************/
+var __webpack_exports__ = {};
+// This entry need to be wrapped in an IIFE because it need to be in strict mode.
+!function() {
+"use strict";
+/*!************************************************************************!*\
+  !*** ./Resources/Public/Assets/Src/JavaScript/Module/ConsentBanner.js ***!
+  \************************************************************************/
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   init: function() { return /* binding */ init; }
+/* harmony export */ });
+const cookieUtils = __webpack_require__(/*! ../Lib/cookie */ "./Resources/Public/Assets/Src/JavaScript/Lib/cookie.js");
+const cbPrefix = 'bb-consentbanner-';
+const categoryPrefix = 'bb-consentbanner-';
+
+// IE has no Array.from :((
+// DON'T USE! BAD POLYFILL
+if (!('from' in Array)) Array.from = function (entries) {
+  const array = [];
+  for (let i = 0; i < entries.length; i++) array.push(entries[i]);
+  return array;
+};
+
+// IE has no Array.prototype.includes :((
+if (!('includes' in Array.prototype)) Array.prototype.includes = function (searchElement, fromIndex) {
+  return this.indexOf(searchElement, fromIndex) !== -1;
+};
+
+// IE has no Object.fromEntries :((
+// DON'T USE! BAD POLYFILL
+if (!('fromEntries' in Object)) Object.fromEntries = function (entries) {
+  const obj = {};
+  Array.from(entries).forEach(entry => {
+    obj[entry[0]] = entry[1];
+  });
+  return obj;
+};
+
+/**
+ * @typedef {Object} ConsentBannerButtonsDisplayNames
+ * @property {string} name
+ * @property {string} acceptAll
+ * @property {string} saveAndClose
+ * @property {string} confirmSelection
+ * @property {string} reject
+ * @property {string} advancedSettings
+ * */
+
+/**
+ * @typedef {Object} ConsentBannerCategoryData
+ * @property {number} uid
+ * @property {string} name
+ * @property {string} description
+ * @property {boolean} lockedAndActive
+ * */
+
+/**
+ * @typedef {Object} ConsentBannerData
+ * @property {string} layoutType
+ * @property {boolean} showCategories
+ * @property {string} cName
+ * @property {number} confirmDuration
+ * @property {string} title
+ * @property {string} description
+ * @property {Object} privacyPage
+ * @property {ConsentBannerButtonsDisplayNames} buttonsDisplayNames
+ * @property {ConsentBannerCategoryData[]} categories
+ * @property {Object[]} modules
+ * */
+
+/**
+ * @const bbConsentBanner
+ * @type {ConsentBannerData}
+ * */
+
+// needed for the types to work properly
+bbConsentBanner = bbConsentBanner || null;
+let bbConsentBannerCookieName = '';
+function ConsentBanner(node) {
+  const typeofIsAndValueIsNot = (variable, type, value) => typeof variable === type && variable !== value;
+  // Data
+  this.bbConsentBanner = typeofIsAndValueIsNot(bbConsentBanner, 'object', '') ? bbConsentBanner : null;
+  this.cookieName = typeofIsAndValueIsNot(this.bbConsentBanner.cName, 'string', '') ? bbConsentBanner.cName : 'BbConsentPreference';
+  bbConsentBannerCookieName = this.cookieName;
+  this.confirmDuration = typeofIsAndValueIsNot(this.bbConsentBanner.confirmDuration, 'number', 0) ? this.bbConsentBanner.confirmDuration : 20;
+  this.categories = typeof bbConsentBanner.categories === 'object' && bbConsentBanner.categories.length !== 0 ? bbConsentBanner.categories : null;
+  this.modules = typeof bbConsentBanner.modules === 'object' && bbConsentBanner.modules.length !== 0 ? bbConsentBanner.modules : null;
+  // Elements
+  this.form = null;
+  this.acceptButton = null;
+  this.saveButton = null;
+  this.moreButton = null;
+  this.confirmButton = null;
+  this.rejectButton = null;
+  console.log(node.classList.contains('bb-widget'));
+  if (node.classList.contains('bb-widget')) {
+    this.widget = node;
+    node = createElementWithAttrs('div', {
+      className: ['bb-consentbanner', `${this.bbConsentBanner.layoutType}`].join(' ')
+    });
+  } else if (node.classList.contains('bb-widget') && node.classList.contains(cbPrefix + '-text-link')) {
+    this.widget = node;
+    document.querySelector('.bb-widget.bb-consentbanner-button').remove();
+  } else {
+    if (document.querySelector('.bb-widget.bb-consentbanner--text-link')) {
+      document.querySelector('.bb-widget.bb-consentbanner-button').remove();
+    } else {
+      this.widget = createElementWithAttrs('div', {
+        className: ['bb-widget', cbPrefix + 'button'].join(' ')
+      });
+    }
+  }
+  this.preferences = JSON.parse(cookieUtils.get(this.cookieName));
+  this.isBottomLayout = node.classList.contains('bb-cb-bottom');
+  this.init = () => {
+    if (this.bbConsentBanner === null || this.categories === null || this.modules === null) {
+      let warn = '';
+      if (this.bbConsentBanner === null) warn += 'Consent banner, ';
+      if (this.categories === null) warn += 'Categories ';
+      if (this.modules === null) warn += 'and Modules ';
+      warn += 'data empty, Consent Banner not initialised!';
+      console.warn(warn);
+      return false;
+    }
+    this.widget.addEventListener('click', () => {
+      if (this.form === null) this.generateBanner();else this.form.parentElement.classList.add('visible');
+      this.moreButton.click();
+      Object.keys(this.preferences).forEach(module => {
+        const moduleToggle = this.form.querySelector(`.${cbPrefix}module input[name="${module}"]`);
+        if (this.preferences[module] !== moduleToggle.checked) moduleToggle.click();
+      });
+    });
+    if (Object.keys(this.preferences).length === 0) this.generateBanner();else node.insertAdjacentElement('afterend', this.widget);
+  };
+  this.attachBannerEventListeners = () => {
+    this.form?.addEventListener('submit', e => {
+      e.preventDefault();
+    });
+
+    // saves cookie preferences as a cookie
+    this.saveButton?.addEventListener('click', () => setCookieAndReload(collectData()));
+    this.confirmButton?.addEventListener('click', () => setCookieAndReload(collectData()));
+
+    // saves cookie preferences (sets all to true) as a cookie
+    this.acceptButton?.addEventListener('click', () => setCookieAndReload(collectAndModifyData(true)));
+
+    // saves cookie preferences (sets all to false) as a cookie
+    this.rejectButton?.addEventListener('click', () => setCookieAndReload(collectAndModifyData(false)));
+
+    // expands the cookie banner to show the toggles
+    this.moreButton?.addEventListener('click', () => {
+      // remove unneeded buttons
+      this.moreButton.remove();
+      this.confirmButton?.remove();
+      // show save button
+      this.saveButton.classList.remove('hidden');
+
+      // force overlay layout
+      node.classList.remove('bb-cb-bottom');
+      node.classList.add('bb-cb-overlay');
+
+      // convert one-click buttons to secondary
+      const convertToSecondary = button => {
+        button?.classList.remove('bb-btn--typeP');
+        button?.classList.add('bb-btn--typeS');
+      };
+      convertToSecondary(this.acceptButton);
+      convertToSecondary(this.rejectButton);
+
+      // make content scrollable
+      this.form.querySelector(`.${cbPrefix}content`).classList.remove('bb-type-dynamic');
+      this.form.querySelector(`.${cbPrefix}content`).classList.add('bb-type-scroll');
+
+      // show options
+      Array.from(this.form.querySelectorAll(`.${cbPrefix}category-modules.hidden`)).forEach(modules => {
+        modules.classList.remove('hidden');
+      });
+      this.form.querySelector(`.${cbPrefix}categories`).classList.remove('hidden');
+      this.form.querySelector(`.${cbPrefix}buttons`).classList.remove('not-categories');
+      this.form.querySelector(`.${cbPrefix}buttons`).classList.add('is-categories');
+    });
+
+    // closes the banner
+    this.form.querySelector(`.${cbPrefix}close`)?.addEventListener('click', () => {
+      if (Object.keys(this.preferences).length === 0) setCookieAndReload(collectAndModifyData(false));else this.form.parentElement.classList.remove('visible');
+    });
+    const collectData = () => Object.fromEntries(Array.from(this.form.querySelectorAll(`.${cbPrefix}module input:not(:disabled)`)).map(el => {
+      return [el.name, el.checked];
+    }));
+    const collectAndModifyData = value => {
+      const data = collectData();
+      for (let key of Object.keys(data)) data[key] = value;
+      setCookieAndReload(data);
+      return data;
+    };
+    const setCookieAndReload = data => {
+      cookieUtils.set(this.cookieName, JSON.stringify(data) + ';secure;samesite=strict', this.confirmDuration);
+      window.location.reload();
+    };
+
+    // syncs the category toggle if one of its module toggles gets changed
+    Array.from(this.form.querySelectorAll(`.${cbPrefix}module input:not(:disabled)`)).forEach(input => {
+      // document.documentMode === 11 := special case for IE11
+      input.addEventListener(document.documentMode === 11 ? 'change' : 'input', () => {
+        const categoryID = input.dataset.category;
+        const siblingStates = Array.from(document.querySelectorAll(`.${cbPrefix}module input`)).filter(el => el.dataset.category === categoryID).map(el => el.checked);
+        const category = document.querySelector(`.${cbPrefix}category input[name="${categoryPrefix + categoryID}"]`);
+        category.indeterminate = false;
+        if (!siblingStates.includes(true)) category.checked = false;else if (!siblingStates.includes(false)) category.checked = true;else category.indeterminate = true;
+      });
+    });
+
+    // syncs all module toggles of a category if the category toggle gets changed
+    Array.from(this.form.querySelectorAll(`.${cbPrefix}category input[name^=${categoryPrefix}]:not(:disabled)`)).forEach(input => {
+      // document.documentMode === 11 := special case for IE11
+      input.addEventListener(document.documentMode === 11 ? 'change' : 'input', () => {
+        const categoryID = input.name.replace(categoryPrefix, '');
+        Array.from(document.querySelectorAll(`.${cbPrefix}module input`)).filter(el => el.dataset.category === categoryID).forEach(module => module.checked = input.checked);
+      });
+    });
+  };
+  this.generateBanner = () => {
+    this.widget.insertAdjacentElement('beforebegin', node);
+    const _el = createElementWithAttrs;
+    this.form = _el('form', {
+      className: [cbPrefix + 'body'].join(' ')
+    });
+    const formHeader = _el('div', {
+      className: cbPrefix + 'header'
+    });
+    _el('button', {
+      className: cbPrefix + 'close'
+    }, formHeader);
+    if (this.bbConsentBanner.title !== '') {
+      _el('h3', {
+        className: cbPrefix + '-heading',
+        innerText: this.bbConsentBanner.title
+      }, formHeader);
+    }
+    this.form.appendChild(formHeader);
+    const formContent = _el('div', {
+      className: [cbPrefix + 'content', !this.isBottomLayout ? 'bb-type-scroll' : 'bb-type-dynamic', this.bbConsentBanner.showCategories ? 'is-categories' : undefined].join(' ')
+    });
+    if (this.bbConsentBanner.description !== '') {
+      _el('p', {
+        className: cbPrefix + '-text',
+        innerHTML: this.bbConsentBanner.description // innerHTML to decode html entities
+      }, formContent);
+    }
+    if (typeof this.bbConsentBanner.categories === "object" && this.bbConsentBanner.categories.length > 0) {
+      const contentCategories = _el('div', {
+        className: [cbPrefix + 'categories', this.bbConsentBanner.showCategories ? undefined : 'hidden'].join(' ')
+      });
+      this.bbConsentBanner.categories?.forEach(category => {
+        const categoryModules = _el('div', {
+          className: [cbPrefix + 'category-modules', 'hidden'].join(' ')
+        });
+        const modules = this.bbConsentBanner.modules?.filter(module => module.category.uid === category.uid);
+        modules?.forEach(module => {
+          categoryModules.appendChild(createToggle(false, module.name, module.uid, module.description, {
+            'data-category': module.category.uid,
+            checked: !!category.lockedAndActive,
+            disabled: !!category.lockedAndActive
+          }));
+        });
+        contentCategories.appendChild(createToggle(true, category.name, categoryPrefix + category.uid, category.description, {
+          checked: !!category.lockedAndActive,
+          disabled: !!category.lockedAndActive
+        }, typeof modules === "object" && categoryModules.children.length > 0 ? categoryModules : null));
+      });
+      formContent.appendChild(contentCategories);
+    }
+    this.form.appendChild(formContent);
+    const formFooter = _el('div', {
+      className: cbPrefix + 'footer'
+    });
+    const buttonContainer = _el('div', {
+      className: [cbPrefix + 'buttons', this.bbConsentBanner.showCategories ? 'is-categories' : 'not-categories'].join(' ')
+    });
+    const displayNames = this.bbConsentBanner.buttonsDisplayNames;
+
+    // always render accept-button
+    this.acceptButton = _el('button', {
+      className: ['bb-button', 'bb-btn--typeP'].join(' '),
+      type: 'submit',
+      title: displayNames.acceptAll,
+      innerText: displayNames.acceptAll
+    }, buttonContainer);
+
+    // always render save-button; hide at first, show in advanced settings
+    this.saveButton = _el('button', {
+      className: ['bb-button', 'bb-btn--typeP', 'hidden'].join(' '),
+      type: 'submit',
+      title: displayNames.saveAndClose,
+      innerText: displayNames.saveAndClose
+    }, buttonContainer);
+
+    // show more-BUTTON only when not in bottom layout, otherwise link (see below)
+    if (!this.isBottomLayout) this.moreButton = _el('button', {
+      className: ['bb-button', 'bb-btn--typeS'].join(' '),
+      type: 'button',
+      title: displayNames.advancedSettings,
+      innerText: displayNames.advancedSettings
+    }, buttonContainer);
+
+    // show confirm-button in bottom layout (save button with different label)
+    if (this.isBottomLayout && this.bbConsentBanner.showCategories) this.confirmButton = _el('button', {
+      className: ['bb-button', 'bb-btn--typeS'].join(' '),
+      type: 'submit',
+      title: displayNames.confirmSelection,
+      innerText: displayNames.confirmSelection
+    }, buttonContainer);
+
+    // show reject-button only when no options are visible at first
+    if (!this.bbConsentBanner.showCategories) this.rejectButton = _el('button', {
+      className: ['bb-button', 'bb-btn--typeP'].join(' '),
+      type: 'button',
+      title: displayNames.reject,
+      innerText: displayNames.reject
+    }, buttonContainer);
+    formFooter.appendChild(buttonContainer);
+
+    // show more-LINK only in bottom layout, otherwise button (see above)
+    const linkContainer = _el('div', {
+      className: cbPrefix + 'links'
+    });
+    if (this.isBottomLayout) {
+      this.moreButton = _el('button', {
+        className: [cbPrefix + '-link'].join(' '),
+        type: 'button',
+        title: displayNames.advancedSettings,
+        innerText: displayNames.advancedSettings
+      }, linkContainer);
+    }
+    _el('a', {
+      className: cbPrefix + '-link',
+      title: this.bbConsentBanner.privacyPage.label,
+      innerText: this.bbConsentBanner.privacyPage.label,
+      href: this.bbConsentBanner.privacyPage.uri
+    }, linkContainer);
+    formFooter.appendChild(linkContainer);
+    this.form.appendChild(formFooter);
+    this.attachBannerEventListeners();
+    document.querySelector('.bb-consentbanner').appendChild(this.form);
+    document.querySelector('.bb-consentbanner').classList.add('visible');
+  };
+}
+let initiated = false;
+function init(node /*, options*/) {
+  let CB = new ConsentBanner(node);
+  CB.init();
+  if (initiated) return;
+  initiated = true;
+  document.querySelectorAll('[data-cookiebanner-module]').forEach(toggleBox => {
+    toggleBox.querySelector('input').addEventListener('click', () => {
+      // also toggle the other toggles with this module id
+      document.querySelectorAll(`[data-cookiebanner-module="${toggleBox.dataset.cookiebannerModule}"] input`).forEach(input => input.checked = true);
+
+      // update preferences cookie
+      const preferences = JSON.parse(cookieUtils.get(bbConsentBannerCookieName));
+      preferences[toggleBox.dataset.cookiebannerModule] = true;
+      cookieUtils.set(bbConsentBannerCookieName, JSON.stringify(preferences) + ';secure;samesite=strict', this.confirmDuration);
+
+      // reload page to apply preferences
+      setTimeout(() => window.location.reload(), 100);
+    });
+  });
+}
+function createElementWithAttrs(tag, attrs, appendTo) {
+  const el = document.createElement(tag);
+  for (const key in attrs) {
+    if (!attrs.hasOwnProperty(key)) continue;
+    if (key === 'innerText') el.innerText = attrs[key];else if (key === 'innerHTML') el.innerHTML = attrs[key];else {
+      if (key in el) el[key] = attrs[key];else el.setAttribute(key === 'className' ? 'class' : key, attrs[key]);
+    }
+  }
+  if (appendTo) appendTo.appendChild(el);
+  return el;
+}
+function createToggle(isCategory, label, inputName, description, inputAttributes, appendModules) {
+  isCategory = isCategory ?? false;
+  label = label ?? '';
+  inputName = inputName ?? '';
+  description = description ?? '';
+  inputAttributes = inputAttributes ?? {};
+  appendModules = appendModules ?? false;
+  const _el = createElementWithAttrs;
+  const main = _el('div', {
+    className: [cbPrefix + (isCategory ? 'category' : 'module')].join(' ')
+  });
+  const labelEl = _el('label', {
+    className: 'bb-control-checkbox',
+    'aria-label': label
+  });
+  labelEl.appendChild(_el('span', {
+    className: ['bb-control-label', isCategory ? 'bb-label-category' : 'bb-label-module'].join(' '),
+    innerText: label
+  }));
+  labelEl.appendChild(_el('input', {
+    ...inputAttributes,
+    type: 'checkbox',
+    name: inputName
+  }));
+  labelEl.appendChild(_el('span', {
+    className: 'bb-toggle'
+  }));
+  main.appendChild(labelEl);
+  if (description) main.appendChild(_el('p', {
+    className: cbPrefix + 'description',
+    innerText: description
+  }));
+  if (appendModules) main.appendChild(appendModules);
+  return main;
+}
+}();
+/******/ 	return __webpack_exports__;
+/******/ })()
+;
+});

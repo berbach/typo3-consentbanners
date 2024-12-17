@@ -87,6 +87,7 @@ function ConsentBanner(node) {
     this.moreButton = null
     this.confirmButton = null
     this.rejectButton = null
+    console.log(node.classList.contains('bb-widget'));
     if (node.classList.contains('bb-widget')) {
         this.widget = node
         node = createElementWithAttrs('div', {
