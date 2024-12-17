@@ -92,33 +92,27 @@ function ConsentBanner(node) {
 
     this.preferences = JSON.parse(cookieUtils.get(this.cookieName));
 
-    console.log(node.classList.contains('bb-widget'));
-    console.log(this.preferences)
+    if (node.classList.contains("bb-widget")) {
+        this.widget = node;
+        node = createElementWithAttrs("div", {
+            className: ["bb-consentbanner", `${this.bbConsentBanner.layoutType}`].join(" ")
+        })
+    } else {
+        this.widget = createElementWithAttrs("button", {
+            className: ["bb-widget", cbPrefix + "button"].join(" ")
+        });
+    }
 
     if (this.bbConsentBanner.isTextLink === false) {
         document.querySelector('.bb-consentbanner--text-link')?.parentElement.remove();
     }
 
-    if (node.classList.contains('bb-widget')) {
-        this.widget = node
-        if(Object.keys(this.preferences).length !== 0) {
-            node = createElementWithAttrs('div', {
-                className: ['bb-consentbanner', `${this.bbConsentBanner.layoutType}`].join(' ')
-            })
-        }
-    } else {
-
-        this.widget = createElementWithAttrs('button', {
-            className: ['bb-widget', cbPrefix + 'button'].join(' ')
-        })
-    }
-    console.log(node.classList);
-
-    this.preferences = JSON.parse(cookieUtils.get(this.cookieName));
-
     this.isBottomLayout = node.classList.contains('bb-cb-bottom')
 
     this.init = () => {
+        if (Object.keys(this.preferences).length === 0 && node.classList.contains("bb-consentbanner--text-link") && this.bbConsentBanner.isTextLink === false){
+            return false;
+        }
         if (this.bbConsentBanner === null || this.categories === null || this.modules === null) {
             let warn = '';
             if (this.bbConsentBanner === null) warn += 'Consent banner, '
@@ -267,11 +261,10 @@ function ConsentBanner(node) {
     }
 
     this.generateBanner = () => {
-        console.log(node)
-        if (this.bbConsentBanner.isTextLink){
-            document.querySelector('body').appendChild(node)
-        }else {
-            this.widget.insertAdjacentElement('beforebegin', node)
+        if (this.bbConsentBanner.isTextLink) {
+            document.querySelector('body').appendChild(node);
+        } else {
+            this.widget.insertAdjacentElement('beforebegin', node);
         }
         const _el = createElementWithAttrs
         this.form = _el('form', {className: [cbPrefix + 'body'].join(' ')})
