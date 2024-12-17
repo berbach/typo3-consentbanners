@@ -207,9 +207,11 @@ function ConsentBanner(node) {
   }
   if (node.classList.contains('bb-widget')) {
     this.widget = node;
-    node = createElementWithAttrs('div', {
-      className: ['bb-consentbanner', `${this.bbConsentBanner.layoutType}`].join(' ')
-    });
+    if (!node.classList.contains('bb-consentbanner')) {
+      node = createElementWithAttrs('div', {
+        className: ['bb-consentbanner', `${this.bbConsentBanner.layoutType}`].join(' ')
+      });
+    }
   } else {
     this.widget = createElementWithAttrs('div', {
       className: ['bb-widget', cbPrefix + 'button'].join(' ')
