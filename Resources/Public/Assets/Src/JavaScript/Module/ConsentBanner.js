@@ -90,6 +90,13 @@ function ConsentBanner(node) {
 
     console.log(node.classList.contains('bb-widget') && node.classList.contains(cbPrefix + '-text-link'));
 
+    if (
+        document.querySelector('.bb-widget.bb-consentbanner--text-link').classList.contains(cbPrefix + '-text-link') &&
+        document.querySelector('.bb-widget.bb-consentbanner-button').classList.contains(cbPrefix + 'button')
+    ) {
+        document.querySelector('.bb-widget.bb-consentbanner-button').remove()
+    }
+
     if (node.classList.contains('bb-widget') && node.classList.contains(cbPrefix + 'button')) {
         this.widget = node
         node = createElementWithAttrs('div', {

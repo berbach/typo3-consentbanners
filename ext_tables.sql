@@ -26,6 +26,7 @@ CREATE TABLE tx_consentbanners_domain_model_settings
     confirm_duration   int(11) unsigned     DEFAULT '20' NOT NULL,
     categories         int(11) unsigned     DEFAULT '0'  NOT NULL,
     show_categories    SMALLint(5) unsigned DEFAULT '0'  NOT NULL,
+    is_text_link       SMALLint(5) unsigned DEFAULT '0'  NOT NULL,
 
     deleted            SMALLint(5) unsigned DEFAULT '0'  NOT NULL,
     hidden             SMALLint(5) unsigned DEFAULT '0'  NOT NULL,

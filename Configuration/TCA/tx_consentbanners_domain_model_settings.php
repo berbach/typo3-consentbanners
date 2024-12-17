@@ -300,6 +300,29 @@ return [
             ]
         ],
 
+        'is_text_link' => [
+            'exclude' => true,
+            'l10n_mode' => 'exclude',
+            'label' => 'LLL:EXT:consentbanners/Resources/Private/Language/locallang_mod.xlf:field.is_text_link',
+            'config' => [
+                'type' => 'check',
+                'renderType' => 'checkboxToggle',
+                'items' => [
+                    [
+                        'label' =>  '',
+                        'labelChecked' => 'Enabled',
+                        'labelUnchecked' => 'Disabled',
+                    ],
+                ],
+                'eval' => 'maximumRecordsChecked',
+                'validation' => [
+                    'maximumRecordsChecked' => 2,
+                    'maximumRecordsCheckedInPid' => 1
+                ],
+
+            ]
+        ],
+
         'categories' => [
             'exclude' => true,
             'l10n_mode' => 'exclude',

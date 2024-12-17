@@ -70,6 +70,7 @@ class ConsentBannerProcessor implements DataProcessorInterface
                 'consentAccepted'       => $consentAccepted,
                 'layoutType'            => $banner->getLayoutType(),
                 'showCategories'        => (bool)$banner->getShowCategories(),
+                'isTextLink'            => (bool)$banner->getIsTextLink(),
                 'cName'                 => self::$cName,
                 'confirmDuration'       => MathUtility::canBeInterpretedAsInteger($banner->getConfirmDuration()) ? $banner->getConfirmDuration() : 20,
                 'title'                 => $banner->getTitle(),

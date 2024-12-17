@@ -74,6 +74,12 @@ class Settings extends AbstractEntity
      */
     protected $showCategories;
     /**
+     * is_text_link
+     *
+     * @var int
+     */
+    protected $isTextLink;
+    /**
      * confirm_duration
      *
      * @var int
@@ -326,6 +332,28 @@ class Settings extends AbstractEntity
     {
         $this->showCategories = $showCategories;
     }
+
+    /**
+     * Returns the isTextLink
+     *
+     * @return int $isTextLink
+     */
+    public function getIsTextLink(): int
+    {
+        return $this->isTextLink;
+    }
+
+    /**
+     * Sets the isTextLink
+     *
+     * @param int $isTextLink
+     * @return void
+     */
+    public function setIsTextLink(int $isTextLink): void
+    {
+        $this->isTextLink = $isTextLink;
+    }
+
     /**
      * Returns the confirm_duration
      *

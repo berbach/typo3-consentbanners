@@ -78,6 +78,9 @@
             <trans-unit id="field.show_categories">
                 <source>Show Categories</source>
             </trans-unit>
+            <trans-unit id="field.is_text_link">
+                <source>Is cookie setting text link</source>
+            </trans-unit>
             <trans-unit id="field.name">
                 <source>Name</source>
             </trans-unit>
