@@ -98,6 +98,9 @@ function ConsentBanner(node) {
 
     } else if(node.classList.contains('bb-widget') && node.classList.contains(cbPrefix + '-text-link')) {
         this.widget = node
+        node = createElementWithAttrs('div', {
+            className: ['bb-consentbanner', `${this.bbConsentBanner.layoutType}`].join(' ')
+        })
         if (document.querySelector('.bb-widget').classList.contains(cbPrefix + 'button')) {
             document.querySelector('.bb-widget.bb-consentbanner-button').remove()
         }
@@ -202,7 +205,7 @@ function ConsentBanner(node) {
             if (Object.keys(this.preferences).length === 0)
                 setCookieAndReload(collectAndModifyData(false))
             else
-                this.form.parentElement.classList.remove('visible')
+                this.form.parentElement.remove()
         })
 
         const collectData = () => Object.fromEntries(
