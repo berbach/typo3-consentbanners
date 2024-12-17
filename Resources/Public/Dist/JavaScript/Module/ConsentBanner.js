@@ -209,13 +209,13 @@ function ConsentBanner(node) {
   }
   if (node.classList.contains('bb-widget')) {
     this.widget = node;
-    if (!document.querySelector('.bb-consentbanner')) {
+    if (Object.keys(this.preferences).length !== 0) {
       node = createElementWithAttrs('div', {
         className: ['bb-consentbanner', `${this.bbConsentBanner.layoutType}`].join(' ')
       });
     }
   } else {
-    this.widget = createElementWithAttrs('div', {
+    this.widget = createElementWithAttrs('button', {
       className: ['bb-widget', cbPrefix + 'button'].join(' ')
     });
   }
@@ -330,7 +330,7 @@ function ConsentBanner(node) {
     });
   };
   this.generateBanner = () => {
-    console.log(this.widget.classList);
+    console.log(node);
     if (this.bbConsentBanner.isTextLink) {
       document.querySelector('body').appendChild(node);
     } else {
