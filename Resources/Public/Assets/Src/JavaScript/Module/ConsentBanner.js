@@ -93,7 +93,7 @@ function ConsentBanner(node) {
             className: ['bb-consentbanner', `${this.bbConsentBanner.layoutType}`].join(' ')
         })
     } else
-        if (node.classList.contains(cbPrefix + '--text-link')) {
+        if (node.classList.contains(cbPrefix + '-text-link')) {
             this.widget = node
             document.querySelector('.bb-widget.bb-consentbanner-button').remove()
         }else {
