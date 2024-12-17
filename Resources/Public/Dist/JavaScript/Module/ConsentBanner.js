@@ -207,7 +207,7 @@ function ConsentBanner(node) {
   }
   if (node.classList.contains('bb-widget')) {
     this.widget = node;
-    if (!node.classList.contains('bb-consentbanner')) {
+    if (!document.querySelector('.bb-consentbanner')) {
       node = createElementWithAttrs('div', {
         className: ['bb-consentbanner', `${this.bbConsentBanner.layoutType}`].join(' ')
       });
