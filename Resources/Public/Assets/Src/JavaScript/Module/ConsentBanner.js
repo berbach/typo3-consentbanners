@@ -110,9 +110,14 @@ function ConsentBanner(node) {
     this.isBottomLayout = node.classList.contains('bb-cb-bottom')
 
     this.init = () => {
+        if (this.bbConsentBanner.isTextLink === false) {
+            document.querySelector('.bb-consentbanner--text-link')?.parentElement.remove();
+        }
         if (Object.keys(this.preferences).length === 0 && node.classList.contains("bb-consentbanner--text-link") && this.bbConsentBanner.isTextLink === false){
             return false;
         }
+
+
         if (this.bbConsentBanner === null || this.categories === null || this.modules === null) {
             let warn = '';
             if (this.bbConsentBanner === null) warn += 'Consent banner, '
@@ -261,7 +266,7 @@ function ConsentBanner(node) {
     }
 
     this.generateBanner = () => {
-        if (this.bbConsentBanner.isTextLink) {
+        if (this.bbConsentBanner.isTextLink === true) {
             document.querySelector('body').appendChild(node);
         } else {
             this.widget.insertAdjacentElement('beforebegin', node);
