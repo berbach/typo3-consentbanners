@@ -52,6 +52,7 @@ if (!('fromEntries' in Object))
  * @typedef {Object} ConsentBannerData
  * @property {string} layoutType
  * @property {boolean} showCategories
+ * @property {boolean} isTextLink
  * @property {string} cName
  * @property {number} confirmDuration
  * @property {string} title
@@ -88,29 +89,21 @@ function ConsentBanner(node) {
     this.confirmButton = null
     this.rejectButton = null
 
-    console.log(node.classList.contains('bb-widget') && node.classList.contains(cbPrefix + '-text-link'));
+    console.log(node.classList.contains('bb-widget'));
 
-    if (
-        document.querySelector('.bb-widget.bb-consentbanner--text-link').classList.contains(cbPrefix + '-text-link') &&
-        document.querySelector('.bb-widget.bb-consentbanner-button').classList.contains(cbPrefix + 'button')
-    ) {
-        document.querySelector('.bb-widget.bb-consentbanner-button').remove()
-    }
 
-    if (node.classList.contains('bb-widget') && node.classList.contains(cbPrefix + 'button')) {
+
+    if (node.classList.contains('bb-widget') && node.classList.contains(cbPrefix + 'button') && this.bbConsentBanner.isTextLink === false) {
         this.widget = node
         node = createElementWithAttrs('div', {
             className: ['bb-consentbanner', `${this.bbConsentBanner.layoutType}`].join(' ')
         })
 
-    } else if(node.classList.contains('bb-widget') && node.classList.contains(cbPrefix + '-text-link')) {
+    } else if(node.classList.contains('bb-widget') && node.classList.contains(cbPrefix + '-text-link') && this.bbConsentBanner.isTextLink === true) {
         this.widget = node
         node = createElementWithAttrs('div', {
             className: ['bb-consentbanner', `${this.bbConsentBanner.layoutType}`].join(' ')
         })
-        if (document.querySelector('.bb-widget').classList.contains(cbPrefix + 'button')) {
-            document.querySelector('.bb-widget.bb-consentbanner-button').remove()
-        }
     }else {
         this.widget = createElementWithAttrs('div', {
             className: ['bb-widget', cbPrefix + 'button'].join(' ')
@@ -272,8 +265,11 @@ function ConsentBanner(node) {
 
     this.generateBanner = () => {
         console.log(this.widget.classList)
-        this.widget.insertAdjacentElement('beforebegin', node)
-
+        if (this.bbConsentBanner.isTextLink){
+            document.querySelector('body').appendChild(node)
+        }else {
+            this.widget.insertAdjacentElement('beforebegin', node)
+        }
         const _el = createElementWithAttrs
         this.form = _el('form', {className: [cbPrefix + 'body'].join(' ')})
 
