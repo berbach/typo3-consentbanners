@@ -200,6 +200,7 @@ function ConsentBanner(node) {
   this.confirmButton = null;
   this.rejectButton = null;
   console.log(node.classList.contains('bb-widget'));
+  console.log(node.classList);
   if (node.classList.contains('bb-widget')) {
     this.widget = node;
     node = createElementWithAttrs('div', {
