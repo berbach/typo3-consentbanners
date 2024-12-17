@@ -171,6 +171,7 @@ if (!('fromEntries' in Object)) Object.fromEntries = function (entries) {
  * @property {string} title
  * @property {string} description
  * @property {Object} privacyPage
+ * @property {string} closeBtn
  * @property {ConsentBannerButtonsDisplayNames} buttonsDisplayNames
  * @property {ConsentBannerCategoryData[]} categories
  * @property {Object[]} modules
@@ -339,7 +340,8 @@ function ConsentBanner(node) {
       className: cbPrefix + 'header'
     });
     _el('button', {
-      className: cbPrefix + 'close'
+      className: cbPrefix + 'close',
+      title: this.bbConsentBanner.closeBtn
     }, formHeader);
     if (this.bbConsentBanner.title !== '') {
       _el('h3', {

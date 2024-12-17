@@ -58,6 +58,7 @@ if (!('fromEntries' in Object))
  * @property {string} title
  * @property {string} description
  * @property {Object} privacyPage
+ * @property {string} closeBtn
  * @property {ConsentBannerButtonsDisplayNames} buttonsDisplayNames
  * @property {ConsentBannerCategoryData[]} categories
  * @property {Object[]} modules
@@ -270,7 +271,7 @@ function ConsentBanner(node) {
         this.form = _el('form', {className: [cbPrefix + 'body'].join(' ')})
 
         const formHeader = _el('div', {className: cbPrefix + 'header'})
-        _el('button', {className: cbPrefix + 'close'}, formHeader)
+        _el('button', {className: cbPrefix + 'close', title: this.bbConsentBanner.closeBtn}, formHeader)
 
         if (this.bbConsentBanner.title !== '') {
             _el('h3', {

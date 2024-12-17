@@ -18,6 +18,9 @@
 			<trans-unit id="cookiebanner.advancedSettings">
 				<target>Erweiterte Einstellungen</target>
 			</trans-unit>
+            <trans-unit id="cookiebanner.closeBtn">
+                <target>Einstellung schließen</target>
+            </trans-unit>
 		</body>
 	</file>
 </xliff>
