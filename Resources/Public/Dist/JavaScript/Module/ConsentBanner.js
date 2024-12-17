@@ -201,7 +201,9 @@ function ConsentBanner(node) {
   this.moreButton = null;
   this.confirmButton = null;
   this.rejectButton = null;
+  this.preferences = JSON.parse(cookieUtils.get(this.cookieName));
   console.log(node.classList.contains('bb-widget'));
+  console.log(this.preferences);
   if (this.bbConsentBanner.isTextLink === false) {
     document.querySelector('.bb-consentbanner--text-link')?.parentElement.remove();
   }
