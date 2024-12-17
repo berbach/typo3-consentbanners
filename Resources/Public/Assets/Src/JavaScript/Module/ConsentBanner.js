@@ -91,20 +91,16 @@ function ConsentBanner(node) {
 
     console.log(node.classList.contains('bb-widget'));
 
+    if (this.bbConsentBanner.isTextLink === false) {
+        document.querySelector('.bb-consentbanner--text-link')?.parentElement.remove();
+    }
 
-
-    if (node.classList.contains('bb-widget') && node.classList.contains(cbPrefix + 'button') && this.bbConsentBanner.isTextLink === false) {
+    if (node.classList.contains('bb-widget')) {
         this.widget = node
         node = createElementWithAttrs('div', {
             className: ['bb-consentbanner', `${this.bbConsentBanner.layoutType}`].join(' ')
         })
-
-    } else if(node.classList.contains('bb-widget') && node.classList.contains(cbPrefix + '-text-link') && this.bbConsentBanner.isTextLink === true) {
-        this.widget = node
-        node = createElementWithAttrs('div', {
-            className: ['bb-consentbanner', `${this.bbConsentBanner.layoutType}`].join(' ')
-        })
-    }else {
+    } else {
         this.widget = createElementWithAttrs('div', {
             className: ['bb-widget', cbPrefix + 'button'].join(' ')
         })
@@ -205,7 +201,7 @@ function ConsentBanner(node) {
             if (Object.keys(this.preferences).length === 0)
                 setCookieAndReload(collectAndModifyData(false))
             else
-                this.form.parentElement.remove()
+                this.form.parentElement.classList.remove('visible')
         })
 
         const collectData = () => Object.fromEntries(

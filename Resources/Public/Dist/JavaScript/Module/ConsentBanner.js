@@ -201,12 +201,10 @@ function ConsentBanner(node) {
   this.confirmButton = null;
   this.rejectButton = null;
   console.log(node.classList.contains('bb-widget'));
-  if (node.classList.contains('bb-widget') && node.classList.contains(cbPrefix + 'button') && this.bbConsentBanner.isTextLink === false) {
-    this.widget = node;
-    node = createElementWithAttrs('div', {
-      className: ['bb-consentbanner', `${this.bbConsentBanner.layoutType}`].join(' ')
-    });
-  } else if (node.classList.contains('bb-widget') && node.classList.contains(cbPrefix + '-text-link') && this.bbConsentBanner.isTextLink === true) {
+  if (this.bbConsentBanner.isTextLink === false) {
+    document.querySelector('.bb-consentbanner--text-link')?.parentElement.remove();
+  }
+  if (node.classList.contains('bb-widget')) {
     this.widget = node;
     node = createElementWithAttrs('div', {
       className: ['bb-consentbanner', `${this.bbConsentBanner.layoutType}`].join(' ')
@@ -289,7 +287,7 @@ function ConsentBanner(node) {
 
     // closes the banner
     this.form.querySelector(`.${cbPrefix}close`)?.addEventListener('click', () => {
-      if (Object.keys(this.preferences).length === 0) setCookieAndReload(collectAndModifyData(false));else this.form.parentElement.remove();
+      if (Object.keys(this.preferences).length === 0) setCookieAndReload(collectAndModifyData(false));else this.form.parentElement.classList.remove('visible');
     });
     const collectData = () => Object.fromEntries(Array.from(this.form.querySelectorAll(`.${cbPrefix}module input:not(:disabled)`)).map(el => {
       return [el.name, el.checked];
