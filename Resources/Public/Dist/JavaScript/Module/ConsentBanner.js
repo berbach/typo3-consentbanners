@@ -329,6 +329,7 @@ function ConsentBanner(node) {
     });
   };
   this.generateBanner = () => {
+    console.log(this.widget.classList);
     this.widget.insertAdjacentElement('beforebegin', node);
     const _el = createElementWithAttrs;
     this.form = _el('form', {
