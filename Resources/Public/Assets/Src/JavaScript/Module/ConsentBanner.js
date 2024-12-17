@@ -103,15 +103,12 @@ function ConsentBanner(node) {
         });
     }
 
-    if (this.bbConsentBanner.isTextLink === false) {
-        document.querySelector('.bb-consentbanner--text-link')?.parentElement.remove();
-    }
-
     this.isBottomLayout = node.classList.contains('bb-cb-bottom')
 
     this.init = () => {
-        if (this.bbConsentBanner.isTextLink === false) {
+        if (this.bbConsentBanner.isTextLink === false && node.classList.contains("bb-consentbanner--text-link")) {
             document.querySelector('.bb-consentbanner--text-link')?.parentElement.remove();
+            return false;
         }
         if (Object.keys(this.preferences).length === 0 && node.classList.contains("bb-consentbanner--text-link") && this.bbConsentBanner.isTextLink === false){
             return false;
