@@ -58,7 +58,7 @@ return [
         ],
         'settings' => [
             'showitem' => '
-                   layout_type, confirm_duration, show_categories
+                   layout_type, confirm_duration, show_categories, is_text_link
             ',
         ],
         'language' => [
