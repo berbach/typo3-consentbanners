@@ -92,17 +92,6 @@ function ConsentBanner(node) {
 
     this.preferences = JSON.parse(cookieUtils.get(this.cookieName));
 
-    if (node.classList.contains("bb-widget")) {
-        this.widget = node;
-        node = createElementWithAttrs("div", {
-            className: ["bb-consentbanner", `${this.bbConsentBanner.layoutType}`].join(" ")
-        })
-    } else {
-        this.widget = createElementWithAttrs("button", {
-            className: ["bb-widget", cbPrefix + "button"].join(" ")
-        });
-    }
-
     this.isBottomLayout = node.classList.contains('bb-cb-bottom')
 
     this.init = () => {
@@ -114,6 +103,16 @@ function ConsentBanner(node) {
             return false;
         }
 
+        if (node.classList.contains("bb-widget")) {
+            this.widget = node;
+            node = createElementWithAttrs("div", {
+                className: ["bb-consentbanner", `${this.bbConsentBanner.layoutType}`].join(" ")
+            });
+        } else {
+            this.widget = createElementWithAttrs("button", {
+                className: ["bb-widget", cbPrefix + "button"].join(" ")
+            });
+        }
 
         if (this.bbConsentBanner === null || this.categories === null || this.modules === null) {
             let warn = '';
