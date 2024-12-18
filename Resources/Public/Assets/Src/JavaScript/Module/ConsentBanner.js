@@ -348,7 +348,6 @@ function ConsentBanner(node) {
         this.acceptButton = _el('button', {
             className: ['bb-button', 'bb-btn--typeP'].join(' '),
             type: 'submit',
-            title: displayNames.acceptAll,
             innerText: displayNames.acceptAll,
         }, buttonContainer)
 
@@ -356,7 +355,6 @@ function ConsentBanner(node) {
         this.saveButton = _el('button', {
             className: ['bb-button', 'bb-btn--typeP', 'hidden'].join(' '),
             type: 'submit',
-            title: displayNames.saveAndClose,
             innerText: displayNames.saveAndClose,
         }, buttonContainer)
 
@@ -365,7 +363,6 @@ function ConsentBanner(node) {
             this.moreButton = _el('button', {
                 className: ['bb-button', 'bb-btn--typeS'].join(' '),
                 type: 'button',
-                title: displayNames.advancedSettings,
                 innerText: displayNames.advancedSettings,
             }, buttonContainer)
 
@@ -374,7 +371,6 @@ function ConsentBanner(node) {
             this.confirmButton = _el('button', {
                 className: ['bb-button', 'bb-btn--typeS'].join(' '),
                 type: 'submit',
-                title: displayNames.confirmSelection,
                 innerText: displayNames.confirmSelection,
             }, buttonContainer)
 
@@ -383,7 +379,6 @@ function ConsentBanner(node) {
             this.rejectButton = _el('button', {
                 className: ['bb-button', 'bb-btn--typeP'].join(' '),
                 type: 'button',
-                title: displayNames.reject,
                 innerText: displayNames.reject,
             }, buttonContainer)
 
@@ -395,14 +390,12 @@ function ConsentBanner(node) {
             this.moreButton = _el('button', {
                 className: [cbPrefix + '-link'].join(' '),
                 type: 'button',
-                title: displayNames.advancedSettings,
                 innerText: displayNames.advancedSettings,
             }, linkContainer)
         }
 
         _el('a', {
             className: cbPrefix + '-link',
-            title: this.bbConsentBanner.privacyPage.label,
             innerText: this.bbConsentBanner.privacyPage.label,
             href: this.bbConsentBanner.privacyPage.uri
         }, linkContainer)
