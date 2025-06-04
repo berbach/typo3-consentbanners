@@ -222,7 +222,7 @@ function ConsentBanner(node) {
         }
 
         const setCookieAndReload = (data) => {
-            cookieUtils.set(this.cookieName, JSON.stringify(data) + ';secure;samesite=strict', this.confirmDuration)
+            cookieUtils.set(this.cookieName, JSON.stringify(data) + ';secure;samesite=lax', this.confirmDuration)
             window.location.reload()
         }
 
@@ -429,7 +429,7 @@ export function init(node/*, options*/) {
             // update preferences cookie
             const preferences = JSON.parse(cookieUtils.get(bbConsentBannerCookieName))
             preferences[toggleBox.dataset.cookiebannerModule] = true
-            cookieUtils.set(bbConsentBannerCookieName, JSON.stringify(preferences) + ';secure;samesite=strict', this.confirmDuration)
+            cookieUtils.set(bbConsentBannerCookieName, JSON.stringify(preferences) + ';secure;samesite=lax', this.confirmDuration)
 
             // reload page to apply preferences
             setTimeout(() => window.location.reload(), 100)
