@@ -405,8 +405,10 @@ function ConsentBanner(node) {
         this.form.appendChild(formFooter)
 
         this.attachBannerEventListeners()
-        document.querySelector('.bb-consentbanner').appendChild(this.form)
-        document.querySelector('.bb-consentbanner').classList.add('visible')
+        if(document.querySelector('.bb-consentbanner-body') == null) {
+            document.querySelector('.bb-consentbanner').appendChild(this.form)
+            document.querySelector('.bb-consentbanner').classList.add('visible')
+        }
     }
 }
 
