@@ -102,7 +102,7 @@ function ConsentBanner(node) {
         if (Object.keys(this.preferences).length === 0 && node.classList.contains("bb-consentbanner--text-link") && this.bbConsentBanner.isTextLink === false){
             return false;
         }
-        if (node.classList.contains("bb-widget")) {
+        if (node.classList.contains("bb-text-widget")) {
             this.widget = node;
         }else if (node.classList.contains("bb-widget")) {
             this.widget = node;
