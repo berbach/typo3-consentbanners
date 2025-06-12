@@ -143,7 +143,9 @@ function ConsentBanner(node) {
         if (Object.keys(this.preferences).length === 0)
             this.generateBanner();
         else
-            node.insertAdjacentElement('afterend', this.widget)
+            if (!this.widget.classList.contains("bb-text-widget")) {
+                node.insertAdjacentElement('afterend', this.widget)
+            }
     }
 
     this.attachBannerEventListeners = () => {
