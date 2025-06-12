@@ -94,26 +94,30 @@ function ConsentBanner(node) {
 
     this.isBottomLayout = node.classList.contains('bb-cb-bottom')
 
+    if (node.classList.contains("bb-widget")) {
+        this.widget = node;
+        node = createElementWithAttrs("div", {
+            className: ["bb-consentbanner", `${this.bbConsentBanner.layoutType}`].join(" ")
+        });
+    } else {
+        this.widget = createElementWithAttrs("button", {
+            className: ["bb-widget", cbPrefix + "button"].join(" ")
+        });
+    }
+
     this.init = () => {
-        if (this.bbConsentBanner.isTextLink === false && node.classList.contains("bb-consentbanner--text-link")) {
-            document.querySelector('.bb-consentbanner--text-link')?.parentElement.remove();
-            return false;
-        }
-        if (Object.keys(this.preferences).length === 0 && node.classList.contains("bb-consentbanner--text-link") && this.bbConsentBanner.isTextLink === false){
-            return false;
-        }
-        if (node.classList.contains("bb-text-widget")) {
-            this.widget = node;
-        }else if (node.classList.contains("bb-widget")) {
-            this.widget = node;
-            node = createElementWithAttrs("div", {
-                className: ["bb-consentbanner", `${this.bbConsentBanner.layoutType}`].join(" ")
-            });
-        } else {
-            this.widget = createElementWithAttrs("button", {
-                className: ["bb-widget", cbPrefix + "button"].join(" ")
-            });
-        }
+        // if (this.bbConsentBanner.isTextLink === false && node.classList.contains("bb-consentbanner--text-link")) {
+        //     document.querySelector('.bb-consentbanner--text-link')?.parentElement.remove();
+        //     return false;
+        // }
+        // if (Object.keys(this.preferences).length === 0 && node.classList.contains("bb-consentbanner--text-link") && this.bbConsentBanner.isTextLink === false){
+        //     return false;
+        // }
+        // if (node.classList.contains("bb-text-widget")) {
+        //     this.widget = node;
+        // }else
+
+
 
         if (this.bbConsentBanner === null || this.categories === null || this.modules === null) {
             let warn = '';
@@ -142,10 +146,11 @@ function ConsentBanner(node) {
 
         if (Object.keys(this.preferences).length === 0)
             this.generateBanner();
-        else
-            if (!this.widget.classList.contains("bb-text-widget")) {
+        else {
+            if (!this.widget.classList.contains("bb-text-widget") && this.bbConsentBanner.isTextLink === false) {
                 node.insertAdjacentElement('afterend', this.widget)
             }
+        }
     }
 
     this.attachBannerEventListeners = () => {
