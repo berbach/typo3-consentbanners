@@ -94,12 +94,17 @@ function ConsentBanner(node) {
 
     this.isBottomLayout = node.classList.contains('bb-cb-bottom')
 
-    if (node.classList.contains("bb-widget")) {
+    if (node.classList.contains("bb-text-widget") && Object.keys(this.preferences).length !== 0) {
         this.widget = node;
         node = createElementWithAttrs("div", {
             className: ["bb-consentbanner", `${this.bbConsentBanner.layoutType}`].join(" ")
         });
-    } else {
+    }else if (node.classList.contains("bb-widget")) {
+        this.widget = node;
+        node = createElementWithAttrs("div", {
+            className: ["bb-consentbanner", `${this.bbConsentBanner.layoutType}`].join(" ")
+        });
+    } else if (this.bbConsentBanner.isTextLink === false) {
         this.widget = createElementWithAttrs("button", {
             className: ["bb-widget", cbPrefix + "button"].join(" ")
         });
