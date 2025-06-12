@@ -94,14 +94,15 @@ function ConsentBanner(node) {
 
     this.isBottomLayout = node.classList.contains('bb-cb-bottom')
 
-    if (node.classList.contains("bb-text-widget")) {
-        this.widget = node;
-        if(Object.keys(this.preferences).length !== 0) {
-            node = createElementWithAttrs("div", {
-                className: ["bb-consentbanner", `${this.bbConsentBanner.layoutType}`].join(" ")
-            });
-        }
-    }else if (node.classList.contains("bb-widget")) {
+    // if (node.classList.contains("bb-text-widget")) {
+    //     this.widget = node;
+    //     if(Object.keys(this.preferences).length !== 0) {
+    //         node = createElementWithAttrs("div", {
+    //             className: ["bb-consentbanner", `${this.bbConsentBanner.layoutType}`].join(" ")
+    //         });
+    //     }
+    // }else
+    if (node.classList.contains("bb-widget")) {
         this.widget = node;
         node = createElementWithAttrs("div", {
             className: ["bb-consentbanner", `${this.bbConsentBanner.layoutType}`].join(" ")
@@ -154,9 +155,9 @@ function ConsentBanner(node) {
         if (Object.keys(this.preferences).length === 0)
             this.generateBanner();
         else {
-            if (!this.widget.classList.contains("bb-text-widget") && this.bbConsentBanner.isTextLink === false) {
+            //if (!this.widget.classList.contains("bb-text-widget") && this.bbConsentBanner.isTextLink === false) {
                 node.insertAdjacentElement('afterend', this.widget)
-            }
+            //}
         }
     }
 
@@ -277,11 +278,13 @@ function ConsentBanner(node) {
     }
 
     this.generateBanner = () => {
-        if (this.bbConsentBanner.isTextLink === true) {
-            document.querySelector('body').appendChild(node);
-        } else {
-            this.widget.insertAdjacentElement('beforebegin', node);
-        }
+        // if (this.bbConsentBanner.isTextLink === true) {
+        //     document.querySelector('body').appendChild(node);
+        // } else {
+        //     this.widget.insertAdjacentElement('beforebegin', node);
+        // }
+        this.widget.insertAdjacentElement('beforebegin', node)
+
         const _el = createElementWithAttrs
         this.form = _el('form', {className: [cbPrefix + 'body'].join(' ')})
 
