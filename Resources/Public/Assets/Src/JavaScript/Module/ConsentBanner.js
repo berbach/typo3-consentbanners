@@ -94,11 +94,13 @@ function ConsentBanner(node) {
 
     this.isBottomLayout = node.classList.contains('bb-cb-bottom')
 
-    if (node.classList.contains("bb-text-widget") && Object.keys(this.preferences).length !== 0) {
+    if (node.classList.contains("bb-text-widget")) {
         this.widget = node;
-        node = createElementWithAttrs("div", {
-            className: ["bb-consentbanner", `${this.bbConsentBanner.layoutType}`].join(" ")
-        });
+        if(Object.keys(this.preferences).length !== 0) {
+            node = createElementWithAttrs("div", {
+                className: ["bb-consentbanner", `${this.bbConsentBanner.layoutType}`].join(" ")
+            });
+        }
     }else if (node.classList.contains("bb-widget")) {
         this.widget = node;
         node = createElementWithAttrs("div", {
