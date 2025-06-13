@@ -82,6 +82,7 @@ function ConsentBanner(node) {
     this.confirmDuration = typeofIsAndValueIsNot(this.bbConsentBanner.confirmDuration, 'number', 0) ? this.bbConsentBanner.confirmDuration : 20;
     this.categories = typeof bbConsentBanner.categories === 'object' && bbConsentBanner.categories.length !== 0 ? bbConsentBanner.categories : null;
     this.modules = typeof bbConsentBanner.modules === 'object' && bbConsentBanner.modules.length !== 0 ? bbConsentBanner.modules : null;
+    this.isBottomLayout = typeofIsAndValueIsNot(this.bbConsentBanner.layoutType, 'string', 'bb-cb-bottom')
     // Elements
     this.form = null
     this.acceptButton = null
@@ -92,7 +93,7 @@ function ConsentBanner(node) {
 
     this.preferences = JSON.parse(cookieUtils.get(this.cookieName));
 
-    this.isBottomLayout = node.classList.contains('bb-cb-bottom')
+
 
     this.init = () => {
         if (this.bbConsentBanner.isTextLink === false && node.classList.contains("bb-text-widget")) {
@@ -272,13 +273,10 @@ function ConsentBanner(node) {
     }
 
     this.generateBanner = () => {
-        // if (this.bbConsentBanner.isTextLink === true) {
-        //     document.querySelector('body').appendChild(node);
-        // } else {
-        //     this.widget.insertAdjacentElement('beforebegin', node);
-        // }
-        if(Object.keys(this.preferences).length !== 0) {
+        if(Object.keys(this.preferences).length !== 0 && this.bbConsentBanner.isTextLink === false) {
             this.widget.insertAdjacentElement('beforebegin', node)
+        }else if(Object.keys(this.preferences).length !== 0 && this.bbConsentBanner.isTextLink === true){
+            document.querySelector('main + footer').insertAdjacentElement('afterend', node)
         }
         const _el = createElementWithAttrs
         this.form = _el('form', {className: [cbPrefix + 'body'].join(' ')})
@@ -372,48 +370,50 @@ function ConsentBanner(node) {
         }, buttonContainer)
 
         // show more-BUTTON only when not in bottom layout, otherwise link (see below)
-        if (!this.isBottomLayout)
+        if (!this.isBottomLayout) {
             this.moreButton = _el('button', {
                 className: ['bb-button', 'bb-btn--typeS'].join(' '),
                 type: 'button',
                 innerText: displayNames.advancedSettings,
             }, buttonContainer)
-
+        }
         // show confirm-button in bottom layout (save button with different label)
-        if (this.isBottomLayout && this.bbConsentBanner.showCategories)
+        if (this.isBottomLayout && this.bbConsentBanner.showCategories) {
             this.confirmButton = _el('button', {
                 className: ['bb-button', 'bb-btn--typeS'].join(' '),
                 type: 'submit',
                 innerText: displayNames.confirmSelection,
             }, buttonContainer)
-
+        }
         // show reject-button only when no options are visible at first
-        if (!this.bbConsentBanner.showCategories)
+        if (!this.bbConsentBanner.showCategories) {
             this.rejectButton = _el('button', {
                 className: ['bb-button', 'bb-btn--typeP'].join(' '),
                 type: 'button',
                 innerText: displayNames.reject,
             }, buttonContainer)
-
+        }
         formFooter.appendChild(buttonContainer)
 
         // show more-LINK only in bottom layout, otherwise button (see above)
-        const linkContainer = _el('div', {className: cbPrefix + 'links'})
         if (this.isBottomLayout) {
+            const linkContainer = _el('div', {className: cbPrefix + 'links'})
+
             this.moreButton = _el('button', {
                 className: [cbPrefix + '-link'].join(' '),
                 type: 'button',
                 innerText: displayNames.advancedSettings,
             }, linkContainer)
+
+
+            _el('a', {
+                className: cbPrefix + '-link',
+                innerText: this.bbConsentBanner.privacyPage.label,
+                href: this.bbConsentBanner.privacyPage.uri
+            }, linkContainer)
+
+            formFooter.appendChild(linkContainer)
         }
-
-        _el('a', {
-            className: cbPrefix + '-link',
-            innerText: this.bbConsentBanner.privacyPage.label,
-            href: this.bbConsentBanner.privacyPage.uri
-        }, linkContainer)
-
-        formFooter.appendChild(linkContainer)
 
         this.form.appendChild(formFooter)
 
