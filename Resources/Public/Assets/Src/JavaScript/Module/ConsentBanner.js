@@ -150,7 +150,7 @@ function ConsentBanner(node) {
             return false
         }
 
-        this.widget.addEventListener('click', () => {
+        this.widget?.addEventListener('click', () => {
             if (this.form === null)
                 this.generateBanner()
             else
