@@ -107,6 +107,7 @@ function ConsentBanner(node) {
                 node = createElementWithAttrs("div", {
                     className: ["bb-consentbanner", `${this.bbConsentBanner.layoutType}`].join(" ")
                 });
+                this.banner = node;
             }else {
                 this.banner = document.querySelector('.bb-consentbanner');
             }
