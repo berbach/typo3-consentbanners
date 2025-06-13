@@ -114,6 +114,9 @@ function ConsentBanner(node) {
     }
 
     this.init = () => {
+        if (this.bbConsentBanner.isTextLink === true && node.classList.contains("bb-text-widget") && Object.keys(this.preferences).length === 0) {
+            return false;
+        }
         // if (this.bbConsentBanner.isTextLink === false && node.classList.contains("bb-consentbanner--text-link")) {
         //     document.querySelector('.bb-consentbanner--text-link')?.parentElement.remove();
         //     return false;
