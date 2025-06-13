@@ -84,6 +84,7 @@ function ConsentBanner(node) {
     this.modules = typeof bbConsentBanner.modules === 'object' && bbConsentBanner.modules.length !== 0 ? bbConsentBanner.modules : null;
     this.isBottomLayout = !typeofIsAndValueIsNot(this.bbConsentBanner.layoutType, 'string', 'bb-cb-bottom');
     // Elements
+    this.banner = null
     this.form = null
     this.acceptButton = null
     this.saveButton = null
@@ -97,8 +98,9 @@ function ConsentBanner(node) {
         if (this.bbConsentBanner.isTextLink === false && node.classList.contains("bb-text-widget")) {
             return false;
         }
-
-        if (node.classList.contains("bb-text-widget") && this.bbConsentBanner.isTextLink === true) {
+        if (node.classList.contains("bb-consentbanner")){
+            this.banner = node;
+        }else if (node.classList.contains("bb-text-widget") && this.bbConsentBanner.isTextLink === true) {
             this.widget = node;
             if(Object.keys(this.preferences).length !== 0){
                 node = createElementWithAttrs("div", {
@@ -180,8 +182,8 @@ function ConsentBanner(node) {
             this.saveButton.classList.remove('hidden')
 
             // force overlay layout
-            node.classList.remove('bb-cb-bottom')
-            node.classList.add('bb-cb-overlay')
+            this.banner.classList.remove('bb-cb-bottom')
+            this.banner.classList.add('bb-cb-overlay')
 
             // convert one-click buttons to secondary
             const convertToSecondary = (button) => {
