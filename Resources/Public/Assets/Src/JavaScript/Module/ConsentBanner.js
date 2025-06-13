@@ -94,31 +94,12 @@ function ConsentBanner(node) {
 
     this.isBottomLayout = node.classList.contains('bb-cb-bottom')
 
-    // if (node.classList.contains("bb-text-widget")) {
-    //     this.widget = node;
-    //     if(Object.keys(this.preferences).length !== 0) {
-    //         node = createElementWithAttrs("div", {
-    //             className: ["bb-consentbanner", `${this.bbConsentBanner.layoutType}`].join(" ")
-    //         });
-    //     }
-    // }else
-
-
     this.init = () => {
-        // if (this.bbConsentBanner.isTextLink === true && node.classList.contains("bb-text-widget") && Object.keys(this.preferences).length === 0) {
-        //     return false;
-        // }
-        // if (this.bbConsentBanner.isTextLink === false && node.classList.contains("bb-consentbanner--text-link")) {
-        //     document.querySelector('.bb-consentbanner--text-link')?.parentElement.remove();
-        //     return false;
-        // }
-        // if (Object.keys(this.preferences).length === 0 && node.classList.contains("bb-consentbanner--text-link") && this.bbConsentBanner.isTextLink === false){
-        //     return false;
-        // }
+        if (this.bbConsentBanner.isTextLink === false && node.classList.contains("bb-text-widget")) {
+            return false;
+        }
 
-
-
-        if (node.classList.contains("bb-text-widget")) {
+        if (node.classList.contains("bb-text-widget") && this.bbConsentBanner.isTextLink === true) {
             this.widget = node;
             if(Object.keys(this.preferences).length !== 0){
                 node = createElementWithAttrs("div", {
