@@ -296,8 +296,9 @@ function ConsentBanner(node) {
         // } else {
         //     this.widget.insertAdjacentElement('beforebegin', node);
         // }
-        this.widget.insertAdjacentElement('beforebegin', node)
-
+        if(Object.keys(this.preferences).length !== 0) {
+            this.widget.insertAdjacentElement('beforebegin', node)
+        }
         const _el = createElementWithAttrs
         this.form = _el('form', {className: [cbPrefix + 'body'].join(' ')})
 
