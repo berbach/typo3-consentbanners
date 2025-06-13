@@ -151,9 +151,7 @@ function ConsentBanner(node) {
         if (Object.keys(this.preferences).length === 0)
             this.generateBanner();
         else if (this.bbConsentBanner.isTextLink === false && this.widget.classList.contains("bb-widget")) {
-            //if (!this.widget.classList.contains("bb-text-widget") && this.bbConsentBanner.isTextLink === false) {
-                node.insertAdjacentElement('afterend', this.widget)
-            //}
+            node.insertAdjacentElement('afterend', this.widget)
         }
     }
 
