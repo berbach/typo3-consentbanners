@@ -82,7 +82,7 @@ function ConsentBanner(node) {
     this.confirmDuration = typeofIsAndValueIsNot(this.bbConsentBanner.confirmDuration, 'number', 0) ? this.bbConsentBanner.confirmDuration : 20;
     this.categories = typeof bbConsentBanner.categories === 'object' && bbConsentBanner.categories.length !== 0 ? bbConsentBanner.categories : null;
     this.modules = typeof bbConsentBanner.modules === 'object' && bbConsentBanner.modules.length !== 0 ? bbConsentBanner.modules : null;
-    this.isBottomLayout = typeofIsAndValueIsNot(this.bbConsentBanner.layoutType, 'string', 'bb-cb-bottom')
+    this.isBottomLayout = !!typeofIsAndValueIsNot(this.bbConsentBanner.layoutType, 'string', 'bb-cb-bottom');
     // Elements
     this.form = null
     this.acceptButton = null
