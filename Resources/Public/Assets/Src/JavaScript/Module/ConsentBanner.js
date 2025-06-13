@@ -102,21 +102,12 @@ function ConsentBanner(node) {
     //         });
     //     }
     // }else
-    if (node.classList.contains("bb-widget")) {
-        this.widget = node;
-        node = createElementWithAttrs("div", {
-            className: ["bb-consentbanner", `${this.bbConsentBanner.layoutType}`].join(" ")
-        });
-    } else if (this.bbConsentBanner.isTextLink === false) {
-        this.widget = createElementWithAttrs("button", {
-            className: ["bb-widget", cbPrefix + "button"].join(" ")
-        });
-    }
+
 
     this.init = () => {
-        if (this.bbConsentBanner.isTextLink === true && node.classList.contains("bb-text-widget") && Object.keys(this.preferences).length === 0) {
-            return false;
-        }
+        // if (this.bbConsentBanner.isTextLink === true && node.classList.contains("bb-text-widget") && Object.keys(this.preferences).length === 0) {
+        //     return false;
+        // }
         // if (this.bbConsentBanner.isTextLink === false && node.classList.contains("bb-consentbanner--text-link")) {
         //     document.querySelector('.bb-consentbanner--text-link')?.parentElement.remove();
         //     return false;
@@ -124,9 +115,28 @@ function ConsentBanner(node) {
         // if (Object.keys(this.preferences).length === 0 && node.classList.contains("bb-consentbanner--text-link") && this.bbConsentBanner.isTextLink === false){
         //     return false;
         // }
-        // if (node.classList.contains("bb-text-widget")) {
-        //     this.widget = node;
-        // }else
+
+
+
+        if (node.classList.contains("bb-text-widget")) {
+            this.widget = node;
+            if(Object.keys(this.preferences).length !== 0){
+                node = createElementWithAttrs("div", {
+                    className: ["bb-consentbanner", `${this.bbConsentBanner.layoutType}`].join(" ")
+                });
+            }
+        }else if (node.classList.contains("bb-widget")) {
+            this.widget = node;
+            node = createElementWithAttrs("div", {
+                className: ["bb-consentbanner", `${this.bbConsentBanner.layoutType}`].join(" ")
+            });
+        } else if (this.bbConsentBanner.isTextLink === false) {
+            this.widget = createElementWithAttrs("button", {
+                className: ["bb-widget", cbPrefix + "button"].join(" ")
+            });
+        }else if (this.bbConsentBanner.isTextLink === true){
+
+        }
 
 
 
@@ -157,7 +167,7 @@ function ConsentBanner(node) {
 
         if (Object.keys(this.preferences).length === 0)
             this.generateBanner();
-        else {
+        else if (this.bbConsentBanner.isTextLink === false && this.widget.classList.contains("bb-widget")) {
             //if (!this.widget.classList.contains("bb-text-widget") && this.bbConsentBanner.isTextLink === false) {
                 node.insertAdjacentElement('afterend', this.widget)
             //}
