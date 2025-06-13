@@ -83,8 +83,6 @@ function ConsentBanner(node) {
     this.categories = typeof bbConsentBanner.categories === 'object' && bbConsentBanner.categories.length !== 0 ? bbConsentBanner.categories : null;
     this.modules = typeof bbConsentBanner.modules === 'object' && bbConsentBanner.modules.length !== 0 ? bbConsentBanner.modules : null;
     this.isBottomLayout = !typeofIsAndValueIsNot(this.bbConsentBanner.layoutType, 'string', 'bb-cb-bottom');
-    alert(this.bbConsentBanner.layoutType)
-    alert(!typeofIsAndValueIsNot(this.bbConsentBanner.layoutType, 'string', 'bb-cb-bottom'))
     // Elements
     this.form = null
     this.acceptButton = null
@@ -94,8 +92,6 @@ function ConsentBanner(node) {
     this.rejectButton = null
 
     this.preferences = JSON.parse(cookieUtils.get(this.cookieName));
-
-
 
     this.init = () => {
         if (this.bbConsentBanner.isTextLink === false && node.classList.contains("bb-text-widget")) {
@@ -118,8 +114,6 @@ function ConsentBanner(node) {
             this.widget = createElementWithAttrs("button", {
                 className: ["bb-widget", cbPrefix + "button"].join(" ")
             });
-        }else if (this.bbConsentBanner.isTextLink === true){
-
         }
 
 
