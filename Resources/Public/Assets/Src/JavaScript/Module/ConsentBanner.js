@@ -98,6 +98,7 @@ function ConsentBanner(node) {
         if (this.bbConsentBanner.isTextLink === false && node.classList.contains("bb-text-widget")) {
             return false;
         }
+
         if (node.classList.contains("bb-consentbanner")){
             this.banner = node;
         }else if (node.classList.contains("bb-text-widget") && this.bbConsentBanner.isTextLink === true) {
@@ -106,12 +107,15 @@ function ConsentBanner(node) {
                 node = createElementWithAttrs("div", {
                     className: ["bb-consentbanner", `${this.bbConsentBanner.layoutType}`].join(" ")
                 });
+            }else {
+                this.banner = document.querySelector('.bb-consentbanner');
             }
         }else if (node.classList.contains("bb-widget")) {
             this.widget = node;
             node = createElementWithAttrs("div", {
                 className: ["bb-consentbanner", `${this.bbConsentBanner.layoutType}`].join(" ")
             });
+            this.banner = node;
         } else if (this.bbConsentBanner.isTextLink === false) {
             this.widget = createElementWithAttrs("button", {
                 className: ["bb-widget", cbPrefix + "button"].join(" ")
