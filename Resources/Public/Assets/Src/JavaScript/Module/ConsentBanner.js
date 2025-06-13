@@ -123,8 +123,6 @@ function ConsentBanner(node) {
             });
         }
 
-
-
         if (this.bbConsentBanner === null || this.categories === null || this.modules === null) {
             let warn = '';
             if (this.bbConsentBanner === null) warn += 'Consent banner, '
