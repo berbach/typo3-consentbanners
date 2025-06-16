@@ -111,7 +111,7 @@ const config = {
         new webpack.ProgressPlugin(),
         new CleanWebpackPlugin({
             protectWebpackAssets: false,
-            cleanOnceBeforeBuildPatterns: ['**/BaseCookieBanner.js', '**/BaseCookieBanner.js.map']
+            cleanOnceBeforeBuildPatterns: ['JavaScript/**/*.js', 'JavaScript/**/*.js.map']
         })
     ],
 };

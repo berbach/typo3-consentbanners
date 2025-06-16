@@ -10,10 +10,10 @@
     "license": "(MIT)",
     "main": "Base.js",
     "scripts": {
-        "build": "npm run style && npm run script",
-        "build:dev": "npm run style:dev & npm run script:dev",
-        "script:dev": "webpack --mode=development --config script.webpack.js",
-        "style:dev": "webpack --mode=development --config style.webpack.js",
+        "build": "webpack build --mode=production --config style.webpack.js && webpack build --mode=production --config script.webpack.js",
+        "build:dev": "webpack build --mode=development --config style.webpack.js && webpack build --mode=development --config script.webpack.js",
+        "script:dev": "webpack build --mode=development --config script.webpack.js",
+        "style:dev": "webpack build --mode=development --config style.webpack.js",
         "script": "webpack --mode=production --config script.webpack.js",
         "style": "webpack --mode=production --config style.webpack.js"
     },
