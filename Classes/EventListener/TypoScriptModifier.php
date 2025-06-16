@@ -174,11 +174,11 @@ class TypoScriptModifier
         $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable('sys_template');
 
         $queryBuilder
-            ->update('sys_template', 't')
+            ->update('sys_template')
             ->where(
-                $queryBuilder->expr()->eq('t.pid', $queryBuilder->createNamedParameter($this->globalPid, Connection::PARAM_INT))
+                $queryBuilder->expr()->eq('pid', $queryBuilder->createNamedParameter($this->globalPid, Connection::PARAM_INT))
             )
-            ->set('t.config', $typoScript)
+            ->set('config', $typoScript)
             ->executeStatement();
     }
 
