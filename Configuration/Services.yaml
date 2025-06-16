@@ -6,6 +6,7 @@ services:
 
   Bb\Consentbanners\:
     resource: '../Classes/*'
+    exclude: '../Classes/Domain/Model/*'
 
   Bb\Consentbanners\Controller\BackendConsentbannerController:
     public: true

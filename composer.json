@@ -1,7 +1,7 @@
 {
     "name": "bb/consentbanners",
     "type": "typo3-cms-extension",
-    "description": "Consent Banner Extension with Javascript and non-Javascript.",
+    "description": "Consent Banner Extension with Javascript.",
     "homepage": "https://berbach.com/",
     "version": "1.0.0",
     "license": ["GPL-2.0-or-later"],

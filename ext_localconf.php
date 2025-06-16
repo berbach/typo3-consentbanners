@@ -1,9 +1,12 @@
 <?php
+declare(strict_types=1);
+
+defined('TYPO3') || die('Access denied.');
+
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Imaging\IconRegistry;
 use TYPO3\CMS\Core\Imaging\IconProvider\SvgIconProvider;
-defined('TYPO3') || die('Access denied.');
 
 call_user_func(static function () {
     // Add module configuration
