@@ -1,5 +1,4 @@
 <?php
-
 namespace Bb\Consentbanners\Domain\Model;
 
 use \TYPO3\CMS\Extbase\DomainObject\AbstractEntity;
@@ -11,9 +10,9 @@ class Module extends AbstractEntity
     /**
      * pid
      *
-     * @var int
+     * @var int | null
      */
-    protected $pid;
+    protected ?int $pid = null;
     /**
      * name
      *

@@ -2,21 +2,24 @@
 
 namespace Bb\Consentbanners\Domain\Repository;
 
-use Doctrine\DBAL\DBALException;
-use Doctrine\DBAL\Driver\Exception;
+use Doctrine\DBAL\Exception;
+use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\QueryBuilder;
 use TYPO3\CMS\Core\Database\Query\Restriction\DeletedRestriction;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Persistence\Repository;
+use TYPO3\CMS\Extbase\Persistence\Exception\InvalidQueryException;
 use TYPO3\CMS\Extbase\Persistence\Generic\Typo3QuerySettings;
+use TYPO3\CMS\Extbase\Persistence\QueryInterface;
+use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
 
 class SettingsRepository extends Repository
 {
     /**
      * @var string
      */
-    public static string $tableName = 'tx_consentbanners_domain_model_settings';
+    public const TABLE_NAME = 'tx_consentbanners_domain_model_settings';
 
     /**
      * @param array $storageIds
@@ -61,7 +64,7 @@ class SettingsRepository extends Repository
             $isLocalized = isset($tcaCtrl['languageField'], $tcaCtrl['transOrigPointerField']) && $tcaCtrl['transOrigPointerField'] && $tcaCtrl['languageField'];
 
             if ($pid && $isLocalized) {
-                $queryBuilder = $this->getQueryBuilder();
+                $queryBuilder = $this->getQueryBuilderForTable();
 
                 $queryBuilder->getRestrictions()->removeAll();
 
@@ -72,16 +75,16 @@ class SettingsRepository extends Repository
 
                 $queryBuilder
                     ->select('uid', 'pid', 'title', 'sys_language_uid')
-                    ->from(self::$tableName)
+                    ->from(self::TABLE_NAME)
                     ->where(
-                        $queryBuilder->expr()->eq('pid', $queryBuilder->createNamedParameter($pid, \PDO::PARAM_INT)),
+                        $queryBuilder->expr()->eq('pid', $queryBuilder->createNamedParameter($pid, Connection::PARAM_INT)),
 
-                        $queryBuilder->expr()->eq($tcaCtrl['languageField'], $queryBuilder->createNamedParameter($languageId, \PDO::PARAM_INT))
+                        $queryBuilder->expr()->eq($tcaCtrl['languageField'], $queryBuilder->createNamedParameter($languageId, Connection::PARAM_INT))
                     );
 
                 if(!is_null($originalId)){
                     $queryBuilder->andWhere(
-                        $queryBuilder->expr()->eq($tcaCtrl['transOrigPointerField'], $queryBuilder->createNamedParameter($originalId, \PDO::PARAM_INT))
+                        $queryBuilder->expr()->eq($tcaCtrl['transOrigPointerField'], $queryBuilder->createNamedParameter($originalId, Connection::PARAM_INT))
                     );
                 }
 
@@ -97,8 +100,8 @@ class SettingsRepository extends Repository
         return null;
     }
 
-    private function getQueryBuilder(): QueryBuilder
+    protected static function getQueryBuilderForTable(): QueryBuilder
     {
-        return GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable(self::$tableName);
+        return GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable(self::TABLE_NAME);
     }
 }
