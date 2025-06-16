@@ -317,7 +317,7 @@ class BackendConsentbannerController extends ActionController
 
         // Adding title, menus, buttons, etc. using $moduleTemplate ...
         //$moduleTemplate->setContent($this->view->render());
-        return $moduleTemplate->renderResponse();
+        return $moduleTemplate->renderResponse('BackendConsentbanner/Settings');
     }
 
     /**
@@ -379,7 +379,7 @@ class BackendConsentbannerController extends ActionController
         ]);
 
         // Adding title, menus, buttons, etc. using $moduleTemplate ...
-        return $moduleTemplate->renderResponse();
+        return $moduleTemplate->renderResponse('BackendConsentbanner/Categories');
     }
 
     /**
@@ -430,7 +430,7 @@ class BackendConsentbannerController extends ActionController
         ]);
 
         // Adding title, menus, buttons, etc. using $moduleTemplate ...
-        return $moduleTemplate->renderResponse();
+        return $moduleTemplate->renderResponse('BackendConsentbanner/Modules');
     }
 
     protected function initializeModuleTemplate(
