@@ -65,7 +65,7 @@ class AllowCookieViewHelper extends AbstractViewHelper
         $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable(ModuleRepository::TABLE_NAME);
         $queryBuilder->getRestrictions()->removeAll();
         $res = $queryBuilder
-            ->select('uid', 'name', 'description', 'placeholder_headline', 'placeholder')
+            ->select('uid', 'name', 'description', 'placeholder_headline', 'placeholder', 'module_target')
             ->from(ModuleRepository::TABLE_NAME)
             ->where($queryBuilder->expr()->inSet('module_target', $queryBuilder->createNamedParameter($moduleName)));
 
