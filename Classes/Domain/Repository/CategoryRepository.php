@@ -84,7 +84,7 @@ class CategoryRepository extends Repository
 
         if ($id) {
             $statement = $statement->where(
-                $queryBuilder->expr()->eq('category.uid', $queryBuilder->createNamedParameter($id, \PDO::PARAM_INT))
+                $queryBuilder->expr()->eq('category.uid', $queryBuilder->createNamedParameter($id, Connection::PARAM_INT))
             );
         }
 

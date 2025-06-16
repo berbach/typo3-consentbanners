@@ -75,7 +75,7 @@ class ModuleRepository extends Repository
 
         if ($id) {
             $statement = $statement->where(
-                $queryBuilder->expr()->eq('uid', $queryBuilder->createNamedParameter($id, \PDO::PARAM_INT))
+                $queryBuilder->expr()->eq('uid', $queryBuilder->createNamedParameter($id, Connection::PARAM_INT))
             );
         }
 
@@ -83,7 +83,7 @@ class ModuleRepository extends Repository
             $statement = $statement->orderBy($order);
         }
 
-        $statement = $statement->execute();
+        $statement = $statement->executeQuery();
 
         if ($id) {
             return $statement->fetchAssociative();
