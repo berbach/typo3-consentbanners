@@ -59,8 +59,8 @@ class SettingsRepository extends Repository
     public function getRecordSettingsInLanguage(int $pid, int $languageId, int $originalId = null, bool $useDeleteClause = true): ?array
     {
         $isLocalized = false;
-        if (isset($GLOBALS['TCA'][self::$tableName]['ctrl']) && is_array($GLOBALS['TCA'][self::$tableName]['ctrl'])) {
-            $tcaCtrl = $GLOBALS['TCA'][self::$tableName]['ctrl'];
+        if (isset($GLOBALS['TCA'][self::TABLE_NAME]['ctrl']) && is_array($GLOBALS['TCA'][self::TABLE_NAME]['ctrl'])) {
+            $tcaCtrl = $GLOBALS['TCA'][self::TABLE_NAME]['ctrl'];
             $isLocalized = isset($tcaCtrl['languageField'], $tcaCtrl['transOrigPointerField']) && $tcaCtrl['transOrigPointerField'] && $tcaCtrl['languageField'];
 
             if ($pid && $isLocalized) {
