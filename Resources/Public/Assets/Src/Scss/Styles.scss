@@ -4,10 +4,11 @@ Helper functions and non–output snippets only (font-face imports, reusable mix
 One @import per line
 */
 //Import Abstracts files
-@import 'abstracts/variables';
-@import 'abstracts/unit';
-@import 'abstracts/breakpoint';
-@import 'abstracts/mixins';
+@use "sass:meta";
+@use 'abstracts/variables';
+@use 'abstracts/unit';
+@use 'abstracts/breakpoint';
+@use 'abstracts/mixins';
 
 *, *::before, *::after {
 	box-sizing: inherit;
@@ -40,9 +41,9 @@ Micro level reusable components are imported here
 One @import per line
 */
 //Import Component files
-@import "components/form";
-@import "components/cookiebanner";
-@import "components/placeholder";
+@include meta.load-css("components/form");
+@include meta.load-css("components/cookiebanner");
+@include meta.load-css("components/placeholder");
 
 /*
 Have a single scss for each specific page

@@ -1,20 +1,22 @@
+@use "../abstracts/variables";
+
 @use 'sass:math';
 
-.#{$prefix}consentbanner-placeholder {
+.#{variables.$prefix}consentbanner-placeholder {
   position: relative;
   width: 100%;
   $border-thickness: 3px;
-  border: $border-thickness dashed $secondary;
+  border: $border-thickness dashed variables.$secondary;
 
-  &.#{$prefix}media--wrapper.#{$prefix}type--movie {
+  &.#{variables.$prefix}media--wrapper.#{variables.$prefix}type--movie {
     align-items: stretch;
   }
 
-  .#{$prefix}aspect-16-9 & {
+  .#{variables.$prefix}aspect-16-9 & {
     padding-top: calc(#{math.div(9, 16) * 100%} - #{$border-thickness * 2});
   }
 
-  .#{$prefix}consentbanner-placeholder-wrapper {
+  .#{variables.$prefix}consentbanner-placeholder-wrapper {
     position: absolute;
     top: 0;
     left: 0;
@@ -30,15 +32,15 @@
     justify-content: center;
   }
 
-  .#{$prefix}consentbanner-placeholder-text {
+  .#{variables.$prefix}consentbanner-placeholder-text {
     margin-bottom: 1em;
     text-align: center;
   }
 
-  .#{$prefix}consentbanner-module {
+  .#{variables.$prefix}consentbanner-module {
     padding: 0 calc((100% - 14em) / 2);
 
-    .#{$prefix}control-checkbox {
+    .#{variables.$prefix}control-checkbox {
       font-weight: bold;
       padding: .5em 1.5em;
       //background: $gray95;
@@ -48,7 +50,7 @@
   &-variable-height {
     padding-top: 2rem;
     padding-bottom: 2rem;
-    .#{$prefix}consentbanner-placeholder-wrapper {
+    .#{variables.$prefix}consentbanner-placeholder-wrapper {
       position: relative;
     }
   }

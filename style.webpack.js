@@ -1,5 +1,8 @@
+'use strict'
+
 const path = require('path');
 const webpack = require('webpack');
+const autoprefixer = require('autoprefixer')
 const {CleanWebpackPlugin} = require('clean-webpack-plugin');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
@@ -28,36 +31,44 @@ const config = {
          */
         path: path.resolve(__dirname + '/Resources/Public/', 'Dist')
     },
+    cache: {
+        type: 'filesystem',
+    },
     stats: {
-        children: true,
-        assets: false
+
     },
     module: {
         rules: [
             {
                 test: /\.(sa|sc)ss$/,
-                use: [
-                    MiniCssExtractPlugin.loader,
-                    {
+                use: [{
+                    loader: MiniCssExtractPlugin.loader,
+                }, {
                         loader: "css-loader",
                         options: {
                             importLoaders: 1,
-                            sourceMap: isDevelopment,
+                            sourceMap: true,
                             //publicPath: '../Css'
                         }
                     },
                     {
                         loader: "postcss-loader",
                         options: {
-                            sourceMap: isDevelopment,
+                            sourceMap: true,
+                            postcssOptions: {
+                                plugins: [
+                                    autoprefixer
+                                ]
+                            }
                         }
                     },
                     {
                         loader: "sass-loader",
                         options: {
-                            sourceMap: isDevelopment,
+                            implementation: require("sass"),
+                            sourceMap: true,
                             sassOptions: {
-                                outputStyle: 'compressed',
+                                quietDeps: true
                             },
                         }
                     }
@@ -94,9 +105,11 @@ const config = {
                 minimizerOptions: [{
                     level: {
                         1: {
-                            roundingPrecision: "all=3",
+                            // roundingPrecision: "all=3,px=5",
                         },
-                        2: {},
+                        2: {
+                            restructureRules: true
+                        },
                     },
                 }, {
                     preset: [
@@ -121,7 +134,6 @@ const config = {
         hints: false
     },
     plugins: [
-        new webpack.ProgressPlugin(),
         new MiniCssExtractPlugin({
             filename: 'Css/[name].css',
             chunkFilename: 'Css/[id].css',

@@ -426,7 +426,7 @@ function ConsentBanner(node) {
 
 let initiated = false;
 
-export function init(node/*, options*/) {
+export function init(node) {
     let CB = new ConsentBanner(node)
     CB.init();
 

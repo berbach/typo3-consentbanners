@@ -1,10 +1,17 @@
+@use "sass:map";
+@use "sass:meta";
+@use "sass:string";
+@use "breakpoint";
+@use "unit";
+@use "variables";
+
 @mixin bb-font-style-by-type($style-type: null) {
-  @if map-has-key($font-style-types, $style-type) {
+  @if map.has-key(variables.$font-style-types, $style-type) {
 
     @each $size,
-    $font-defs in map-get($font-style-types, $style-type) {
+    $font-defs in map.get(variables.$font-style-types, $style-type) {
 
-      @include bb-mq-up($size) {
+      @include breakpoint.bb-mq-up($size) {
 
         @each $name,
         $value in $font-defs {
@@ -14,17 +21,17 @@
           }
 
           @else if $name==line-height {
-            #{$name}: bb-calc-rem($value);
+            #{$name}: unit.bb-calc-rem($value);
           }
 
-          @else if type-of($name)=='string' {
+          @else if meta.type-of($name)=='string' {
 
-            @if type-of($value) !='number' {
+            @if meta.type-of($value) !='number' {
               #{$name}: $value;
             }
 
-            @else if type-of($value)=='number' {
-              #{$name}: bb-calc-rem($value);
+            @else if meta.type-of($value)=='number' {
+              #{$name}: unit.bb-calc-rem($value);
             }
           }
 
@@ -44,7 +51,7 @@
 }
 
 @mixin bb-text-align($position: 'left') {
-  text-align: unquote($position);
+  text-align: string.unquote($position);
 }
 
 @mixin logo-mixin($logo: false) {

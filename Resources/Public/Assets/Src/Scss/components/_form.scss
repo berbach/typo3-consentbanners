@@ -1,18 +1,21 @@
+@use "../abstracts/unit";
+@use "../abstracts/variables";
+
 @use 'sass:math';
 
-.#{$prefix}consentbanner {
+.#{variables.$prefix}consentbanner {
   $self: &;
 
   &-content {
-    &.#{$prefix}type-scroll {
+    &.#{variables.$prefix}type-scroll {
       overflow-y: auto;
     }
 
     #{$self}-categories {
       #{$self}-category {
         padding-top: .5em;
-        padding-bottom: bb-calc-rem(8);
-        border-bottom: 1px solid $gray;
+        padding-bottom: unit.bb-calc-rem(8);
+        border-bottom: 1px solid variables.$gray;
 
         &:last-child {
           border: none;
@@ -23,8 +26,8 @@
         }
 
         &-modules {
-          padding-left: bb-calc-rem(25);
-          margin-top: bb-calc-rem(8);
+          padding-left: unit.bb-calc-rem(25);
+          margin-top: unit.bb-calc-rem(8);
         }
 
         #{$self}-module {
@@ -48,7 +51,7 @@
 
   &-content,
   &-placeholder {
-    .#{$prefix}control-checkbox {
+    .#{variables.$prefix}control-checkbox {
       display: flex;
       justify-content: space-between;
 
@@ -60,37 +63,37 @@
           display: none;
         }
 
-        &:checked + .#{$prefix}toggle {
-          background: $darkGreen;
+        &:checked + .#{variables.$prefix}toggle {
+          background: variables.$darkGreen;
 
           &:after {
             left: 2.5em - .25em - $toggleKnobSize;
           }
         }
 
-        &:indeterminate + .#{$prefix}toggle {
-          background: $gray;
+        &:indeterminate + .#{variables.$prefix}toggle {
+          background: variables.$gray;
 
           &:after {
             left: math.div(2.5em - .25em - $toggleKnobSize, 2);
           }
         }
 
-        &:disabled + .#{$prefix}toggle {
-          border: bb-calc-rem(2) solid $darkGray80;
-          background: $lightGray;
+        &:disabled + .#{variables.$prefix}toggle {
+          border: unit.bb-calc-rem(2) solid variables.$darkGray80;
+          background: variables.$lightGray;
           opacity: .6;
         }
       }
 
-      .#{$prefix}toggle {
+      .#{variables.$prefix}toggle {
         position: relative;
         height: $toggleHeight;
         width: 2.5em;
 
         border-radius: .75em;
-        border: bb-calc-rem(2) solid $darkGray80;
-        background: $darkGray80;
+        border: unit.bb-calc-rem(2) solid variables.$darkGray80;
+        background: variables.$darkGray80;
 
         transition: .2s ease;
 
@@ -106,7 +109,7 @@
           width: $toggleKnobSize;
           border-radius: .75em;
 
-          background: $white;
+          background: variables.$white;
           box-shadow: 0 0 10px rgba(0, 0, 0, .2);
 
           transition: .3s cubic-bezier(.7, 0, .1, 1);
@@ -116,8 +119,8 @@
   }
 
   // bottom banner layout
-  &.#{$prefix}cb-bottom {
-    .#{$prefix}control-checkbox {
+  &.#{variables.$prefix}cb-bottom {
+    .#{variables.$prefix}control-checkbox {
       @media (min-width: 640px) {
         flex-direction: row-reverse;
         margin-right: 15px;
@@ -126,7 +129,7 @@
         margin-bottom: 8px;
       }
 
-      .#{$prefix}toggle {
+      .#{variables.$prefix}toggle {
         margin-right: 7px;
       }
     }

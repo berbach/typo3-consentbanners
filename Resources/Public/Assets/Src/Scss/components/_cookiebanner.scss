@@ -1,29 +1,27 @@
+@use "../abstracts/variables";
+@use "../abstracts/unit";
+
 @use "sass:math";
 @use "sass:map";
 @use "sass:list";
 @use "sass:selector";
 
-$prefix: "bb-" !default;
+//$prefix: "bb-" !default;
 $white: #FFFFFF !default;
 $gray95: #F5F5F5 !default;
 $gray: #A7BABA !default;
 
-$breakpoints: (
-    small: 0,
-    medium: 768px,
-    large: 1024px
-);
 $container-gutter: (
     small: 20px 12px 12px,
     medium: 40px 20px 20px
 );
 $background-overlay: rgb(0, 0, 0, .3) !default;
 $background-full-width: #f0f0f0 !default;
-$container-max-width: bb-calc-rem(1440) !default;
+$container-max-width: unit.bb-calc-rem(1440) !default;
 $min-padding: 16px !default;
 $max-width: $container-max-width !default;
 
-.#{$prefix}consentbanner {
+.#{variables.$prefix}consentbanner {
     $self: &;
 
     left: 0;
@@ -31,26 +29,26 @@ $max-width: $container-max-width !default;
     position: fixed;
     display: none;
 
-    @at-root .#{$prefix}cb-overlay#{&} {
+    @at-root .#{variables.$prefix}cb-overlay#{&} {
         background: $background-overlay;
         align-items: center;
         justify-content: center;
         top: 0;
         height: 100vh;
         width: 100vw;
-        @media screen and (min-width: bb-calc-rem(map.get($breakpoints, "medium"))) {
+        @media screen and (min-width: unit.bb-calc-rem(map.get(variables.$breakpoints, "medium"))) {
             padding-left: 20px;
             padding-right: 20px;
         }
     }
 
-    @at-root .#{$prefix}cb-bottom#{&} {
+    @at-root .#{variables.$prefix}cb-bottom#{&} {
         background: $background-full-width;
         align-items: flex-end;
         width: 100vw;
         max-height: min(100vh, 700px);
         bottom: 0;
-        border-top: 8px solid $secondary;
+        border-top: 8px solid variables.$secondary;
     }
 
     &.visible {
@@ -61,13 +59,13 @@ $max-width: $container-max-width !default;
         position: relative;
         flex: 1;
 
-        padding: bb-calc-rem(map.get($container-gutter, "small"));
+        padding: unit.bb-calc-rem(map.get($container-gutter, "small"));
 
-        @media screen and (min-width: bb-calc-rem(map.get($breakpoints, "medium"))) {
-            padding: bb-calc-rem(map.get($container-gutter, "medium"));
+        @media screen and (min-width: unit.bb-calc-rem(map.get(variables.$breakpoints, "medium"))) {
+            padding: unit.bb-calc-rem(map.get($container-gutter, "medium"));
         }
 
-        .#{$prefix}cb-bottom & {
+        .#{variables.$prefix}cb-bottom & {
             display: flex;
             flex-direction: column;
             flex-wrap: nowrap;
@@ -76,7 +74,7 @@ $max-width: $container-max-width !default;
             align-content: center;
 
 
-            @media screen and (min-width: bb-calc-rem(map.get($breakpoints, "large"))) {
+            @media screen and (min-width: unit.bb-calc-rem(map.get(variables.$breakpoints, "large"))) {
                 flex-direction: row;
                 flex-wrap: wrap;
                 max-width: $container-max-width;
@@ -84,8 +82,8 @@ $max-width: $container-max-width !default;
             }
         }
 
-        .#{$prefix}cb-overlay & {
-            max-width: bb-calc-rem(map.get($breakpoints, "medium"));
+        .#{variables.$prefix}cb-overlay & {
+            max-width: unit.bb-calc-rem(map.get(variables.$breakpoints, "medium"));
             background: $white;
             display: flex;
             flex-direction: column;
@@ -99,7 +97,7 @@ $max-width: $container-max-width !default;
         #{$self}-header {
             width: 100%;
 
-            .#{$prefix}cb-bottom & {
+            .#{variables.$prefix}cb-bottom & {
                 #{$self}-close {
                     display: none !important;
                 }
@@ -109,27 +107,27 @@ $max-width: $container-max-width !default;
         #{$self}-content {
             width: 100%;
 
-            .#{$prefix}cb-bottom & {
+            .#{variables.$prefix}cb-bottom & {
                 position: relative;
                 align-items: stretch;
                 align-content: stretch;
                 justify-content: flex-start;
                 flex-direction: column;
                 flex-wrap: nowrap;
-                padding-bottom: bb-calc-rem(15);
+                padding-bottom: unit.bb-calc-rem(15);
 
                 &.is-categories {
-                    padding-bottom: bb-calc-rem(15);
-                    @media screen and (min-width: bb-calc-rem(map.get($breakpoints, "medium"))) {
-                        padding-bottom: bb-calc-rem(50);
+                    padding-bottom: unit.bb-calc-rem(15);
+                    @media screen and (min-width: unit.bb-calc-rem(map.get(variables.$breakpoints, "medium"))) {
+                        padding-bottom: unit.bb-calc-rem(50);
                         margin-bottom: 15px;
                     }
-                    @media screen and (min-width: bb-calc-rem(map.get($breakpoints, "large"))) {
+                    @media screen and (min-width: unit.bb-calc-rem(map.get(variables.$breakpoints, "large"))) {
                         margin-bottom: 0;
                     }
                 }
 
-                @media screen and (min-width: bb-calc-rem(map.get($breakpoints, "large"))) {
+                @media screen and (min-width: unit.bb-calc-rem(map.get(variables.$breakpoints, "large"))) {
                     width: 70%;
                 }
 
@@ -140,13 +138,13 @@ $max-width: $container-max-width !default;
                     align-items: stretch;
                     margin-top: 15px;
 
-                    @media screen and (min-width: bb-calc-rem(map.get($breakpoints, "medium"))) {
+                    @media screen and (min-width: unit.bb-calc-rem(map.get(variables.$breakpoints, "medium"))) {
                         flex-direction: row;
                         justify-content: flex-start;
                         align-items: center;
                         flex-wrap: wrap;
                         position: absolute;
-                        height: bb-calc-rem(45);
+                        height: unit.bb-calc-rem(45);
                         left: 0;
                         right: 0;
                         bottom: 0;
@@ -179,7 +177,7 @@ $max-width: $container-max-width !default;
             #{$self}-buttons {
                 display: flex;
 
-                > .#{$prefix}button {
+                > .#{variables.$prefix}button {
                     cursor: pointer;
 
                     &.hidden {
@@ -188,7 +186,7 @@ $max-width: $container-max-width !default;
                 }
             }
 
-            .#{$prefix}cb-bottom & {
+            .#{variables.$prefix}cb-bottom & {
                 width: 100%;
                 display: flex;
                 flex-direction: column;
@@ -196,7 +194,7 @@ $max-width: $container-max-width !default;
                 align-items: center;
                 justify-content: space-between;
 
-                @media screen and (min-width: bb-calc-rem(map.get($breakpoints, "large"))) {
+                @media screen and (min-width: unit.bb-calc-rem(map.get(variables.$breakpoints, "large"))) {
                     width: 30%;
 
                 }
@@ -205,13 +203,13 @@ $max-width: $container-max-width !default;
                     width: 100%;
                     flex-direction: column;
 
-                    @media screen and (min-width: bb-calc-rem(map.get($breakpoints, "medium"))) {
+                    @media screen and (min-width: unit.bb-calc-rem(map.get(variables.$breakpoints, "medium"))) {
                         width: 100%;
                         flex-direction: row;
                         flex-wrap: nowrap;
                     }
 
-                    @media screen and (min-width: bb-calc-rem(map.get($breakpoints, "large"))) {
+                    @media screen and (min-width: unit.bb-calc-rem(map.get(variables.$breakpoints, "large"))) {
                         width: 75%;
                         flex-direction: column;
                         align-items: stretch;
@@ -220,7 +218,7 @@ $max-width: $container-max-width !default;
                 }
 
                 #{$self}-links {
-                    height: bb-calc-rem(45);
+                    height: unit.bb-calc-rem(45);
                     width: 100%;
                     display: flex;
                     justify-content: center;
@@ -228,15 +226,16 @@ $max-width: $container-max-width !default;
 
                     #{$self}--link {
                         flex: 1 0 auto;
-                        @media screen and (min-width: bb-calc-rem(map.get($breakpoints, "large"))) {
-                            flex: 0 0 auto;
-                        }
-                        font-size: bb-calc-rem(16);
+                        font-size: unit.bb-calc-rem(16);
                         line-height: 1.5;
                         border: 0;
                         display: inline-block;
-                        padding: bb-calc-rem(10.5 10 10.5 10);
+                        padding: unit.bb-calc-rem(10.5 10 10.5 10);
                         position: relative;
+
+                        @media screen and (min-width: unit.bb-calc-rem(map.get(variables.$breakpoints, "large"))) {
+                            flex: 0 0 auto;
+                        }
 
                         //&:first-child {
                         //  padding-left: bb-calc-rem(5);
@@ -244,11 +243,11 @@ $max-width: $container-max-width !default;
 
                         &:after {
                             content: "";
-                            background-color: $darkBlue;
+                            background-color: variables.$darkBlue;
                             width: 2px;
                             position: absolute;
-                            top: bb-calc-rem(12.5);
-                            bottom: bb-calc-rem(10.5);
+                            top: unit.bb-calc-rem(12.5);
+                            bottom: unit.bb-calc-rem(10.5);
                             right: -1px;
                             opacity: .7;
                         }
@@ -264,21 +263,21 @@ $max-width: $container-max-width !default;
                 }
             }
 
-            .#{$prefix}cb-overlay & {
-                padding-top: bb-calc-rem(8);
+            .#{variables.$prefix}cb-overlay & {
+                padding-top: unit.bb-calc-rem(8);
 
                 #{$self}-buttons {
                     flex-direction: column;
                     align-items: center;
                     justify-content: center;
-                    @media screen and (min-width: bb-calc-rem(map.get($breakpoints, "medium"))) {
+                    @media screen and (min-width: unit.bb-calc-rem(map.get(variables.$breakpoints, "medium"))) {
                         flex-direction: row;
                         &.is-categories,
                         &.not-categories {
                             flex-direction: row-reverse;
 
-                            .#{$prefix}button {
-                                @media screen and (min-width: bb-calc-rem(map.get($breakpoints, "medium"))) {
+                            .#{variables.$prefix}button {
+                                @media screen and (min-width: unit.bb-calc-rem(map.get(variables.$breakpoints, "medium"))) {
                                     margin-right: 9px;
                                     margin-left: 0;
                                     margin-bottom: 0;
@@ -291,10 +290,10 @@ $max-width: $container-max-width !default;
                         }
                     }
 
-                    .#{$prefix}button {
+                    .#{variables.$prefix}button {
                         flex: 1;
                         width: 100%;
-                        @media screen and (min-width: bb-calc-rem(map.get($breakpoints, "medium"))) {
+                        @media screen and (min-width: unit.bb-calc-rem(map.get(variables.$breakpoints, "medium"))) {
                             width: auto;
                         }
                     }
@@ -311,12 +310,12 @@ $max-width: $container-max-width !default;
                     }
 
                     $visual-center-ratio: .8;
-                    margin-top: bb-calc-rem(list.nth(map.get($container-gutter, "small"), $small-paddings-index)) * $visual-center-ratio;
-
-                    @media screen and (min-width: bb-calc-rem(map.get($breakpoints, "medium"))) {
-                        margin-top: bb-calc-rem(list.nth(map.get($container-gutter, "medium"), $medium-paddings-index)) * $visual-center-ratio;
-                    }
                     text-align: center;
+                    margin-top: unit.bb-calc-rem(list.nth(map.get($container-gutter, "small"), $small-paddings-index)) * $visual-center-ratio;
+
+                    @media screen and (min-width: unit.bb-calc-rem(map.get(variables.$breakpoints, "medium"))) {
+                        margin-top: unit.bb-calc-rem(list.nth(map.get($container-gutter, "medium"), $medium-paddings-index)) * $visual-center-ratio;
+                    }
                 }
             }
         }
@@ -333,8 +332,8 @@ $max-width: $container-max-width !default;
 
             $size: 40px;
 
-            height: bb-calc-rem($size);
-            width: bb-calc-rem($size);
+            height: unit.bb-calc-rem($size);
+            width: unit.bb-calc-rem($size);
 
             appearance: none;
             background: none;
@@ -356,7 +355,7 @@ $max-width: $container-max-width !default;
                 width: 1px;
                 height: $icon-height;
 
-                background: $darkBlue;
+                background: variables.$darkBlue;
 
                 transform: rotate(45deg);
 
@@ -370,31 +369,31 @@ $max-width: $container-max-width !default;
         #{$self}--heading {
             font-weight: bold;
 
-            .#{$prefix}cb-bottom & {
+            .#{variables.$prefix}cb-bottom & {
                 text-align: left;
             }
 
-            .#{$prefix}cb-overlay & {
+            .#{variables.$prefix}cb-overlay & {
                 text-align: center;
             }
 
-            margin-bottom: bb-calc-rem(6);
+            margin-bottom: unit.bb-calc-rem(6);
         }
     }
 
     &-content {
         #{$self}--text {
-            margin-bottom: bb-calc-rem(2);
+            margin-bottom: unit.bb-calc-rem(2);
         }
 
         #{$self}--link {
             text-decoration: underline;
-            color: $darkBlue;
+            color: variables.$darkBlue;
 
             cursor: pointer;
 
             &:hover {
-                color: $secondary;
+                color: variables.$secondary;
             }
         }
     }
@@ -406,18 +405,18 @@ $max-width: $container-max-width !default;
     &-footer #{$self}-buttons {
 
 
-        .#{$prefix}button {
+        .#{variables.$prefix}button {
             outline: none;
             padding: 0.625rem;
             border: 0.125rem solid transparent;
             display: inline-block;
-            font-size: bb-calc-rem(16);
+            font-size: unit.bb-calc-rem(16);
 
-            &.#{$prefix}btn {
+            &.#{variables.$prefix}btn {
                 &--typeP {
                     margin: 0;
 
-                    background: $darkBlue;
+                    background: variables.$darkBlue;
                     color: $white;
                 }
 
@@ -425,22 +424,22 @@ $max-width: $container-max-width !default;
                     margin: 0;
 
                     background: transparent;
-                    color: $darkBlue;
-                    border-color: $secondary;
+                    color: variables.$darkBlue;
+                    border-color: variables.$secondary;
                 }
 
                 &--typeS, &--typeP {
                     &:hover {
-                        border-color: $secondary;
-                        background: $secondary;
+                        border-color: variables.$secondary;
+                        background: variables.$secondary;
                         color: $white;
                     }
                 }
             }
 
-            .#{$prefix}cb-overlay & {
+            .#{variables.$prefix}cb-overlay & {
                 margin-bottom: 9px;
-                @media screen and (min-width: bb-calc-rem(map.get($breakpoints, "medium"))) {
+                @media screen and (min-width: unit.bb-calc-rem(map.get(variables.$breakpoints, "medium"))) {
                     margin-right: 9px;
                     margin-bottom: 0;
                 }
@@ -450,16 +449,16 @@ $max-width: $container-max-width !default;
                 }
             }
 
-            .#{$prefix}cb-bottom & {
+            .#{variables.$prefix}cb-bottom & {
                 margin-bottom: 9px;
-                @media screen and (min-width: bb-calc-rem(map.get($breakpoints, "medium"))) {
+                @media screen and (min-width: unit.bb-calc-rem(map.get(variables.$breakpoints, "medium"))) {
                     margin-bottom: 0;
                     margin-left: 5px;
                     margin-right: 5px;
                     flex: 1 0 auto;
                 }
 
-                @media screen and (min-width: bb-calc-rem(map.get($breakpoints, "large"))) {
+                @media screen and (min-width: unit.bb-calc-rem(map.get(variables.$breakpoints, "large"))) {
                     margin-bottom: 9px;
                     margin-left: 0;
                     margin-right: 0;
@@ -467,18 +466,18 @@ $max-width: $container-max-width !default;
 
                 &:first-child {
                     margin-bottom: 9px;
-                    @media screen and (min-width: bb-calc-rem(map.get($breakpoints, "medium"))) {
+                    @media screen and (min-width: unit.bb-calc-rem(map.get(variables.$breakpoints, "medium"))) {
                         margin-bottom: 0;
                         margin-left: 0;
                     }
-                    @media screen and (min-width: bb-calc-rem(map.get($breakpoints, "large"))) {
+                    @media screen and (min-width: unit.bb-calc-rem(map.get(variables.$breakpoints, "large"))) {
                         margin-bottom: 9px;
                     }
                 }
 
                 &:last-child {
                     margin-bottom: 0;
-                    @media screen and (min-width: bb-calc-rem(map.get($breakpoints, "medium"))) {
+                    @media screen and (min-width: unit.bb-calc-rem(map.get(variables.$breakpoints, "medium"))) {
                         margin-right: 0;
                     }
                 }
@@ -488,7 +487,7 @@ $max-width: $container-max-width !default;
         }
     }
 
-    &-button.#{$prefix}widget {
+    &-button.#{variables.$prefix}widget {
         position: fixed;
         left: 12px;
         bottom: 12px;
@@ -498,7 +497,7 @@ $max-width: $container-max-width !default;
 
         border-radius: 50%;
 
-        background: url('../Image/checkbox.svg') no-repeat center, $secondary;
+        background: url('../Image/checkbox.svg') no-repeat center, variables.$secondary;
         background-size: 18px;
         box-shadow: 0 1px 8px rgba(0, 0, 0, .1);
 
