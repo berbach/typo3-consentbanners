@@ -3,31 +3,68 @@
 namespace Bb\Consentbanners\Utility;
 
 use TYPO3\CMS\Backend\Utility\BackendUtility;
+use TYPO3\CMS\Core\Site\Entity\Site;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class TCASelectItemUtility
 {
     public function getAllContentElements(&$params): void
     {
-        $groups = BackendUtility::getPagesTSconfig(0)['mod.']['wizards.']['newContentElement.']['wizardItems.'];
-        $CType = isset(BackendUtility::getPagesTSconfig(0)['TCEFORM.']['tt_content.']['CType.']) ? BackendUtility::getPagesTSconfig(0)['TCEFORM.']['tt_content.']['CType.'] : null;
-        $removeItems = !is_null($CType) && isset($CType['removeItems']) ? $CType['removeItems'] : null;
-        $removeItems = !is_null($removeItems) ? GeneralUtility::trimExplode(',',$removeItems) : null;
-        foreach ($groups as $key => $group) {
-            $params['items'][] = ['label' => $group['header'], 'value' => '--div--', 'group' => rtrim($key, '.')];
-            foreach ($group['elements.'] as $element) {
+        $groupedArray = [];
 
-                if(!is_null($removeItems) && !in_array($element['tt_content_defValues.']['CType'], $removeItems, false)) {
-                    $params['items'][] = ['label' => $element['title'], 'value' => $element['tt_content_defValues.']['CType'], 'icon' => $element['iconIdentifier'], 'group' => rtrim($key, '.')];
+        // TCA global laden
+        $tca = $GLOBALS['TCA']['tt_content'] ?? [];
+
+        if (isset($tca['columns']['CType']['config'])) {
+            $configCType = $tca['columns']['CType']['config'];
+
+            if (isset($configCType['items']) && is_array($configCType['items'])) {
+                /** @var $site Site */
+                $site = $params['site'];
+                $tceForm = BackendUtility::getPagesTSconfig($site->getRootPageId())['TCEFORM.'];
+                $removeItems = isset($tceForm['tt_content.']['CType.']['removeItems']) ? GeneralUtility::trimExplode(',',$tceForm['tt_content.']['CType.']['removeItems'].', list, felogin_login') : [];
+                $removeGroups = GeneralUtility::trimExplode(',','menu, forms');
+                $itemGroups = isset($configCType['itemGroups']) ? $configCType['itemGroups'] : [];
+                if(isset($configCType['itemGroups']) && !empty($configCType['itemGroups'])) {
+                    foreach ($itemGroups as $key => $group) {
+                        if (!in_array($key, $removeGroups, true)) {
+                            $groupedArray[$key] = [
+                                "label" => $group,
+                                "items" => []
+                            ];
+                        }
+                    }
+                }else{
+                    $groupedArray["items"] = [];
                 }
-                if (is_null($removeItems)){
-                    $params['items'][] = ['label' => $element['title'], 'value' => $element['tt_content_defValues.']['CType'], 'icon' => $element['iconIdentifier'], 'group' => rtrim($key, '.')];
+
+
+                foreach ($configCType['items'] as $item) {
+                    $groupName = $item['group'];
+                    if(!in_array($item['value'], $removeItems, true) && !in_array($groupName, $removeGroups, true)) {
+                        if (isset($groupedArray[$groupName])) {
+                            unset($item["group"]);
+                            $groupedArray[$groupName]["items"][$item['value']] = $item;
+                        }else {
+                            $groupedArray["items"][$item['value']] = $item;
+                        }
+                    }
                 }
+
+                foreach ($groupedArray as $key => $item) {
+                    if (isset($groupedArray[$key]['items']) && !empty($groupedArray[$key]['items'])){
+                        $params['items'][] = ['label' => $groupedArray[$key]['label'], 'value' => '--div--'];
+                        foreach ($groupedArray[$key]['items'] as $item) {
+                            $params['items'][] = ['label' => $item['label'], 'value' => $item['value']];
+                        }
+                    }elseif (isset($groupedArray['items']) && !empty($groupedArray['items'])){
+                        foreach ($groupedArray['items'] as $item) {
+                            $params['items'][] = ['label' => $item['label'], 'value' => $item['value']];
+                        }
+                    }
+                }
+
             }
         }
-
-        $params['items'] = array_filter($params['items'], static function ($item) {
-            return isset($item['value']);
-        });
     }
 }
