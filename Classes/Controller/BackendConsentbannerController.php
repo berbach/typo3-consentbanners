@@ -208,13 +208,13 @@ class BackendConsentbannerController extends ActionController
                                 //Conf Create Settings in Language
                                 $edit = [
                                     'edit' => [
-                                        SettingsRepository::$tableName => [
+                                        SettingsRepository::TABLE_NAME => [
                                             $rootPageSite->getRootPageId() => 'new'
                                         ]
                                     ],
                                     'defVals' => [
-                                        SettingsRepository::$tableName => [
-                                            $GLOBALS['TCA'][SettingsRepository::$tableName]['ctrl']['languageField'] => $language->getLanguageId(),
+                                        SettingsRepository::TABLE_NAME => [
+                                            $GLOBALS['TCA'][SettingsRepository::TABLE_NAME]['ctrl']['languageField'] => $language->getLanguageId(),
                                         ]
                                     ],
                                     'returnUrl' => $returnUrl
@@ -237,13 +237,13 @@ class BackendConsentbannerController extends ActionController
                 } else {
                     $new = [
                         'edit' => [
-                            SettingsRepository::$tableName => [
+                            SettingsRepository::TABLE_NAME => [
                                 $rootPageSite->getRootPageId() => 'new'
                             ]
                         ],
                         'defVals' => [
-                            SettingsRepository::$tableName => [
-                                $GLOBALS['TCA'][SettingsRepository::$tableName]['ctrl']['languageField'] => $defaultLanguage->getLanguageId(),
+                            SettingsRepository::TABLE_NAME => [
+                                $GLOBALS['TCA'][SettingsRepository::TABLE_NAME]['ctrl']['languageField'] => $defaultLanguage->getLanguageId(),
                             ]
                         ],
                         'returnUrl' => $this->getBuildRoute($this->moduleName, ['tx_consentbanners_site_consentbanners' => ['action' => $current_action, 'controller' => $current_controller], 'SET' => ['language' => $defaultLanguage->getLanguageId()], 'sysLanguageUid' => $defaultLanguage->getLanguageId(), 'rootPageId' => $rootPageSite->getRootPageId()])
@@ -254,13 +254,13 @@ class BackendConsentbannerController extends ActionController
 
                 $edit = [
                     'edit' => [
-                        SettingsRepository::$tableName => [
+                        SettingsRepository::TABLE_NAME => [
                             $rootPageSite->getRootPageId() => 'new'
                         ]
                     ],
                     'defVals' => [
-                        SettingsRepository::$tableName => [
-                            $GLOBALS['TCA'][SettingsRepository::$tableName]['ctrl']['languageField'] => $defaultLanguage->getLanguageId(),
+                        SettingsRepository::TABLE_NAME => [
+                            $GLOBALS['TCA'][SettingsRepository::TABLE_NAME]['ctrl']['languageField'] => $defaultLanguage->getLanguageId(),
                         ]
                     ],
                     'returnUrl' => $this->getBuildRoute($this->moduleName, ['tx_consentbanners_site_consentbanners' => ['action' => $current_action, 'controller' => $current_controller], 'SET' => ['language' => $defaultLanguage->getLanguageId()], 'sysLanguageUid' => $defaultLanguage->getLanguageId(), 'rootPageId' => $rootPageSite->getRootPageId()])
