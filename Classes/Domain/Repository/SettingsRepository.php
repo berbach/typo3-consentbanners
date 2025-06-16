@@ -90,7 +90,7 @@ class SettingsRepository extends Repository
 
                 $queryBuilder->setMaxResults(1);
 
-                $row = $queryBuilder->execute()->fetchAssociative();
+                $row = $queryBuilder->executeQuery()->fetchAssociative();
 
                 if($row){
                     return $row;
