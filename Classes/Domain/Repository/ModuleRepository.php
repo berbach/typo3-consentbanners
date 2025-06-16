@@ -22,7 +22,7 @@ class ModuleRepository extends Repository
      */
     public const TABLE_NAME = 'tx_consentbanners_domain_model_module';
 
-    protected array $defaultOrderings = [
+    protected $defaultOrderings = [
         'uid' => QueryInterface::ORDER_ASCENDING
     ];
 

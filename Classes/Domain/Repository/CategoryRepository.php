@@ -27,7 +27,7 @@ class CategoryRepository extends Repository
     /**
      * @var array Default order is by title ascending
      */
-    protected array $defaultOrderings = [
+    protected $defaultOrderings = [
         'locked_and_active' => QueryInterface::ORDER_DESCENDING,
         'sorting' => QueryInterface::ORDER_DESCENDING
     ];
