@@ -1,7 +1,6 @@
 const Debug = require('./Lib/debug');
-const BbModule = {};
 
-let ModulesManager = function () {
+let CbModulesManager = function () {
     this.bodyNode = document.querySelector('body');
 
     this.init = () => {
@@ -22,12 +21,13 @@ let ModulesManager = function () {
 
                     if (!supportsStaticImport()) {
                         this.loadScript(`./Module/${value}.js`, () => {
-                            BbModule[value].init(el);
+                            BbCb[value].init(el);
                         });
                     } else {
                         this.importModule(`./Module/${value}.js`)
                             .then((m) => {
-                                BbModule[value].init(el);
+                                Debug.log(BbCb[value]);
+                                BbCb[value].init(el);
                                 Debug.log("Module", value, "initialized");
                             })
                             .catch(error => Debug.log("Module", value, "ERROR", error));
@@ -72,5 +72,5 @@ let ModulesManager = function () {
     }
 };
 
-let Node = new ModulesManager();
+let Node = new CbModulesManager();
 Node.init();

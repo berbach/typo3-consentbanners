@@ -40,7 +40,7 @@ const config = {
             return 'JavaScript/Chunks/' + name
         },
         library: {
-            name: ["BbModule", "[name]"],
+            name: ["BbCb", "[name]"],
             type: 'umd'
         },
         path: path.resolve(__dirname + '/Resources/Public/', 'Dist'),
