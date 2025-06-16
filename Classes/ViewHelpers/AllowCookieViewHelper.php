@@ -2,11 +2,13 @@
 
 namespace Bb\Consentbanners\ViewHelpers;
 
+use Bb\Consentbanners\Domain\Repository\ModuleRepository;
 use Bb\Consentbanners\Utility\CookieUtility;
 use Closure;
 use Doctrine\DBAL\DBALException;
 use Doctrine\DBAL\Driver\Exception;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
+use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Utility\DebuggerUtility;
@@ -60,12 +62,11 @@ class AllowCookieViewHelper extends AbstractViewHelper
             $moduleName = $baseRenderingContext->getVariableProvider()->get('data')['CType'];
         }
 
-        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)
-            ->getQueryBuilderForTable('tx_consentbanners_domain_model_module');
+        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable(ModuleRepository::TABLE_NAME);
         $queryBuilder->getRestrictions()->removeAll();
         $res = $queryBuilder
             ->select('uid', 'name', 'description', 'placeholder_headline', 'placeholder')
-            ->from('tx_consentbanners_domain_model_module')
+            ->from(ModuleRepository::TABLE_NAME)
             ->where($queryBuilder->expr()->inSet('module_target', $queryBuilder->createNamedParameter($moduleName)));
 
         if ($moduleName === 'html') {
@@ -78,7 +79,7 @@ class AllowCookieViewHelper extends AbstractViewHelper
         }
 
         $res = $res
-            ->execute()
+            ->executeQuery()
             ->fetchAssociative();
 
         if (!is_null($cookie) && isset($res['uid'], $cookie->{$res['uid']}) && $cookie->{$res['uid']} === true) {
