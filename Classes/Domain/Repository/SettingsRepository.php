@@ -21,6 +21,12 @@ class SettingsRepository extends Repository
      */
     public const TABLE_NAME = 'tx_consentbanners_domain_model_settings';
 
+
+    public function __construct(
+        private readonly ConnectionPool $connectionPool
+    ) {
+        parent::__construct();
+    }
     /**
      * @param array $storageIds
      * @param int|null $languageId
@@ -100,8 +106,8 @@ class SettingsRepository extends Repository
         return null;
     }
 
-    protected static function getQueryBuilderForTable(): QueryBuilder
+    protected function getQueryBuilderForTable(): QueryBuilder
     {
-        return GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable(self::TABLE_NAME);
+        return $this->connectionPool->getQueryBuilderForTable(self::TABLE_NAME);
     }
 }

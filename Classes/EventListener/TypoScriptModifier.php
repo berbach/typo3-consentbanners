@@ -6,6 +6,7 @@ use Bb\Consentbanners\Domain\Model\Module;
 use Bb\Consentbanners\Domain\Repository\ModuleRepository;
 use Doctrine\DBAL\Exception;
 use TYPO3\CMS\Backend\Controller\Event\BeforeFormEnginePageInitializedEvent;
+use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Extbase\Event\Mvc\BeforeActionCallEvent;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Database\ConnectionPool;
@@ -149,7 +150,7 @@ class TypoScriptModifier
             ->select('*')
             ->from('sys_template')
             ->where(
-                $queryBuilder->expr()->eq('pid', $queryBuilder->createNamedParameter($this->globalPid, \PDO::PARAM_INT))
+                $queryBuilder->expr()->eq('pid', $queryBuilder->createNamedParameter($this->globalPid, Connection::PARAM_INT))
             )
             ->executeQuery()
             ->fetchAssociative();
@@ -175,7 +176,7 @@ class TypoScriptModifier
         $queryBuilder
             ->update('sys_template', 't')
             ->where(
-                $queryBuilder->expr()->eq('t.pid', $queryBuilder->createNamedParameter($this->globalPid, \PDO::PARAM_INT))
+                $queryBuilder->expr()->eq('t.pid', $queryBuilder->createNamedParameter($this->globalPid, Connection::PARAM_INT))
             )
             ->set('t.config', $typoScript)
             ->executeStatement();

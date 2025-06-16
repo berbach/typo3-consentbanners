@@ -10,6 +10,7 @@ use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\QueryBuilder;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Persistence\Exception\InvalidQueryException;
+use TYPO3\CMS\Extbase\Persistence\Generic\Mapper\DataMapper;
 use TYPO3\CMS\Extbase\Persistence\Generic\QueryResult;
 use TYPO3\CMS\Extbase\Persistence\Generic\Typo3QuerySettings;
 use TYPO3\CMS\Extbase\Persistence\QueryInterface;
@@ -20,12 +21,22 @@ use TYPO3\CMS\Extbase\Persistence\Repository;
 class CategoryRepository extends Repository
 {
     /**
+     * @var string
+     */
+    public const TABLE_NAME = 'tx_consentbanners_domain_model_category';
+    /**
      * @var array Default order is by title ascending
      */
-    protected $defaultOrderings = [
+    protected array $defaultOrderings = [
         'locked_and_active' => QueryInterface::ORDER_DESCENDING,
         'sorting' => QueryInterface::ORDER_DESCENDING
     ];
+
+    public function __construct(
+        private readonly ConnectionPool $connectionPool
+    ) {
+        parent::__construct();
+    }
 
     public function initializeObject(): void
     {
@@ -70,14 +81,14 @@ class CategoryRepository extends Repository
      */
     public function findCategories($id = null): array
     {
-        $queryBuilder = $this->getQueryBuilder();
+        $queryBuilder = $this->getQueryBuilderForTable();
         $statement = $queryBuilder
             ->add('select',
                 "category.name, category.description, category.uid, GROUP_CONCAT(module.name ORDER BY module.order SEPARATOR ',') AS module_name")
-            ->from('tx_consentbanners_domain_model_category', 'category')
+            ->from(self::TABLE_NAME, 'category')
             ->leftJoin(
                 'category',
-                'tx_consentbanners_domain_model_module',
+                ModuleRepository::TABLE_NAME,
                 'module',
                 $queryBuilder->expr()->eq('module.category', $queryBuilder->quoteIdentifier('category.uid'))
             );
@@ -104,13 +115,8 @@ class CategoryRepository extends Repository
         return array_map($splitModuleName, $statement->fetchAllAssociative());
     }
 
-    private function getConnection(string $table): Connection
+    protected function getQueryBuilderForTable(): QueryBuilder
     {
-        return GeneralUtility::makeInstance(ConnectionPool::class)->getConnectionForTable($table);
-    }
-
-    private function getQueryBuilder(): QueryBuilder
-    {
-        return $this->getConnection('tx_consentbanners_domain_model_category')->createQueryBuilder();
+        return $this->connectionPool->getQueryBuilderForTable(self::TABLE_NAME);
     }
 }

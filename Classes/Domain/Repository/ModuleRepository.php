@@ -17,9 +17,20 @@ use TYPO3\CMS\Extbase\Persistence\Repository;
 
 class ModuleRepository extends Repository
 {
-    protected $defaultOrderings = [
+    /**
+     * @var string
+     */
+    public const TABLE_NAME = 'tx_consentbanners_domain_model_module';
+
+    protected array $defaultOrderings = [
         'uid' => QueryInterface::ORDER_ASCENDING
     ];
+
+    public function __construct(
+        private readonly ConnectionPool $connectionPool
+    ) {
+        parent::__construct();
+    }
 
     public function initializeObject(): void
     {
@@ -66,12 +77,12 @@ class ModuleRepository extends Repository
      */
     public function findModules($id = null, $order = null): array|bool
     {
-        $queryBuilder = $this->getQueryBuilder();
+        $queryBuilder = $this->getQueryBuilderForTable();
         $statement = $queryBuilder
             ->select(
                 'name', 'description', 'accepted_script', 'rejected_script', 'module_target', 'uid', 'pid'
             )
-            ->from('tx_consentbanners_domain_model_module');
+            ->from(self::TABLE_NAME);
 
         if ($id) {
             $statement = $statement->where(
@@ -92,13 +103,8 @@ class ModuleRepository extends Repository
         return $statement->fetchAllAssociative();
     }
 
-    private function getConnection(): Connection
+    protected function getQueryBuilderForTable(): QueryBuilder
     {
-        return GeneralUtility::makeInstance(ConnectionPool::class)->getConnectionForTable('tx_consentbanners_domain_model_category');
-    }
-
-    private function getQueryBuilder(): QueryBuilder
-    {
-        return $this->getConnection()->createQueryBuilder();
+        return $this->connectionPool->getQueryBuilderForTable(self::TABLE_NAME);
     }
 }
