@@ -14,8 +14,7 @@ let ModulesManager = function () {
         for (let index in eMod) {
             const el = eMod[index]
             if (!(el instanceof HTMLElement)) continue
-            let module = el.dataset.module,
-                mOptions = el.dataset.options || '';
+            let module = el.dataset.moduleCb
 
             if (module !== 'undefined') {
                 let moduleArr = module.split(" ");
@@ -23,13 +22,13 @@ let ModulesManager = function () {
 
                     if (!supportsStaticImport()) {
                         this.loadScript(`./Module/${value}.js`, () => {
-                            BbModule[value].init(el, mOptions);
+                            BbModule[value].init(el);
                         });
                     } else {
                         this.importModule(`./Module/${value}.js`)
                             .then((m) => {
-                                BbModule[value].init(el, mOptions);
-                                Debug.log("Module", value, "initialized with options", mOptions);
+                                BbModule[value].init(el);
+                                Debug.log("Module", value, "initialized");
                             })
                             .catch(error => Debug.log("Module", value, "ERROR", error));
                     }
