@@ -182,6 +182,7 @@ function ConsentBanner(node) {
             // show save button
             this.saveButton.classList.remove('hidden')
 
+
             // force overlay layout
             this.banner.classList.remove('bb-cb-bottom')
             this.banner.classList.add('bb-cb-overlay')
