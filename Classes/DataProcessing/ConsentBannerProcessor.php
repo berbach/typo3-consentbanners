@@ -6,8 +6,10 @@ use Bb\Consentbanners\Utility\CookieUtility;
 use Bb\Consentbanners\Domain\Repository\SettingsRepository;
 use Doctrine\DBAL\DBALException;
 use Doctrine\DBAL\Driver\Exception;
+use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\Core\Context\Context;
 use TYPO3\CMS\Core\Context\Exception\AspectNotFoundException;
+use TYPO3\CMS\Core\Core\RequestId;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Domain\Repository\PageRepository;
 use \TYPO3\CMS\Core\Page\AssetCollector;
@@ -121,7 +123,7 @@ class ConsentBannerProcessor implements DataProcessorInterface
                 ->addInlineJavaScript(
                     'consent_data',
                     'var bbConsentBanner=' . json_encode($tempBanner) . ';'.$tempRejectedScript,
-                    [],
+                    ['nonce' => $this->resolveNonceValue()],
                     ['priority' => true]
                 );
         }
@@ -198,9 +200,14 @@ class ConsentBannerProcessor implements DataProcessorInterface
         return str_replace("var__", 'var ', $value);
     }
 
-    protected function getTypo3Request()
+    protected function getTypo3Request(): ServerRequestInterface
     {
         return $GLOBALS['TYPO3_REQUEST'];
+    }
+
+    protected function resolveNonceValue(): string
+    {
+        return GeneralUtility::makeInstance(RequestId::class)->nonce->consume();
     }
 
     /**
