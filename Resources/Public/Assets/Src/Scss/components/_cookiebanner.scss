@@ -92,6 +92,9 @@ $max-width: $container-max-width !default;
             justify-content: flex-start;
             align-content: center;
             margin: 0 auto;
+            @media screen and (max-width: unit.bb-calc-rem(map.get(variables.$breakpoints, "medium"))) {
+                padding-top: unit.bb-calc-rem(45);
+            }
         }
 
         #{$self}-header {
