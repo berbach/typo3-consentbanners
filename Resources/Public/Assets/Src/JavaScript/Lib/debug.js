@@ -1,36 +1,39 @@
-let _debug = {};
+let Debug = {};
 
-_debug.output = true;
+Debug.output = window.DEVMODE ?? true;
 
-_debug.getArguments = function (args) {
-    var arr = [];
-    for (var i = 0; i < args.length; i++) {
+Debug.setDevMode = function (mode){
+    this.output = mode;
+}
+Debug.getArguments = function (args) {
+    let arr = [];
+    for (let i = 0; i < args.length; i++) {
         arr[i] = args[i];
     }
     return arr;
 };
 
-_debug.info = function () {
+Debug.info = function () {
     this.write("info", this.getArguments(arguments));
 };
 
-_debug.log = function () {
+Debug.log = function () {
     this.write("log", this.getArguments(arguments));
 };
 
-_debug.warn = function () {
+Debug.warn = function () {
     this.write("warn", this.getArguments(arguments));
 };
 
-_debug.error = function () {
+Debug.error = function () {
     this.write("error", this.getArguments(arguments));
 };
 
-_debug.debug = function () {
+Debug.debug = function () {
     this.write("debug", this.getArguments(arguments));
 };
 
-_debug.write = function (level, args) {
+Debug.write = function (level, args) {
     if (this.output && typeof(console) === "object")
         if (typeof InstallTrigger !== 'undefined')
             console[level].apply(this, args);
@@ -40,4 +43,4 @@ _debug.write = function (level, args) {
             window.console[level](args);
 };
 
-module.exports = _debug;
+export default Debug;

@@ -1,4 +1,8 @@
-const Debug = require('./Lib/debug');
+import Debug from './Lib/debug';
+
+window.DEVMODE = process.env.NODE_ENV !== 'production' ?? false;
+
+Debug.setDevMode(DEVMODE);
 
 let CbModulesManager = function () {
     this.bodyNode = document.querySelector('body');
