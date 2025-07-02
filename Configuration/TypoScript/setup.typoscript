@@ -57,6 +57,7 @@ page {
 
     includeCSS {
         consentbanner = EXT:consentbanners/Resources/Public/Dist/Css/CookieBanner.css
+        consentbanner.forceOnTop = 1
     }
 
     includeJSFooter {
