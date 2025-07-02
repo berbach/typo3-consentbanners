@@ -62,6 +62,8 @@ page {
     includeJSFooter {
         consentbanner = EXT:consentbanners/Resources/Public/Dist/JavaScript/BaseCookieBanner.js
         consentbanner.async = 1
+        consentbanner.excludeFromConcatenation = 1
+        consentbanner.disableCompression = 1
     }
 }
 
