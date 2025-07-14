@@ -72,6 +72,7 @@ class AllowCookieViewHelper extends AbstractViewHelper
         $moduleName = $this->renderingContext->getVariableProvider()->get('data')['CType'];
 
         $data = [
+            'isModule' => false,
             'placeholder_headline' => LocalizationUtility::translate('LLL:EXT:consentbanners/Resources/Private/Language/locallang.xlf:placeholderHeadline.removed.html'),
             'placeholder' => LocalizationUtility::translate('LLL:EXT:consentbanners/Resources/Private/Language/locallang.xlf:placeholder.removed.html'),
         ];
@@ -85,26 +86,21 @@ class AllowCookieViewHelper extends AbstractViewHelper
             $bodyText = $this->renderingContext->getVariableProvider()->get('data')['bodytext'];
             return $this->replaceExternalIframes($bodyText, $this->getPlaceholderHTML($data, false));
         }
-        $replaceIfrane = false;
+        $removeIfrane = false;
         if ($this->hasModuleInBanners($moduleName)){
 
             if ($moduleName === 'html') {
                 $mUid = $this->renderingContext->getVariableProvider()->get('data')['ce_consent_module'];
-                $bodyText = $this->renderingContext->getVariableProvider()->get('data')['bodytext'];
                 if ($this->hasHtmlModuleWithId($mUid)){
                     $data = $this->getHtmlModuleById($mUid);
-                    $replaceIfrane = true;
                 }
-                else
-                {
-                    return $this->replaceExternalIframes($bodyText, $this->getPlaceholderHTML($data, false));
-                }
+                $removeIfrane = true;
             }else{
                 $data = $this->getModuleByCType($moduleName);
             }
         }
 
-        if ($moduleName === 'html') {
+        if ($moduleName === 'html' && $data['isModule'] === false) {
             $bodyText = $this->renderingContext->getVariableProvider()->get('data')['bodytext'];
             return $this->replaceExternalIframes($bodyText, $this->getPlaceholderHTML($data, false));
         }
@@ -113,7 +109,8 @@ class AllowCookieViewHelper extends AbstractViewHelper
             return $this->renderChildren();
         }
 
-        if ($replaceIfrane){
+        if ($removeIfrane){
+            $bodyText = $this->renderingContext->getVariableProvider()->get('data')['bodytext'];
             return $this->replaceExternalIframes($bodyText, $this->getPlaceholderHTML($data));
         }else{
             return $this->getPlaceholderHTML($data);
@@ -145,6 +142,7 @@ class AllowCookieViewHelper extends AbstractViewHelper
                             $storageKey = 'module::'.$module->getModuleTarget();
                         }
                         $this->storageModule[$storageKey] = [
+                            'isModule' => true,
                             'uid' => $module->getUid(),
                             'name' => $module->getName(),
                             'description' => $module->getDescription(),
