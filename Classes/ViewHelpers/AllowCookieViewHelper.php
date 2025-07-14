@@ -302,10 +302,15 @@ class AllowCookieViewHelper extends AbstractViewHelper
         }
         $html = '<div class="bb-consentbanner-placeholder' . $normalisedClassArgument . '"' . $normalisedAdditionalAttributes . '>';
         $html .= '<div class="bb-consentbanner-placeholder-wrapper">';
-        if (!empty($data['placeholder'])) {
+        if (!empty($data['placeholder_headline'])) {
             $html .=
                 '<h3 class="bb-consentbanner-placeholder-headline">' .
                 $data['placeholder_headline'] .
+                '</h3>';
+        }elseif (!empty($data['name'])){
+            $html .=
+                '<h3 class="bb-consentbanner-placeholder-headline">' .
+                $data['name'] .
                 '</h3>';
         }
         if (!empty($data['placeholder'])) {
