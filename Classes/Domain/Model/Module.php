@@ -48,6 +48,12 @@ class Module extends AbstractEntity
      *
      * @var string
      */
+    protected string $placeholderHeadline = '';
+    /**
+     * target
+     *
+     * @var string
+     */
     protected string $placeholder = '';
     /**
      * show uri
@@ -189,7 +195,26 @@ class Module extends AbstractEntity
     {
         $this->moduleTarget = $moduleTarget;
     }
+    /**
+     * Returns the placeholder headline
+     *
+     * @return string $placeholderHeadline
+     */
+    public function getPlaceholderHeadline(): string
+    {
+        return $this->placeholderHeadline;
+    }
 
+    /**
+     * Sets the placeholder headline
+     *
+     * @param string $placeholderHeadline
+     * @return void
+     */
+    public function setPlaceholderHeadline(string $placeholderHeadline): void
+    {
+        $this->placeholderHeadline = $placeholderHeadline;
+    }
     /**
      * Returns the placeholder
      *

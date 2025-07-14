@@ -21,6 +21,12 @@
             <trans-unit id="cookiebanner.closeBtn">
                 <target>Einstellung schließen</target>
             </trans-unit>
+            <trans-unit id="placeholder.removed.html">
+                <target>Drittanbieter HTML wurde entfernt.</target>
+            </trans-unit>
+            <trans-unit id="placeholderHeadline.removed.html">
+                <target>Drittanbieter HTML</target>
+            </trans-unit>
 		</body>
 	</file>
 </xliff>

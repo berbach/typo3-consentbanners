@@ -27,7 +27,7 @@ class TCASelectModuleUtility
             ->executeQuery()
             ->fetchAllAssociative();
 
-        $params['items'][] = ['label' => 'No consent banner module', 'value' => 0];
+        $params['items'][] = ['label' => 'No third-party module', 'value' => 0];
         foreach ($modules as $module) {
             $params['items'][] = ['label' => $module['name'], 'value' => $module['uid']];
         }
