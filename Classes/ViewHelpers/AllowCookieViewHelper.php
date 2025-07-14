@@ -82,6 +82,8 @@ class AllowCookieViewHelper extends AbstractViewHelper
             ->executeQuery()
             ->fetchAssociative();
 
+
+
         if (!is_null($cookie) && isset($res['uid'], $cookie->{$res['uid']}) && $cookie->{$res['uid']} === true) {
             return $renderChildrenClosure();
         }

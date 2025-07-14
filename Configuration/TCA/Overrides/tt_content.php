@@ -1,21 +1,24 @@
 <?php
 defined('TYPO3') || die();
 
-$GLOBALS['TCA']['tt_content']['columns'] = array_replace_recursive(
-    $GLOBALS['TCA']['tt_content']['columns'],
+
+\TYPO3\CMS\Core\Utility\ArrayUtility::mergeRecursiveWithOverrule(
+    $GLOBALS['TCA']['tt_content'],
     [
-        'ce_consent_module' => [
-            'exclude' => true,
-            'label' => 'LLL:EXT:consentbanners/Resources/Private/Language/locallang_db.xlf:field.consentbanner.module',
-            'config' => [
-                'type' => 'select',
-                'renderType' => 'selectSingle',
-                'items' => [
-                    ['label' => 'Select a module', 'value' => '']
+        'columns' => [
+            'ce_consent_module' => [
+                'exclude' => true,
+                'label' => 'LLL:EXT:consentbanners/Resources/Private/Language/locallang_db.xlf:field.consentbanner.module',
+                'config' => [
+                    'type' => 'select',
+                    'renderType' => 'selectSingle',
+                    'items' => [
+                        ['label' => 'Select a module', 'value' => '']
+                    ],
+                    'itemsProcFunc' => Bb\Consentbanners\Utility\TCASelectModuleUtility::class . '->getHtmlModules',
                 ],
-                'itemsProcFunc' => Bb\Consentbanners\Utility\TCASelectModuleUtility::class . '->getHtmlModules',
             ],
-        ],
+        ]
     ]
 );
 

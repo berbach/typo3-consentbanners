@@ -24,10 +24,10 @@ class TCASelectModuleUtility
             ->select('uid', 'name')
             ->from('tx_consentbanners_domain_model_module')
             ->where($queryBuilder->expr()->inSet('module_target', $queryBuilder->createNamedParameter('html')))
-            ->execute()
+            ->executeQuery()
             ->fetchAllAssociative();
 
-        $params['items'][] = ['label' => 'No Module', 'value' => 0];
+        $params['items'][] = ['label' => 'No consent banner module', 'value' => 0];
         foreach ($modules as $module) {
             $params['items'][] = ['label' => $module['name'], 'value' => $module['uid']];
         }

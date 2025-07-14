@@ -26,7 +26,6 @@
 }
 .bb-cb--settings-navigation{
     width: 300px;
-    background-color: #F5F5F5;
     border-right: 1px solid #cccccc;
     padding: 5px;
 }
@@ -37,6 +36,21 @@
     width: calc(100% - 300px);
 }
 .bb-cb--menu{
+    --modulemenu-padding-x: .5rem;
+    --modulemenu-padding-y: .75rem;
+    --modulemenu-group-spacer: .5rem;
+    --modulemenu-icon-size: 32px;
+    --modulemenu-icon-border-radius: 4px;
+    --modulemenu-action-bg-state: initial;
+    --modulemenu-action-color-state: initial;
+    --modulemenu-action-border-color-state: initial;
+    --modulemenu-action-bg: transparent;
+    --modulemenu-action-color: inherit;
+    --modulemenu-action-border-width: 1px;
+    --modulemenu-action-border-color: transparent;
+    --modulemenu-action-min-width: 42px;
+    --modulemenu-action-padding: 4px;
+    --modulemenu-action-border-radius: 5px;
     list-style: none;
     padding: 0;
 }
@@ -48,18 +62,41 @@
     align-items: center;
     min-height: 40px;
     text-align: left;
-    border: 1px solid #F5F5F5;
-    border-radius: 4px;
-
+    /*border: 1px solid #F5F5F5;*/
+    /*border-radius: 4px;*/
+    background-color: var(--modulemenu-action-bg-state,var(--modulemenu-action-bg));
+    border: var(--modulemenu-action-border-width) solid var(--modulemenu-action-border-color-state,var(--modulemenu-action-border-color));
+    border-radius: var(--modulemenu-action-border-radius);
+    color: var(--modulemenu-action-color-state,var(--modulemenu-action-color));
+    transition: var(--typo3-transition-color);
 }
+/*@media (prefers-color-scheme: dark) {*/
+/*    .bb-cb--menu-link.bb-active{*/
+/*        color: #d9d9d9;*/
+/*        background-color: transparent;*/
+/*    }*/
+/*}*/
+/*@media (prefers-color-scheme: light) {*/
+/*    .bb-cb--menu-link.bb-active{*/
+/*        color: #1a1a1a;*/
+/*    }*/
+/*}*/
 .bb-cb--menu-link.bb-active{
-    background-color: #ededed;
-    border: 1px solid #d7d7d7;
+    /*background-color: #ededed;*/
+    /*border: 1px solid #d7d7d7;*/
+    --modulemenu-action-color-state: var(--typo3-state-default-focus-color);
+    --modulemenu-action-bg-state: var(--typo3-state-default-focus-bg);
+    --modulemenu-action-border-color-state: var(--typo3-state-default-focus-border-color);
 }
-.bb-cb--menu-link:hover{
-    background-color: #FFFFFF;
-    border: 1px solid #d7d7d7;
+.bb-cb--menu-link:hover,
+.bb-cb--menu-link:focus-visible{
+    --modulemenu-action-color-state: var(--typo3-state-default-hover-color);
+    --modulemenu-action-bg-state: var(--typo3-state-default-hover-bg);
+    --modulemenu-action-border-color-state: var(--typo3-state-default-hover-border-color);
+    /*background-color: #FFFFFF;*/
+    /*border: 1px solid #d7d7d7;*/
     text-decoration: none;
+
 }
 .layout-two-columns {
     display: grid;
