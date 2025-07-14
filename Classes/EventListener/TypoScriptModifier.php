@@ -155,15 +155,15 @@ class TypoScriptModifier
             ->executeQuery()
             ->fetchAssociative();
 
-        if (!isset($contents)) {
-            $contents['config'] = '';
+        if (!$contents) {
+            return '';
         }
 
-        if (!isset($contents['config'])) {
-            $contents['config'] = '';
+        if ($contents && !empty($contents['config'])) {
+            return $contents['config'];
         }
 
-        return $contents['config'];
+        return '';
     }
 
     /**
