@@ -10,6 +10,7 @@ use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Extbase\Event\Mvc\BeforeActionCallEvent;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Database\ConnectionPool;
+use TYPO3\CMS\Extbase\Utility\DebuggerUtility;
 
 class TypoScriptModifier
 {
@@ -31,11 +32,10 @@ class TypoScriptModifier
         if ($event instanceof BeforeActionCallEvent && $event->getActionMethodName() === 'modulesAction') {
             $this->janitor();
         }
-
         if (!($event instanceof BeforeFormEnginePageInitializedEvent)
             || !$event->getRequest()->getParsedBody()
             || !array_key_exists('tx_consentbanners_domain_model_module', $event->getRequest()->getParsedBody()['data'])
-            || !in_array(array_values($event->getRequest()->getQueryParams()['edit']['tx_consentbanners_domain_model_module'])[0], ['edit', 'new'])
+            || !in_array(array_values($event->getRequest()->getQueryParams()['edit']['tx_consentbanners_domain_model_settings'])[0], ['edit', 'new'])
         ) {
             return;
         }

@@ -328,24 +328,19 @@ return [
             'l10n_mode' => 'exclude',
             'label' => 'LLL:EXT:consentbanners/Resources/Private/Language/locallang_mod.xlf:field.categories',
             'config' => [
-                'type' => 'select',
-                'renderType' => 'selectMultipleSideBySide',
+                'type' => 'inline',
                 'foreign_table' => 'tx_consentbanners_domain_model_category',
-                'MM' => 'tx_consentbanners_categories_banner_mm',
-                'foreign_table_where' => ' AND {#tx_consentbanners_domain_model_category}.{#sys_language_uid} IN (-1,0)',
-                'size' => 5,
+                'foreign_field' => 'category_id',
+                'foreign_sortby' => 'sorting_foreign',
+                'foreign_label' => 'name',
                 'maxitems' => 5,
-                'autoSizeMax' => 20,
-                'fieldControl' => [
-                    'editPopup' => [
-                        'disabled' => false,
-                    ],
-                    'addRecord' => [
-                        'disabled' => false,
-                    ],
-                    'listModule' => [
-                        'disabled' => false,
-                    ],
+                'appearance' => [
+                    'newRecordLinkTitle' => 'Add Cookie category',
+                    'useSortable' => true,
+                    'levelLinksPosition' => 'top',
+                    'enabledControls' => ['info' => false],
+                    'collapseAll' => 1,
+                    'expandSingle' => 1,
                 ],
             ],
         ]

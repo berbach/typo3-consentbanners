@@ -4,7 +4,7 @@
         xmlns:be="http://typo3.org/ns/TYPO3/CMS/Backend/ViewHelpers"
         data-namespace-typo3-fluid="true">
 
-<f:layout name="BackendConsentbanner/Default" />
+<f:layout name="Module" />
 
 <f:section name="Headline">
     <h1><f:translate key="LLL:EXT:consentbanners/Resources/Private/Language/locallang_mod.xlf:settings.headline"/></h1>
@@ -13,43 +13,44 @@
 <f:section name="Content">
     <f:flashMessages/>
 
-    <f:if condition="{data.banner}">
+    <f:if condition="{data.banners}">
         <f:then>
             <div class="layout-one-columns">
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <span>Consent Banner</span>
                     </div>
-                    <div class="table-fit">
-                        <table class="table">
-                            <thead>
+                    <f:for as="banner" each="{data.banners}">
+                        <div class="table-fit">
+                            <table class="table">
+                                <thead>
                                 <tr>
                                     <th class="col-label col-responsive">
                                         <span>Title</span>
                                     </th>
                                     <th class="col-content col-responsive nowrap">
-                                        <span>
-                                            {data.banner.title}
-                                        </span>
+                                            <span>
+                                                {banner.title}
+                                            </span>
                                     </th>
                                     <th class="col-control col-responsive nowrap">
                                         <div class="btn-group">
-                                            <a href="{be:uri.editRecord(uid: data.banner.uid, table: 'tx_consentbanners_domain_model_settings', returnUrl: '{returnUrl}')}" class="btn btn-default" title="Edit Consent Banner">
+                                            <a href="{be:uri.editRecord(uid: banner.uid, table: 'tx_consentbanners_domain_model_settings', returnUrl: '{returnUrl}')}" class="btn btn-default" title="Edit Consent Banner">
                                                 <core:icon identifier="actions-open" size="small"/>
                                             </a>
                                         </div>
                                     </th>
                                 </tr>
-                            </thead>
-                            <tbody>
+                                </thead>
+                                <tbody>
                                 <tr>
                                     <th class="col-label col-responsive">
                                         <span>Description</span>
                                     </th>
                                     <td class="col-content col-responsive nowrap">
-                                        <span>
-                                            {data.banner.description}
-                                        </span>
+                                            <span>
+                                                {banner.description}
+                                            </span>
                                     </td>
                                     <td class="col-control nowrap">&nbsp;</td>
                                 </tr>
@@ -59,16 +60,16 @@
                                         <span>Layout Type</span>
                                     </th>
                                     <td class="col-content col-responsive nowrap">
-                                        <f:switch expression="{data.banner.layoutType}">
+                                        <f:switch expression="{banner.layoutType}">
                                             <f:case value="bb-cb-overlay">
-                                                <span>
-                                                    <f:translate key="LLL:EXT:consentbanners/Resources/Private/Language/locallang_mod.xlf:field.layoutType.overlay" />
-                                                </span>
+                                                    <span>
+                                                        <f:translate key="LLL:EXT:consentbanners/Resources/Private/Language/locallang_mod.xlf:field.layoutType.overlay" />
+                                                    </span>
                                             </f:case>
                                             <f:case value="bb-cb-bottom">
-                                                <span>
-                                                    <f:translate key="LLL:EXT:consentbanners/Resources/Private/Language/locallang_mod.xlf:field.layoutType.fullWidthBottom" />
-                                                </span>
+                                                    <span>
+                                                        <f:translate key="LLL:EXT:consentbanners/Resources/Private/Language/locallang_mod.xlf:field.layoutType.fullWidthBottom" />
+                                                    </span>
                                             </f:case>
                                         </f:switch>
                                     </td>
@@ -85,9 +86,10 @@
                                     </td>
                                     <td class="col-control nowrap">&nbsp;</td>
                                 </tr>
-                            </tbody>
-                        </table>
-                    </div>
+                                </tbody>
+                            </table>
+                        </div>
+                    </f:for>
                 </div>
             </div>
         </f:then>

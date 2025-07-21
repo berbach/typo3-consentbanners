@@ -6,26 +6,31 @@ namespace Bb\Consentbanners\Controller;
 use Bb\Consentbanners\Domain\Repository\CategoryRepository;
 use Bb\Consentbanners\Domain\Repository\ModuleRepository;
 use Bb\Consentbanners\Domain\Repository\SettingsRepository;
+
 use Doctrine\DBAL\DBALException;
 use Doctrine\DBAL\Driver\Exception;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\Backend\Routing\Exception\RouteNotFoundException;
 use TYPO3\CMS\Backend\Template\Components\ButtonBar;
+use TYPO3\CMS\Backend\Template\Components\Menu\Menu;
 use TYPO3\CMS\Backend\Template\ModuleTemplate;
 use TYPO3\CMS\Backend\Template\ModuleTemplateFactory;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 
 use TYPO3\CMS\Core\Imaging\Icon;
 use TYPO3\CMS\Core\Imaging\IconFactory;
+use TYPO3\CMS\Core\Imaging\IconSize;
 use TYPO3\CMS\Core\Localization\LanguageService;
+use TYPO3\CMS\Core\Localization\LanguageServiceFactory;
 use TYPO3\CMS\Core\Messaging\FlashMessage;
 use TYPO3\CMS\Core\Messaging\FlashMessageService;
 use TYPO3\CMS\Core\Site\Entity\Site;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Page\PageRenderer;
 use TYPO3\CMS\Backend\Routing\UriBuilder;
-
+use TYPO3\CMS\Core\Type\Bitmask\Permission;
+use TYPO3\CMS\Core\Type\ContextualFeedbackSeverity;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
 
 use TYPO3\CMS\Core\Http\ServerRequestFactory;
@@ -41,6 +46,10 @@ class BackendConsentbannerController extends ActionController
      * @var int
      */
     protected int $current_root_pid = 0;
+    /**
+     * @var int
+     */
+    protected int $rootPageId = 0;
     /**
      * @var int
      */
@@ -92,14 +101,7 @@ class BackendConsentbannerController extends ActionController
      * @var SiteLanguage[]
      */
     protected array $languages;
-    /**
-     * @var SiteFinder
-     */
-    protected SiteFinder $siteFinder;
-    /**
-     * @var PageRenderer
-     */
-    protected PageRenderer $pageRenderer;
+
 
 
     /**
@@ -112,18 +114,34 @@ class BackendConsentbannerController extends ActionController
      * @param PageRenderer $pageRenderer
      */
     public function __construct(
-        protected readonly ModuleTemplateFactory $moduleTemplateFactory,
-        SiteFinder         $siteFinder,
+        protected readonly SiteFinder $siteFinder,
+        protected readonly PageRenderer $pageRenderer,
         protected readonly SettingsRepository $settingsRepository,
         protected readonly CategoryRepository $categoryRepository,
         protected readonly ModuleRepository   $moduleRepository,
-        protected readonly IconFactory $iconFactory,
-        PageRenderer $pageRenderer
+        protected readonly ModuleTemplateFactory $moduleTemplateFactory,
+        private readonly IconFactory $iconFactory,
+        private readonly LanguageServiceFactory $languageServiceFactory,
     )
+    {}
+
+    private function initializeRootPages():void
     {
-        $this->siteFinder = $siteFinder;
-        $this->pageRenderer = $pageRenderer;
+        $sites = $this->siteFinder->getAllSites();
+        foreach ($sites as $site) {
+            $this->sites[$site->getRootPageId()] = $site;
+        }
+
+        ksort($this->sites, SORT_NATURAL);
+
+        if($this->request->hasArgument('site')){
+            $this->rootPageId = (int)$this->request->getArgument('site');
+        }else{
+            $firstKey = array_key_first($this->sites);
+            $this->rootPageId = $this->sites[$firstKey]->getRootPageId();
+        }
     }
+
 
     /**
      * @return void
@@ -134,6 +152,10 @@ class BackendConsentbannerController extends ActionController
     protected function initializeAction(): void
     {
         $params = $this->request->getQueryParams();
+
+        $this->initializeRootPages();
+
+
 
 //        if (isset($params['rootPageId'], $params['sysLanguageUid'])) {
 //            $this->current_root_pid = (int)$params['rootPageId'];
@@ -292,17 +314,17 @@ class BackendConsentbannerController extends ActionController
     public function settingsAction(): ResponseInterface
     {
 
-        $settingsData = $this->settingsRepository->findByStorageIds([(int)$this->current_root_pid], (int)$this->current_sys_language, true);
+        $dataBanners = $this->settingsRepository->findByStorageIds([$this->rootPageId], (int)$this->current_sys_language, true);
         $moduleTemplate = $this->initializeModuleTemplate($this->request);
 
-        $this->registerAsideMenu();
-        $this->registerDocHeaderButton();
-
-        $this->createDocHeaderLanguageMenu($moduleTemplate);
+//        $this->registerAsideMenu();
+//        $this->registerDocHeaderButton();
+//
+//        $this->createDocHeaderLanguageMenu($moduleTemplate);
 
         $moduleTemplate->assignMultiple([
             'data' => [
-                'banner' => $settingsData,
+                'banners' => $dataBanners,
             ],
             'moduleName' => $this->moduleName,
             'returnUrl' => $this->getBuildRoute($this->moduleName, [$this->getFullPluginName() => ['action' => $this->request->getControllerActionName(), 'controller' => $this->request->getControllerName()], 'SET' => ['language' => $this->current_sys_language], 'sysLanguageUid' => $this->current_sys_language, 'rootPageId' => $this->current_root_pid]),
@@ -437,11 +459,18 @@ class BackendConsentbannerController extends ActionController
         ServerRequestInterface $request
     ): ModuleTemplate {
 
+        $view = $this->moduleTemplateFactory->create($request);
         $this->pageRenderer->addCssFile('EXT:consentbanners/Resources/Public/Css/Backend.css');
 
-        $moduleTemplate = $this->moduleTemplateFactory->create($request);
-        $moduleTemplate->getDocHeaderComponent()->setMetaInformation([]);
-        return $moduleTemplate;
+        $context = '';
+        $this->modifyDocHeaderComponent($view, $context);
+        $view->setFlashMessageQueue($this->getFlashMessageQueue());
+        $view->setTitle(
+            $this->getLanguageService()->sL('LLL:EXT:blog_example/Resources/Private/Language/Module/locallang_mod.xlf:mlang_tabs_tab'),
+            $context,
+        );
+
+        return $view;
     }
 
     /**
@@ -697,12 +726,106 @@ class BackendConsentbannerController extends ActionController
     }
 
     /**
-     * Returns the Language Service
-     *
-     * @return LanguageService
+     * @return array<string,scalar>|false
      */
+    public function getMetaInformation(): array|false
+    {
+        $permissionClause = $GLOBALS['BE_USER']->getPagePermsClause(Permission::PAGE_SHOW);
+        return [];
+//        return BackendUtility::readPageAccess(
+//            $this->pageUid,
+//            $permissionClause,
+//        );
+    }
+
+
+
+    private function modifyDocHeaderComponent(ModuleTemplate $view, string &$context): void
+    {
+        $menu = $this->buildMenu($view, $context);
+        $view->getDocHeaderComponent()->getMenuRegistry()->addMenu($menu);
+        $menu = $this->buildSitesMenu($view, $context);
+        $view->getDocHeaderComponent()->getMenuRegistry()->addMenu($menu);
+
+//        $buttonBar = $view->getDocHeaderComponent()->getButtonBar();
+//        $this->addButtons($buttonBar);
+
+        $metaInformation = $this->getMetaInformation();
+        if (is_array($metaInformation)) {
+            $view->getDocHeaderComponent()->setMetaInformation($metaInformation);
+        }
+    }
+
+    private function buildMenu(ModuleTemplate $view, string &$context): Menu
+    {
+        $menuItems = [
+            'settings' => [
+                'controller' => 'BackendConsentbanner',
+                'action' => 'settings',
+                'label' => 'Banner Einstellung',
+            ],
+            'categories' => [
+                'controller' => 'BackendConsentbanner',
+                'action' => 'categories',
+                'label' => 'Categorie Settings',
+            ],
+        ];
+
+        $menu = $view->getDocHeaderComponent()->getMenuRegistry()->makeMenu();
+        $menu->setIdentifier('ConsentBannerModuleMenu');
+
+        foreach ($menuItems as $menuItemConfig) {
+            $isActive = $this->request->getControllerActionName() === $menuItemConfig['action'];
+            $menuItem = $menu->makeMenuItem()
+                ->setTitle($menuItemConfig['label'])
+                ->setHref($this->uriBuilder->reset()->uriFor(
+                    $menuItemConfig['action'],
+                    [],
+                    $menuItemConfig['controller'],
+                ))
+                ->setActive($isActive);
+            $menu->addMenuItem($menuItem);
+            if ($isActive) {
+                $context = $menuItemConfig['label'];
+            }
+        }
+        return $menu;
+    }
+
+    private function buildSitesMenu(ModuleTemplate $view, string &$context): Menu
+    {
+        foreach ($this->sites as $site) {
+            $menuItems['rootPageId::'.$site->getRootPageId()] = [
+                'controller' => 'BackendConsentbanner',
+                'controllerArguments' => ['site' => $site->getRootPageId()],
+                'action' => 'settings',
+                'label' => strtoupper($site->getIdentifier()),
+            ];
+        }
+
+        $menu = $view->getDocHeaderComponent()->getMenuRegistry()->makeMenu();
+        $menu->setIdentifier('ConsentBannerRootPagesMenu');
+
+        foreach ($menuItems as $menuItemConfig) {
+            $isActive = $this->rootPageId === (int)$menuItemConfig['controllerArguments']['site'];
+            $menuItem = $menu->makeMenuItem()
+                ->setTitle($menuItemConfig['label'])
+                ->setHref($this->uriBuilder->reset()->uriFor(
+                    $menuItemConfig['action'],
+                    $menuItemConfig['controllerArguments'],
+                    $menuItemConfig['controller'],
+                ))
+                ->setActive($isActive);
+            $menu->addMenuItem($menuItem);
+            if ($isActive) {
+                $context = $menuItemConfig['label'];
+            }
+        }
+        return $menu;
+    }
+
     protected function getLanguageService(): LanguageService
     {
-        return $GLOBALS['LANG'];
+        return $this->languageServiceFactory->createFromUserPreferences($GLOBALS['BE_USER']);
     }
 }

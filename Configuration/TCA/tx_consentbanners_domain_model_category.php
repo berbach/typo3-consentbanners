@@ -31,7 +31,9 @@ return [
         '0' => [
             'showitem' => '
                 --div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:general,
-                    name,description,locked_and_active,modules,
+                    name,description,locked_and_active,
+                --div--;LLL:EXT:consentbanners/Resources/Private/Language/locallang_mod.xlf:tab.modules,
+                    modules,
                 --div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:language,
                     --palette--;;language,
                 --div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:access,
@@ -130,12 +132,12 @@ return [
             'label' => 'LLL:EXT:consentbanners/Resources/Private/Language/locallang_mod.xlf:field.locked_and_active',
             'config' => [
                 'type' => 'check',
-                'renderType' => 'checkboxToggle',
+                'renderType' => 'checkboxLabeledToggle',
                 'items' => [
                     [
                         'label' => '',
-                        'labelChecked' => 'Enabled',
-                        'labelUnchecked' => 'Disabled',
+                        'labelChecked' => 'Enable locked and active',
+                        'labelUnchecked' => 'Disabled locked and active',
                     ],
                 ],
                 'eval' => 'maximumRecordsChecked',
@@ -152,25 +154,29 @@ return [
             'l10n_mode' => 'exclude',
             'label' => 'LLL:EXT:consentbanners/Resources/Private/Language/locallang_mod.xlf:field.modules',
             'config' => [
-                'type' => 'select',
-                'renderType' => 'selectMultipleSideBySide',
+                'type' => 'inline',
                 'foreign_table' => 'tx_consentbanners_domain_model_module',
-                'MM' => 'tx_consentbanners_module_categories_mm',
-                'foreign_table_where' => ' AND {#tx_consentbanners_domain_model_module}.{#sys_language_uid} IN (-1,0)',
-                'size' => 5,
-                'autoSizeMax' => 20,
-                'fieldControl' => [
-                    'editPopup' => [
-                        'disabled' => false,
-                    ],
-                    'addRecord' => [
-                        'disabled' => false,
-                    ],
-                    'listModule' => [
-                        'disabled' => false,
-                    ],
+                'foreign_field' => 'module_id',
+                'foreign_sortby' => 'sorting_foreign',
+                'foreign_label' => 'name',
+                'maxitems' => 5,
+                'appearance' => [
+                    'newRecordLinkTitle' => 'Add Cookie module',
+                    'useSortable' => true,
+                    'levelLinksPosition' => 'top',
+                    'enabledControls' => ['info' => false],
+                    'collapseAll' => 1,
+                    'expandSingle' => 1,
                 ],
+
+
             ],
-        ]
+        ],
+
+        'category_id' => [
+            'config' => [
+                'type' => 'passthrough',
+            ],
+        ],
     ],
 ];

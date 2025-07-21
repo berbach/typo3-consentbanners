@@ -207,5 +207,11 @@ return [
                 'rows' => 20
             ]
         ],
+
+        'module_id' => [
+            'config' => [
+                'type' => 'passthrough',
+            ],
+        ],
     ],
 ];

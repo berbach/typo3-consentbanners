@@ -42,6 +42,8 @@ CREATE TABLE tx_consentbanners_domain_model_category
     description       text,
     modules           int(11) unsigned     DEFAULT '0' NOT NULL,
     locked_and_active SMALLint(5) unsigned DEFAULT '0' NOT NULL,
+    sorting_foreign   int(11)              DEFAULT '0',
+    category_id       int(11)     unsigned DEFAULT NULL,
 
     deleted           SMALLint(5) unsigned DEFAULT '0' NOT NULL,
     hidden            SMALLint(5) unsigned DEFAULT '0' NOT NULL,
@@ -64,32 +66,34 @@ CREATE TABLE tx_consentbanners_domain_model_module
 
     deleted              smallint(5) unsigned DEFAULT '0' NOT NULL,
     hidden               smallint(5) unsigned DEFAULT '0' NOT NULL,
+    sorting_foreign      int(11)              DEFAULT '0',
+    module_id            int(11)     unsigned DEFAULT NULL,
 
 --     FOREIGN KEY (category) REFERENCES tx_consentbanners_domain_model_category (uid)
 );
-#
-# Table structure for table 'tx_consentbanners_module_categories_mm'
-#
-CREATE TABLE tx_consentbanners_module_categories_mm
-(
-    uid_local       int(11) unsigned DEFAULT '0' NOT NULL,
-    uid_foreign     int(11) unsigned DEFAULT '0' NOT NULL,
-    sorting         int(11) unsigned DEFAULT '0' NOT NULL,
-    sorting_foreign int(11) unsigned DEFAULT '0' NOT NULL,
-
-    KEY uid_local (uid_local),
-    KEY uid_foreign (uid_foreign)
-);
-#
-# Table structure for table 'tx_consentbanners_module_categories_mm'
-#
-CREATE TABLE tx_consentbanners_categories_banner_mm
-(
-    uid_local       int(11) unsigned DEFAULT '0' NOT NULL,
-    uid_foreign     int(11) unsigned DEFAULT '0' NOT NULL,
-    sorting         int(11) unsigned DEFAULT '0' NOT NULL,
-    sorting_foreign int(11) unsigned DEFAULT '0' NOT NULL,
-
-    KEY uid_local (uid_local),
-    KEY uid_foreign (uid_foreign)
-);
+-- #
+-- # Table structure for table 'tx_consentbanners_module_categories_mm'
+-- #
+-- CREATE TABLE tx_consentbanners_module_categories_mm
+-- (
+--     uid_local       int(11) unsigned DEFAULT '0' NOT NULL,
+--     uid_foreign     int(11) unsigned DEFAULT '0' NOT NULL,
+--     sorting         int(11) unsigned DEFAULT '0' NOT NULL,
+--     sorting_foreign int(11) unsigned DEFAULT '0' NOT NULL,
+--
+--     KEY uid_local (uid_local),
+--     KEY uid_foreign (uid_foreign)
+-- );
+-- #
+-- # Table structure for table 'tx_consentbanners_module_categories_mm'
+-- #
+-- CREATE TABLE tx_consentbanners_categories_banner_mm
+-- (
+--     uid_local       int(11) unsigned DEFAULT '0' NOT NULL,
+--     uid_foreign     int(11) unsigned DEFAULT '0' NOT NULL,
+--     sorting         int(11) unsigned DEFAULT '0' NOT NULL,
+--     sorting_foreign int(11) unsigned DEFAULT '0' NOT NULL,
+--
+--     KEY uid_local (uid_local),
+--     KEY uid_foreign (uid_foreign)
+-- );

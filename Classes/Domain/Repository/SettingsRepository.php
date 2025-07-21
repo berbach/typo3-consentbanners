@@ -41,17 +41,23 @@ class SettingsRepository extends Repository
 
         $querySettings->setStoragePageIds($storageIds);
 
-        if($languageId > 0) {
-            $querySettings->setLanguageUid((int)$languageId);
-        }
-
-        if($useIgnoreEnable) {
-            $querySettings->setIgnoreEnableFields(true);
-        }
+//        if($languageId > 0) {
+//            $querySettings->setLanguageUid((int)$languageId);
+//        }
+//
+//        if($useIgnoreEnable) {
+//            $querySettings->setIgnoreEnableFields(true);
+//        }
 
         $this->setDefaultQuerySettings($querySettings);
 
-        return $query->execute()->getFirst();
+//        $query->matching(
+//            $query->logicalNot(
+//                $query->equals('uid', (!$returnRawQueryResult ? $topNews[0]?->getUid() : $topNews[0]['uid']))
+//            )
+//        );
+
+        return $query->execute();
     }
 
     /**
