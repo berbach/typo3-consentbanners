@@ -13,14 +13,18 @@
                 <source>Consent Banners</source>
             </trans-unit>
             <trans-unit id="settings.headline">
-                <source>Settings Consent Banner</source>
+                <source>Consent Banner Management</source>
+            </trans-unit>
+            <trans-unit id="consents.headline">
+                <source>Consent Management Platform</source>
             </trans-unit>
             <trans-unit id="categories.headline">
                 <source>Consent Banner Categories</source>
             </trans-unit>
             <trans-unit id="modules.headline">
-                <source>Consent Banner Modules</source>
+                <source>Consent Banner Modules/Cookies</source>
             </trans-unit>
+
             <trans-unit id="action.settings.title">
                 <source>Settings Banner</source>
             </trans-unit>

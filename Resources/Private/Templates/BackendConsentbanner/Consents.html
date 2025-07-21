@@ -1,0 +1,33 @@
+<html
+        xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
+        xmlns:core="http://typo3.org/ns/TYPO3/CMS/Core/ViewHelpers"
+        xmlns:be="http://typo3.org/ns/TYPO3/CMS/Backend/ViewHelpers"
+        data-namespace-typo3-fluid="true">
+
+<f:layout name="Module" />
+
+<f:section name="Content">
+    <f:flashMessages/>
+    <h1><f:translate key="LLL:EXT:consentbanners/Resources/Private/Language/locallang_mod.xlf:consents.headline"/></h1>
+    <f:debug inline="1">{_all}</f:debug>
+    <f:if condition="{data.consents}">
+        <f:then>
+            <div class="layout-one-columns">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <span>Consents Verwaltung</span>
+                    </div>
+
+                </div>
+            </div>
+        </f:then>
+        <f:else>
+            Keine Daten!!!
+            <!--            <a href="{be:uri.newRecord(table: 'tx_consentbanners_domain_model_settings', pid: currentRootPageId)}" class="btn btn-default" title="{f:translate(key: 'LLL:EXT:consentbanners/Resources/Private/Language/locallang_mod.xlf:action.settings.new.title')}">-->
+            <!--                <core:icon identifier="actions-add" size="small"/>-->
+            <!--                <f:translate key="LLL:EXT:consentbanners/Resources/Private/Language/locallang_mod.xlf:action.settings.new.title" />-->
+            <!--            </a>-->
+        </f:else>
+    </f:if>
+</f:section>
+</html>

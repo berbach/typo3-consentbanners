@@ -40,7 +40,7 @@ use TYPO3\CMS\Extbase\Utility\DebuggerUtility;
 use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
 
 
-class BackendConsentbannerController extends ActionController
+class ManagementController extends ActionController
 {
     /**
      * @var int
@@ -317,143 +317,40 @@ class BackendConsentbannerController extends ActionController
         $dataBanners = $this->settingsRepository->findByStorageIds([$this->rootPageId], (int)$this->current_sys_language, true);
         $moduleTemplate = $this->initializeModuleTemplate($this->request);
 
-//        $this->registerAsideMenu();
-//        $this->registerDocHeaderButton();
-//
-//        $this->createDocHeaderLanguageMenu($moduleTemplate);
-
         $moduleTemplate->assignMultiple([
             'data' => [
                 'banners' => $dataBanners,
             ],
             'moduleName' => $this->moduleName,
             'returnUrl' => $this->getBuildRoute($this->moduleName, [$this->getFullPluginName() => ['action' => $this->request->getControllerActionName(), 'controller' => $this->request->getControllerName()], 'SET' => ['language' => $this->current_sys_language], 'sysLanguageUid' => $this->current_sys_language, 'rootPageId' => $this->current_root_pid]),
-            'currentRootPageId' => $this->current_root_pid,
+            'rootPageId' => $this->rootPageId,
             'currentLanguageId' => $this->current_sys_language,
-            //'defaultLanguageId' => $this->default_sys_language,
-            'docHeaderMenu' => $this->docHeaderMenu,
-            'asideMenu' => $this->asideMenu
         ]);
 
-        //$moduleTemplate->getDocHeaderComponent()->setMetaInformation([]);
-
-        // Adding title, menus, buttons, etc. using $moduleTemplate ...
-        //$moduleTemplate->setContent($this->view->render());
         return $moduleTemplate->renderResponse('BackendConsentbanner/Settings');
     }
 
-    /**
-     * @return ResponseInterface
-     * @throws RouteNotFoundException
-     */
-    public function categoriesAction(): ResponseInterface
+
+    public function consentsAction(): ResponseInterface
     {
-
-
-//        $this->pageRenderer->loadRequireJsModule('TYPO3/CMS/Backend/ContextMenu');
-//        $this->pageRenderer->loadRequireJsModule('TYPO3/CMS/Backend/Modal');
-//        $this->pageRenderer->loadRequireJsModule('TYPO3/CMS/Backend/Tooltip');
-//        $this->pageRenderer->loadRequireJsModule('TYPO3/CMS/Backend/AjaxDataHandler');
-//        $this->pageRenderer->loadRequireJsModule('TYPO3/CMS/Recordlist/Recordlist');
-//        $this->pageRenderer->loadRequireJsModule('TYPO3/CMS/Consentbanners/BackendFormHandler');
-//        $this->pageRenderer->loadRequireJsModule('TYPO3/CMS/Consentbanners/BackendModalPrompts');
-
-        $this->registerAsideMenu();
-        $this->registerDocHeaderButton();
-
         $moduleTemplate = $this->initializeModuleTemplate($this->request);
-
-        if ($this->default_sys_language === $this->current_sys_language) {
-            $this->createDocHeaderButtons($moduleTemplate);
-        }
-
-        $this->createDocHeaderLanguageMenu($moduleTemplate);
-
-        $categoriesData = $this->categoryRepository->findByStorageIds([(int)$this->current_root_pid], (int)$this->current_sys_language, true);
-
-        foreach ($categoriesData as $category) {
-
-            $params = [
-                'data' => [
-                    'tx_consentbanners_domain_model_module' => [
-                        $category->getUid() => [
-                            'hidden' => $category->getHidden() === 1 ? 0 : 1
-                        ]
-                    ]
-                ],
-                'redirect' => $this->redirect
-            ];
-
-            $category->setShowUri($this->getBuildRoutePath('/record/commit', $params));
-        }
 
         $moduleTemplate->assignMultiple([
             'data' => [
-                'categories' => $categoriesData
+                'consents' => [],
             ],
             'moduleName' => $this->moduleName,
             'returnUrl' => $this->getBuildRoute($this->moduleName, [$this->getFullPluginName() => ['action' => $this->request->getControllerActionName(), 'controller' => $this->request->getControllerName()], 'SET' => ['language' => $this->current_sys_language], 'sysLanguageUid' => $this->current_sys_language, 'rootPageId' => $this->current_root_pid]),
-            'currentRootPageId' => $this->current_root_pid,
+            'rootPageId' => $this->rootPageId,
             'currentLanguageId' => $this->current_sys_language,
-            'defaultLanguageId' => $this->default_sys_language,
-            'docHeaderMenu' => $this->docHeaderMenu,
-            'asideMenu' => $this->asideMenu
+            //'defaultLanguageId' => $this->default_sys_language,
         ]);
 
-        // Adding title, menus, buttons, etc. using $moduleTemplate ...
-        return $moduleTemplate->renderResponse('BackendConsentbanner/Categories');
+
+        return $moduleTemplate->renderResponse('BackendConsentbanner/Consents');
     }
 
-    /**
-     * @return ResponseInterface
-     * @throws RouteNotFoundException
-     */
-    public function modulesAction(): ResponseInterface
-    {
-        $this->registerAsideMenu();
-        $this->registerDocHeaderButton();
 
-        $moduleTemplate = $this->initializeModuleTemplate($this->request);
-
-        if ($this->default_sys_language === $this->current_sys_language) {
-            $this->createDocHeaderButtons($moduleTemplate);
-        }
-
-        $this->createDocHeaderLanguageMenu($moduleTemplate);
-
-        $modulesData = $this->moduleRepository->findByStorageIds([(int)$this->current_root_pid], (int)$this->current_sys_language, true);
-
-        foreach ($modulesData as $module) {
-            $params = [
-                'data' => [
-                    'tx_consentbanners_domain_model_module' => [
-                        $module->getUid() => [
-                            'hidden' => $module->getHidden() === 1 ? 0 : 1
-                        ]
-                    ]
-                ],
-                'redirect' => $this->redirect
-            ];
-
-            $module->setShowUri($this->getBuildRoutePath('/record/commit', $params));
-        }
-
-        $moduleTemplate->assignMultiple([
-            'data' => [
-                'modules' => $modulesData,
-            ],
-            'moduleName' => $this->moduleName,
-            'returnUrl' => $this->getBuildRoute($this->moduleName, [$this->getFullPluginName() => ['action' => $this->request->getControllerActionName(), 'controller' => $this->request->getControllerName()], 'SET' => ['language' => $this->current_sys_language], 'sysLanguageUid' => $this->current_sys_language, 'rootPageId' => $this->current_root_pid]),
-            'currentRootPageId' => $this->current_root_pid,
-            'currentLanguageId' => $this->current_sys_language,
-            'defaultLanguageId' => $this->default_sys_language,
-            'docHeaderMenu' => $this->docHeaderMenu,
-            'asideMenu' => $this->asideMenu
-        ]);
-
-        // Adding title, menus, buttons, etc. using $moduleTemplate ...
-        return $moduleTemplate->renderResponse('BackendConsentbanner/Modules');
-    }
 
     protected function initializeModuleTemplate(
         ServerRequestInterface $request
@@ -462,12 +359,12 @@ class BackendConsentbannerController extends ActionController
         $view = $this->moduleTemplateFactory->create($request);
         $this->pageRenderer->addCssFile('EXT:consentbanners/Resources/Public/Css/Backend.css');
 
-        $context = '';
-        $this->modifyDocHeaderComponent($view, $context);
+        $titleComponents = ['title' => '', 'context' => ''];
+        $this->modifyDocHeaderComponent($view, $titleComponents);
         $view->setFlashMessageQueue($this->getFlashMessageQueue());
         $view->setTitle(
-            $this->getLanguageService()->sL('LLL:EXT:blog_example/Resources/Private/Language/Module/locallang_mod.xlf:mlang_tabs_tab'),
-            $context,
+            $titleComponents['title'],
+            $titleComponents['context'],
         );
 
         return $view;
@@ -585,53 +482,53 @@ class BackendConsentbannerController extends ActionController
         }
     }
 
-    /**
-     * @return void
-     * @throws RouteNotFoundException
-     */
-    protected function registerAsideMenu(): void
-    {
-        if (!empty($this->actions)) {
-            foreach ($this->actions as $actionName) {
-                $uri = $this->getBuildActionRoute($actionName);
-                $this->asideMenu[] = [
-                    'title' => LocalizationUtility::translate('LLL:EXT:consentbanners/Resources/Private/Language/locallang_mod.xlf:action.' . $actionName . '.title'),
-                    'uri' => $uri,
-                    'isActive' => $this->isActionMethod($actionName)
-                ];
-            }
-        }
-    }
+//    /**
+//     * @return void
+//     * @throws RouteNotFoundException
+//     */
+//    protected function registerAsideMenu(): void
+//    {
+//        if (!empty($this->actions)) {
+//            foreach ($this->actions as $actionName) {
+//                $uri = $this->getBuildActionRoute($actionName);
+//                $this->asideMenu[] = [
+//                    'title' => LocalizationUtility::translate('LLL:EXT:consentbanners/Resources/Private/Language/locallang_mod.xlf:action.' . $actionName . '.title'),
+//                    'uri' => $uri,
+//                    'isActive' => $this->isActionMethod($actionName)
+//                ];
+//            }
+//        }
+//    }
 
     /**
      * @return void
      * @throws RouteNotFoundException
      */
-    protected function registerDocHeaderButton(): void
-    {
-        if (empty($this->buttons)) {
-            $this->buttons = [
-                $this->createNewRecordButton(
-                    'tx_consentbanners_domain_model_category',
-                    LocalizationUtility::translate('LLL:EXT:consentbanners/Resources/Private/Language/locallang_mod.xlf:action.categories.new.title'),
-                    $this->getBuildActionRoute('categories'),
-                    [
-                        'ConsentBackend' => ['categories']
-                    ],
-                    true
-                ),
-                $this->createNewRecordButton(
-                    'tx_consentbanners_domain_model_module',
-                    LocalizationUtility::translate('LLL:EXT:consentbanners/Resources/Private/Language/locallang_mod.xlf:action.modules.new.title'),
-                    $this->getBuildActionRoute('modules'),
-                    [
-                        'ConsentBackend' => ['modules']
-                    ],
-                    true
-                )
-            ];
-        }
-    }
+//    protected function registerDocHeaderButton(): void
+//    {
+//        if (empty($this->buttons)) {
+//            $this->buttons = [
+//                $this->createNewRecordButton(
+//                    'tx_consentbanners_domain_model_category',
+//                    LocalizationUtility::translate('LLL:EXT:consentbanners/Resources/Private/Language/locallang_mod.xlf:action.categories.new.title'),
+//                    $this->getBuildActionRoute('categories'),
+//                    [
+//                        'ConsentBackend' => ['categories']
+//                    ],
+//                    true
+//                ),
+//                $this->createNewRecordButton(
+//                    'tx_consentbanners_domain_model_module',
+//                    LocalizationUtility::translate('LLL:EXT:consentbanners/Resources/Private/Language/locallang_mod.xlf:action.modules.new.title'),
+//                    $this->getBuildActionRoute('modules'),
+//                    [
+//                        'ConsentBackend' => ['modules']
+//                    ],
+//                    true
+//                )
+//            ];
+//        }
+//    }
 
 
     /**
@@ -739,12 +636,16 @@ class BackendConsentbannerController extends ActionController
     }
 
 
-
-    private function modifyDocHeaderComponent(ModuleTemplate $view, string &$context): void
+    /**
+     * @param ModuleTemplate $view
+     * @param string[] $titleComponents
+     * @return void
+     */
+    private function modifyDocHeaderComponent(ModuleTemplate $view, array &$titleComponents): void
     {
-        $menu = $this->buildMenu($view, $context);
+        $menu = $this->buildMenuActions($view, $titleComponents);
         $view->getDocHeaderComponent()->getMenuRegistry()->addMenu($menu);
-        $menu = $this->buildSitesMenu($view, $context);
+        $menu = $this->buildMenuSites($view, $titleComponents);
         $view->getDocHeaderComponent()->getMenuRegistry()->addMenu($menu);
 
 //        $buttonBar = $view->getDocHeaderComponent()->getButtonBar();
@@ -756,23 +657,23 @@ class BackendConsentbannerController extends ActionController
         }
     }
 
-    private function buildMenu(ModuleTemplate $view, string &$context): Menu
+    private function buildMenuActions(ModuleTemplate $view, array &$titleComponents): Menu
     {
         $menuItems = [
             'settings' => [
-                'controller' => 'BackendConsentbanner',
+                'controller' => 'Management',
                 'action' => 'settings',
-                'label' => 'Banner Einstellung',
+                'label' => $this->getLanguageService()->sL('LLL:EXT:consentbanners/Resources/Private/Language/locallang_mod.xlf:settings.headline'),
             ],
-            'categories' => [
-                'controller' => 'BackendConsentbanner',
-                'action' => 'categories',
-                'label' => 'Categorie Settings',
+            'consents' => [
+                'controller' => 'Management',
+                'action' => 'consents',
+                'label' => $this->getLanguageService()->sL('LLL:EXT:consentbanners/Resources/Private/Language/locallang_mod.xlf:consents.headline'),
             ],
         ];
 
         $menu = $view->getDocHeaderComponent()->getMenuRegistry()->makeMenu();
-        $menu->setIdentifier('ConsentBannerModuleMenu');
+        $menu->setIdentifier('ManagementBannerMenu');
 
         foreach ($menuItems as $menuItemConfig) {
             $isActive = $this->request->getControllerActionName() === $menuItemConfig['action'];
@@ -786,17 +687,17 @@ class BackendConsentbannerController extends ActionController
                 ->setActive($isActive);
             $menu->addMenuItem($menuItem);
             if ($isActive) {
-                $context = $menuItemConfig['label'];
+                $titleComponents['title'] = $menuItemConfig['label'];
             }
         }
         return $menu;
     }
 
-    private function buildSitesMenu(ModuleTemplate $view, string &$context): Menu
+    private function buildMenuSites(ModuleTemplate $view, array &$titleComponents): Menu
     {
         foreach ($this->sites as $site) {
             $menuItems['rootPageId::'.$site->getRootPageId()] = [
-                'controller' => 'BackendConsentbanner',
+                'controller' => 'Management',
                 'controllerArguments' => ['site' => $site->getRootPageId()],
                 'action' => 'settings',
                 'label' => strtoupper($site->getIdentifier()),
@@ -804,7 +705,7 @@ class BackendConsentbannerController extends ActionController
         }
 
         $menu = $view->getDocHeaderComponent()->getMenuRegistry()->makeMenu();
-        $menu->setIdentifier('ConsentBannerRootPagesMenu');
+        $menu->setIdentifier('ManagementRootPagesMenu');
 
         foreach ($menuItems as $menuItemConfig) {
             $isActive = $this->rootPageId === (int)$menuItemConfig['controllerArguments']['site'];
@@ -818,7 +719,7 @@ class BackendConsentbannerController extends ActionController
                 ->setActive($isActive);
             $menu->addMenuItem($menuItem);
             if ($isActive) {
-                $context = $menuItemConfig['label'];
+                $titleComponents['context'] = $menuItemConfig['label'];
             }
         }
         return $menu;

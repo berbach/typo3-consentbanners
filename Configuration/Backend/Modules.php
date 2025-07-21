@@ -1,6 +1,6 @@
 <?php
 
-use Bb\Consentbanners\Controller\BackendConsentbannerController;
+use Bb\Consentbanners\Controller\ManagementController;
 /**
  * Definitions for modules provided by EXT:examples
  */
@@ -16,8 +16,8 @@ return [
         'extensionName' => 'Consentbanners',
         'iconIdentifier' => 'module-cookie',
         'controllerActions' => [
-            BackendConsentbannerController::class => [
-                'settings', 'categories', 'modules', 'delete'
+            ManagementController::class => [
+                'settings', 'consents', 'delete'
             ],
         ],
     ],
