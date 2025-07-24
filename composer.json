@@ -12,7 +12,10 @@
         "Extension"
     ],
     "require": {
-        "typo3/cms-core": "^13.4",
+		"typo3/cms-backend": "^13.3 || dev-main",
+		"typo3/cms-core": "^13.3 || dev-main",
+		"typo3/cms-extbase": "^13.3 || dev-main",
+		"typo3/cms-fluid": "^13.3 || dev-main",
         "php": ">= 8.2 < 8.4",
         "ext-pdo": "*"
     },
@@ -21,6 +24,7 @@
             "Bb\\Consentbanners\\": "Classes/"
         }
     },
+	"minimum-stability": "dev",
     "prefer-stable": true,
     "config": {
 		"vendor-dir": ".build/vendor",
