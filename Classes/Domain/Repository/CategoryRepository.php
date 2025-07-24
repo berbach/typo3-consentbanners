@@ -1,6 +1,6 @@
 <?php
 
-namespace Bb\Consentbanners\Domain\Repository;
+namespace Bb\ConsentBanner\Domain\Repository;
 
 use Doctrine\DBAL\DBALException;
 use Doctrine\DBAL\Driver\Exception;
@@ -23,7 +23,7 @@ class CategoryRepository extends Repository
     /**
      * @var string
      */
-    public const TABLE_NAME = 'tx_consentbanners_domain_model_category';
+    public const TABLE_NAME = 'tx_consentbanner_domain_model_category';
     /**
      * @var array Default order is by title ascending
      */

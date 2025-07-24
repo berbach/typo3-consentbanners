@@ -1,10 +1,9 @@
 <?php
 
-namespace Bb\Consentbanners\DataProcessing;
+namespace Bb\ConsentBanner\DataProcessing;
 
-use Bb\Consentbanners\Utility\CookieUtility;
-use Bb\Consentbanners\Domain\Repository\SettingsRepository;
-use Doctrine\DBAL\DBALException;
+use Bb\ConsentBanner\Utility\CookieUtility;
+use Bb\ConsentBanner\Domain\Repository\SettingsRepository;
 use Doctrine\DBAL\Driver\Exception;
 use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\Core\Context\Context;
@@ -78,13 +77,13 @@ class ConsentBannerProcessor implements DataProcessorInterface
                 'title'                 => $banner->getTitle(),
                 'description'           => $banner->getDescription(),
                 'privacyPage'           => $privacyPage,
-                'closeBtn'              => LocalizationUtility::translate('LLL:EXT:consentbanners/Resources/Private/Language/locallang.xlf:cookiebanner.closeBtn'),
+                'closeBtn'              => LocalizationUtility::translate('LLL:EXT:consent_banner/Resources/Private/Language/locallang.xlf:cookiebanner.closeBtn'),
                 'buttonsDisplayNames'   => [
-                    'acceptAll'             => !empty($banner->getAcceptAll()) ? $banner->getAcceptAll() : LocalizationUtility::translate('LLL:EXT:consentbanners/Resources/Private/Language/locallang.xlf:cookiebanner.acceptAll'),
-                    'saveAndClose'          => !empty($banner->getSaveAndClose()) ? $banner->getSaveAndClose() : LocalizationUtility::translate('LLL:EXT:consentbanners/Resources/Private/Language/locallang.xlf:cookiebanner.saveAndClose'),
-                    'confirmSelection'      => !empty($banner->getConfirmSelection()) ? $banner->getConfirmSelection() : LocalizationUtility::translate('LLL:EXT:consentbanners/Resources/Private/Language/locallang.xlf:cookiebanner.confirmSelection'),
-                    'reject'                => !empty($banner->getReject()) ? $banner->getReject() : LocalizationUtility::translate('LLL:EXT:consentbanners/Resources/Private/Language/locallang.xlf:cookiebanner.reject'),
-                    'advancedSettings'      => !empty($banner->getAdvancedSettings()) ? $banner->getAdvancedSettings() : LocalizationUtility::translate('LLL:EXT:consentbanners/Resources/Private/Language/locallang.xlf:cookiebanner.advancedSettings')
+                    'acceptAll'             => !empty($banner->getAcceptAll()) ? $banner->getAcceptAll() : LocalizationUtility::translate('LLL:EXT:consent_banner/Resources/Private/Language/locallang.xlf:cookiebanner.acceptAll'),
+                    'saveAndClose'          => !empty($banner->getSaveAndClose()) ? $banner->getSaveAndClose() : LocalizationUtility::translate('LLL:EXT:consent_banner/Resources/Private/Language/locallang.xlf:cookiebanner.saveAndClose'),
+                    'confirmSelection'      => !empty($banner->getConfirmSelection()) ? $banner->getConfirmSelection() : LocalizationUtility::translate('LLL:EXT:consent_banner/Resources/Private/Language/locallang.xlf:cookiebanner.confirmSelection'),
+                    'reject'                => !empty($banner->getReject()) ? $banner->getReject() : LocalizationUtility::translate('LLL:EXT:consent_banner/Resources/Private/Language/locallang.xlf:cookiebanner.reject'),
+                    'advancedSettings'      => !empty($banner->getAdvancedSettings()) ? $banner->getAdvancedSettings() : LocalizationUtility::translate('LLL:EXT:consent_banner/Resources/Private/Language/locallang.xlf:cookiebanner.advancedSettings')
                 ]
             ];
 
@@ -207,7 +206,7 @@ class ConsentBannerProcessor implements DataProcessorInterface
 
     protected function resolveNonceValue(): string
     {
-        return GeneralUtility::makeInstance(RequestId::class)->nonce->consume();
+        return '';//GeneralUtility::makeInstance(RequestId::class)->nonce->consume();
     }
 
     /**

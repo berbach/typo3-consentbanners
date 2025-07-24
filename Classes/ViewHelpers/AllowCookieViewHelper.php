@@ -1,11 +1,11 @@
 <?php
 
-namespace Bb\Consentbanners\ViewHelpers;
+namespace Bb\ConsentBanner\ViewHelpers;
 
-use Bb\Consentbanners\Domain\Model\Category;
-use Bb\Consentbanners\Domain\Model\Module;
-use Bb\Consentbanners\Domain\Repository\SettingsRepository;
-use Bb\Consentbanners\Utility\CookieUtility;
+use Bb\ConsentBanner\Domain\Model\Category;
+use Bb\ConsentBanner\Domain\Model\Module;
+use Bb\ConsentBanner\Domain\Repository\SettingsRepository;
+use Bb\ConsentBanner\Utility\CookieUtility;
 use Closure;
 use Doctrine\DBAL\DBALException;
 use Doctrine\DBAL\Driver\Exception;
@@ -73,8 +73,8 @@ class AllowCookieViewHelper extends AbstractViewHelper
 
         $data = [
             'isModule' => false,
-            'placeholder_headline' => LocalizationUtility::translate('LLL:EXT:consentbanners/Resources/Private/Language/locallang.xlf:placeholderHeadline.removed.html'),
-            'placeholder' => LocalizationUtility::translate('LLL:EXT:consentbanners/Resources/Private/Language/locallang.xlf:placeholder.removed.html'),
+            'placeholder_headline' => LocalizationUtility::translate('LLL:EXT:consent_banner/Resources/Private/Language/locallang.xlf:placeholderHeadline.removed.html'),
+            'placeholder' => LocalizationUtility::translate('LLL:EXT:consent_banner/Resources/Private/Language/locallang.xlf:placeholder.removed.html'),
         ];
 
         if (!$moduleName) {

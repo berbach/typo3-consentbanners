@@ -1,6 +1,6 @@
 <?php
 
-namespace Bb\Consentbanners\Domain\Repository;
+namespace Bb\ConsentBanner\Domain\Repository;
 
 use Doctrine\DBAL\Exception;
 use TYPO3\CMS\Core\Database\Connection;
@@ -19,7 +19,7 @@ class BannerRepository extends Repository
     /**
      * @var string
      */
-    public const TABLE_NAME = 'tx_consentbanners_domain_model_banner';
+    public const TABLE_NAME = 'tx_consentbanner_domain_model_banner';
 
 
     public function __construct(

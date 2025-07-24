@@ -8,7 +8,7 @@ defined('TYPO3') || die();
         'columns' => [
             'ce_consent_module' => [
                 'exclude' => true,
-                'label' => 'LLL:EXT:consentbanners/Resources/Private/Language/locallang_db.xlf:field.consentbanner.module',
+                'label' => 'LLL:EXT:consent_banner/Resources/Private/Language/locallang_db.xlf:field.consentbanner.module',
                 'config' => [
                     'type' => 'select',
                     'renderType' => 'selectSingle',
@@ -25,7 +25,7 @@ defined('TYPO3') || die();
 \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addToAllTCAtypes(
     'tt_content',
     '
-    --div--;LLL:EXT:consentbanners/Resources/Private/Language/locallang_db.xlf:tab.consentbanner;,
+    --div--;LLL:EXT:consent_banner/Resources/Private/Language/locallang_db.xlf:tab.consentbanner;,
     --palette--;;ceConsentSettings,',
     'html',
     'after:bodytext'

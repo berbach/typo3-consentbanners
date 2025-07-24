@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 
-use Bb\Consentbanners\Domain\Model\Consent;
+use Bb\ConsentBanner\Domain\Model\Consent;
 
 return [
     Consent::class => [

@@ -1,19 +1,18 @@
 <?php
 
-use Bb\Consentbanners\Controller\ManagementController;
+use Bb\ConsentBanner\Controller\ManagementController;
 /**
  * Definitions for modules provided by EXT:examples
  */
 return [
-    'site_consentbanners' => [
+    'consentbanner_management' => [
         'parent' => 'site',
-        'position' => ['top'],
+        'position' => ['after' => 'web_ts'],
         'access' => 'admin',
         'workspaces' => 'live',
-        'path' => '/module/site/consentbanners',
-        'aliases' => ['site_ConsentbannersManagement'],
-        'labels' => 'LLL:EXT:consentbanners/Resources/Private/Language/locallang_mod.xlf:module.label',
-        'extensionName' => 'Consentbanners',
+        'path' => '/module/site/consent_banner',
+        'labels' => 'LLL:EXT:consent_banner/Resources/Private/Language/locallang_mod.xlf:module.label',
+        'extensionName' => 'ConsentBanner',
         'iconIdentifier' => 'module-cookie',
         'controllerActions' => [
             ManagementController::class => [

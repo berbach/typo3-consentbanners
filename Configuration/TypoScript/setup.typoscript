@@ -1,16 +1,16 @@
-plugin.tx_consentbanners {
+plugin.tx_consentbanner {
     view {
         templateRootPaths {
-            0 = EXT:consentbanners/Resources/Private/Templates/
-            10 = {$plugin.tx_consentbanners.view.templateRootPath}
+            0 = EXT:consent_banner/Resources/Private/Templates/
+            10 = {$plugin.tx_consentbanner.view.templateRootPath}
         }
         partialRootPaths {
-            0 = EXT:consentbanners/Resources/Private/Partials/
-            10 = {$plugin.tx_consentbanners.view.partialRootPath}
+            0 = EXT:consent_banner/Resources/Private/Partials/
+            10 = {$plugin.tx_consentbanner.view.partialRootPath}
         }
         layoutRootPaths {
-            0 = EXT:consentbanners/Resources/Private/Layouts/
-            10 = {$plugin.tx_consentbanners.view.layoutRootPath}
+            0 = EXT:consent_banner/Resources/Private/Layouts/
+            10 = {$plugin.tx_consentbanner.view.layoutRootPath}
         }
     }
     persistence {
@@ -39,11 +39,11 @@ lib.consentbanners {
     10 {
         templateName = ConsentBanner
 
-        templateRootPaths < plugin.tx_consentbanners.view.templateRootPaths
-        partialRootPaths < plugin.tx_consentbanners.view.partialRootPaths
-        layoutRootPaths < plugin.tx_consentbanners.view.layoutRootPaths
+        templateRootPaths < plugin.tx_consentbanner.view.templateRootPaths
+        partialRootPaths < plugin.tx_consentbanner.view.partialRootPaths
+        layoutRootPaths < plugin.tx_consentbanner.view.layoutRootPaths
 
-        settings < plugin.tx_consentbanners.settings
+        settings < plugin.tx_consentbanner.settings
 
         dataProcessing {
             10 = Bb\Consentbanners\DataProcessing\ConsentBannerProcessor
@@ -56,12 +56,12 @@ page {
     1633505733 < lib.consentbanners
 
     includeCSS {
-        consentbanner = EXT:consentbanners/Resources/Public/Dist/Css/CookieBanner.css
+        consentbanner = EXT:consent_banner/Resources/Public/Dist/Css/CookieBanner.css
         consentbanner.forceOnTop = 1
     }
 
     includeJSFooter {
-        consentbanner = EXT:consentbanners/Resources/Public/Dist/JavaScript/BaseCookieBanner.js
+        consentbanner = EXT:consent_banner/Resources/Public/Dist/JavaScript/BaseCookieBanner.js
         consentbanner.async = 1
         consentbanner.excludeFromConcatenation = 1
         consentbanner.disableCompression = 1
@@ -70,6 +70,6 @@ page {
 
 tt_content.html {
     templateRootPaths {
-        200 = EXT:consentbanners/Resources/Private/Templates/
+        200 = EXT:consent_banner/Resources/Private/Templates/
     }
 }

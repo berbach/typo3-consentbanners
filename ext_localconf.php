@@ -11,14 +11,14 @@ use TYPO3\CMS\Core\Imaging\IconProvider\SvgIconProvider;
 call_user_func(static function () {
     // Add module configuration
     ExtensionManagementUtility::addTypoScriptSetup(
-        'module.tx_consentbanners {
+        'module.tx_consent_banner {
             settings {
                 storagePid = 999
             }
             view {
-                templateRootPaths.0 = EXT:consentbanners/Resources/Private/Backend/Templates/
-                partialRootPaths.0 = EXT:consentbanners/Resources/Private/Backend/Partials/
-                layoutRootPaths.0 = EXT:consentbanners/Resources/Private/Backend/Layouts/
+                templateRootPaths.0 = EXT:consent_banner/Resources/Private/Backend/Templates/
+                partialRootPaths.0 = EXT:consent_banner/Resources/Private/Backend/Partials/
+                layoutRootPaths.0 = EXT:consent_banner/Resources/Private/Backend/Layouts/
             }
         }'
     );

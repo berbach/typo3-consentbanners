@@ -5,7 +5,7 @@ return [
         'backend.contextmenu',
     ],
     'imports' => [
-        '@bb/consentbanners/BackendFormHandler.js' => 'EXT:consentbanners/Resources/Public/JavaScript/BackendFormHandler.js',
-        '@bb/consentbanners/BackendModalPrompts.js' => 'EXT:consentbanners/Resources/Public/JavaScript/BackendModalPrompts.js',
+        '@bb/consentbanner/BackendFormHandler.js' => 'EXT:consent_banner/Resources/Public/JavaScript/BackendFormHandler.js',
+        '@bb/consentbanner/BackendModalPrompts.js' => 'EXT:consent_banner/Resources/Public/JavaScript/BackendModalPrompts.js',
     ],
 ];

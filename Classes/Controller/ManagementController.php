@@ -1,13 +1,12 @@
 <?php
 declare(strict_types=1);
 
-namespace Bb\Consentbanners\Controller;
+namespace Bb\ConsentBanner\Controller;
 
-use Bb\Consentbanners\Domain\Repository\CategoryRepository;
-use Bb\Consentbanners\Domain\Repository\ModuleRepository;
-use Bb\Consentbanners\Domain\Repository\SettingsRepository;
+use Bb\ConsentBanner\Domain\Repository\CategoryRepository;
+use Bb\ConsentBanner\Domain\Repository\ModuleRepository;
+use Bb\ConsentBanner\Domain\Repository\SettingsRepository;
 
-use Doctrine\DBAL\DBALException;
 use Doctrine\DBAL\Driver\Exception;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -145,9 +144,8 @@ class ManagementController extends ActionController
 
     /**
      * @return void
-     * @throws DBALException
-     * @throws Exception
      * @throws RouteNotFoundException
+     * @throws \Doctrine\DBAL\Exception
      */
     protected function initializeAction(): void
     {
@@ -162,12 +160,12 @@ class ManagementController extends ActionController
 //            $this->current_sys_language = (int)$params['sysLanguageUid'];
 //        }
 
-        if (isset($params['tx_consentbanners_site_consentbanners']) && is_array($params['tx_consentbanners_site_consentbanners'])) {
-            $current_action = $params['tx_consentbanners_site_consentbanners']['action'] ?? 'settings';
-            $current_controller = $params['tx_consentbanners_site_consentbanners']['controller'] ?? 'BackendConsentbanner';
+        if (isset($params['tx_consentbanner_consentbanner_management']) && is_array($params['tx_consentbanner_consentbanner_management'])) {
+            $current_action = $params['tx_consentbanner_consentbanner_management']['action'] ?? 'settings';
+            $current_controller = $params['tx_consentbanner_consentbanner_management']['controller'] ?? 'BackendConsentbanner';
         } else {
             $current_action = 'settings';
-            $current_controller = 'BackendConsentbanner';
+            $current_controller = 'Management';
         }
 
         $rootPageSites = $this->siteFinder->getAllSites();
@@ -193,7 +191,7 @@ class ManagementController extends ActionController
                     $rp_menu[$rootPageSite->getRootPageId()] = [
                         'isRecord' => true,
                         'title' => $recordRootPageSite['title'],
-                        'uri' => $this->getBuildRoute($this->moduleName, ['tx_consentbanners_site_consentbanners' => ['action' => $current_action, 'controller' => $current_controller], 'SET' => ['language' => $defaultLanguage->getLanguageId()], 'sysLanguageUid' => $defaultLanguage->getLanguageId(), 'rootPageId' => $rootPageSite->getRootPageId()])
+                        'uri' => $this->getBuildRoute($this->moduleName, ['tx_consentbanner_consentbanner_management' => ['action' => $current_action, 'controller' => $current_controller], 'SET' => ['language' => $defaultLanguage->getLanguageId()], 'sysLanguageUid' => $defaultLanguage->getLanguageId(), 'rootPageId' => $rootPageSite->getRootPageId()])
                     ];
 
                     $ll_menu[$defaultLanguage->getLanguageId()] = [
@@ -202,7 +200,7 @@ class ManagementController extends ActionController
                         'pid' => $settingsInDefaultLanguage['pid'],
                         'sysLanguageUid' => $settingsInDefaultLanguage['sys_language_uid'],
                         'title' => $defaultLanguage->getTitle(),
-                        'uri' => $this->getBuildRoute($this->moduleName, ['tx_consentbanners_site_consentbanners' => ['action' => $current_action, 'controller' => $current_controller], 'SET' => ['language' => $defaultLanguage->getLanguageId()], 'sysLanguageUid' => $defaultLanguage->getLanguageId(), 'rootPageId' => $rootPageSite->getRootPageId()])
+                        'uri' => $this->getBuildRoute($this->moduleName, ['tx_consentbanner_consentbanner_management' => ['action' => $current_action, 'controller' => $current_controller], 'SET' => ['language' => $defaultLanguage->getLanguageId()], 'sysLanguageUid' => $defaultLanguage->getLanguageId(), 'rootPageId' => $rootPageSite->getRootPageId()])
                     ];
                     $this->default_sys_language = $defaultLanguage->getLanguageId();
                     foreach ($rootPageSite->getLanguages() as $language) {
@@ -213,7 +211,7 @@ class ManagementController extends ActionController
                         if ($language->isEnabled()) {
                             $settingsInLanguage = $this->settingsRepository->getRecordSettingsInLanguage($rootPageSite->getRootPageId(), $language->getLanguageId());
 
-                            $returnUrl = $this->getBuildRoute($this->moduleName, ['tx_consentbanners_site_consentbanners' => ['action' => $current_action, 'controller' => $current_controller], 'SET' => ['language' => $language->getLanguageId()], 'sysLanguageUid' => $language->getLanguageId(), 'rootPageId' => $rootPageSite->getRootPageId()]);
+                            $returnUrl = $this->getBuildRoute($this->moduleName, ['tx_consentbanner_consentbanner_management' => ['action' => $current_action, 'controller' => $current_controller], 'SET' => ['language' => $language->getLanguageId()], 'sysLanguageUid' => $language->getLanguageId(), 'rootPageId' => $rootPageSite->getRootPageId()]);
 
                             if (!is_null($settingsInLanguage)) {
                                 $ll_menu[$language->getLanguageId()] = [
@@ -222,7 +220,7 @@ class ManagementController extends ActionController
                                     'pid' => $settingsInLanguage['pid'],
                                     'sysLanguageUid' => $settingsInLanguage['sys_language_uid'],
                                     'title' => $language->getTitle(),
-                                    'uri' => $this->getBuildRoute($this->moduleName, ['tx_consentbanners_site_consentbanners' => ['action' => $current_action, 'controller' => $current_controller], 'SET' => ['language' => $language->getLanguageId()], 'sysLanguageUid' => $language->getLanguageId(), 'rootPageId' => $rootPageSite->getRootPageId()])
+                                    'uri' => $this->getBuildRoute($this->moduleName, ['tx_consentbanner_consentbanner_management' => ['action' => $current_action, 'controller' => $current_controller], 'SET' => ['language' => $language->getLanguageId()], 'sysLanguageUid' => $language->getLanguageId(), 'rootPageId' => $rootPageSite->getRootPageId()])
 
                                 ];
 
@@ -268,7 +266,7 @@ class ManagementController extends ActionController
                                 $GLOBALS['TCA'][SettingsRepository::TABLE_NAME]['ctrl']['languageField'] => $defaultLanguage->getLanguageId(),
                             ]
                         ],
-                        'returnUrl' => $this->getBuildRoute($this->moduleName, ['tx_consentbanners_site_consentbanners' => ['action' => $current_action, 'controller' => $current_controller], 'SET' => ['language' => $defaultLanguage->getLanguageId()], 'sysLanguageUid' => $defaultLanguage->getLanguageId(), 'rootPageId' => $rootPageSite->getRootPageId()])
+                        'returnUrl' => $this->getBuildRoute($this->moduleName, ['tx_consentbanner_consentbanner_management' => ['action' => $current_action, 'controller' => $current_controller], 'SET' => ['language' => $defaultLanguage->getLanguageId()], 'sysLanguageUid' => $defaultLanguage->getLanguageId(), 'rootPageId' => $rootPageSite->getRootPageId()])
                     ];
 
                     $newSettingsUri = $this->getBuildRoute('record_edit', $new);
@@ -285,7 +283,7 @@ class ManagementController extends ActionController
                             $GLOBALS['TCA'][SettingsRepository::TABLE_NAME]['ctrl']['languageField'] => $defaultLanguage->getLanguageId(),
                         ]
                     ],
-                    'returnUrl' => $this->getBuildRoute($this->moduleName, ['tx_consentbanners_site_consentbanners' => ['action' => $current_action, 'controller' => $current_controller], 'SET' => ['language' => $defaultLanguage->getLanguageId()], 'sysLanguageUid' => $defaultLanguage->getLanguageId(), 'rootPageId' => $rootPageSite->getRootPageId()])
+                    'returnUrl' => $this->getBuildRoute($this->moduleName, ['tx_consentbanner_consentbanner_management' => ['action' => $current_action, 'controller' => $current_controller], 'SET' => ['language' => $defaultLanguage->getLanguageId()], 'sysLanguageUid' => $defaultLanguage->getLanguageId(), 'rootPageId' => $rootPageSite->getRootPageId()])
                 ];
 
                 $tempRootPageSides[$rootPageSite->getRootPageId()] = [
@@ -297,8 +295,6 @@ class ManagementController extends ActionController
                     'rootPageMenu' => $rp_menu,
                     'newSettingsUri' => $newSettingsUri ?? (empty($ll_menu) ? $this->getBuildRoute('record_edit', $edit) : '')
                 ];
-            } else {
-                //FlashMassage
             }
 
         }
@@ -327,7 +323,7 @@ class ManagementController extends ActionController
             'currentLanguageId' => $this->current_sys_language,
         ]);
 
-        return $moduleTemplate->renderResponse('BackendConsentbanner/Settings');
+        return $moduleTemplate->renderResponse('Management/Settings');
     }
 
 
@@ -347,7 +343,7 @@ class ManagementController extends ActionController
         ]);
 
 
-        return $moduleTemplate->renderResponse('BackendConsentbanner/Consents');
+        return $moduleTemplate->renderResponse('Management/Consents');
     }
 
 
@@ -357,7 +353,7 @@ class ManagementController extends ActionController
     ): ModuleTemplate {
 
         $view = $this->moduleTemplateFactory->create($request);
-        $this->pageRenderer->addCssFile('EXT:consentbanners/Resources/Public/Css/Backend.css');
+        $this->pageRenderer->addCssFile('EXT:consent_banner/Resources/Public/Css/Backend.css');
 
         $titleComponents = ['title' => '', 'context' => ''];
         $this->modifyDocHeaderComponent($view, $titleComponents);
@@ -492,7 +488,7 @@ class ManagementController extends ActionController
 //            foreach ($this->actions as $actionName) {
 //                $uri = $this->getBuildActionRoute($actionName);
 //                $this->asideMenu[] = [
-//                    'title' => LocalizationUtility::translate('LLL:EXT:consentbanners/Resources/Private/Language/locallang_mod.xlf:action.' . $actionName . '.title'),
+//                    'title' => LocalizationUtility::translate('LLL:EXT:consent_banner/Resources/Private/Language/locallang_mod.xlf:action.' . $actionName . '.title'),
 //                    'uri' => $uri,
 //                    'isActive' => $this->isActionMethod($actionName)
 //                ];
@@ -509,8 +505,8 @@ class ManagementController extends ActionController
 //        if (empty($this->buttons)) {
 //            $this->buttons = [
 //                $this->createNewRecordButton(
-//                    'tx_consentbanners_domain_model_category',
-//                    LocalizationUtility::translate('LLL:EXT:consentbanners/Resources/Private/Language/locallang_mod.xlf:action.categories.new.title'),
+//                    'tx_consentbanner_domain_model_category',
+//                    LocalizationUtility::translate('LLL:EXT:consent_banner/Resources/Private/Language/locallang_mod.xlf:action.categories.new.title'),
 //                    $this->getBuildActionRoute('categories'),
 //                    [
 //                        'ConsentBackend' => ['categories']
@@ -518,8 +514,8 @@ class ManagementController extends ActionController
 //                    true
 //                ),
 //                $this->createNewRecordButton(
-//                    'tx_consentbanners_domain_model_module',
-//                    LocalizationUtility::translate('LLL:EXT:consentbanners/Resources/Private/Language/locallang_mod.xlf:action.modules.new.title'),
+//                    'tx_consentbanner_domain_model_module',
+//                    LocalizationUtility::translate('LLL:EXT:consent_banner/Resources/Private/Language/locallang_mod.xlf:action.modules.new.title'),
 //                    $this->getBuildActionRoute('modules'),
 //                    [
 //                        'ConsentBackend' => ['modules']
@@ -663,12 +659,12 @@ class ManagementController extends ActionController
             'settings' => [
                 'controller' => 'Management',
                 'action' => 'settings',
-                'label' => $this->getLanguageService()->sL('LLL:EXT:consentbanners/Resources/Private/Language/locallang_mod.xlf:settings.headline'),
+                'label' => $this->getLanguageService()->sL('LLL:EXT:consent_banner/Resources/Private/Language/locallang_mod.xlf:settings.headline'),
             ],
             'consents' => [
                 'controller' => 'Management',
                 'action' => 'consents',
-                'label' => $this->getLanguageService()->sL('LLL:EXT:consentbanners/Resources/Private/Language/locallang_mod.xlf:consents.headline'),
+                'label' => $this->getLanguageService()->sL('LLL:EXT:consent_banner/Resources/Private/Language/locallang_mod.xlf:consents.headline'),
             ],
         ];
 

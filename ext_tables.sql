@@ -6,9 +6,9 @@ CREATE TABLE tt_content
     ce_consent_module varchar(255) DEFAULT '' NOT NULL,
 );
 #
-# Table structure for table 'tx_consentbanners_domain_model_settings'
+# Table structure for table 'tx_consentbanner_domain_model_settings'
 #
-CREATE TABLE tx_consentbanners_domain_model_settings
+CREATE TABLE tx_consentbanner_domain_model_settings
 (
     title              varchar(255)         DEFAULT ''   NOT NULL,
     description        text,
@@ -32,9 +32,9 @@ CREATE TABLE tx_consentbanners_domain_model_settings
 
 );
 #
-# Table structure for table 'tx_consentbanners_domain_model_category'
+# Table structure for table 'tx_consentbanner_domain_model_category'
 #
-CREATE TABLE tx_consentbanners_domain_model_category
+CREATE TABLE tx_consentbanner_domain_model_category
 (
 
     name              varchar(255)         DEFAULT ''  NOT NULL,
@@ -49,9 +49,9 @@ CREATE TABLE tx_consentbanners_domain_model_category
 
 );
 #
-# Table structure for table 'tx_consentbanners_domain_model_module'
+# Table structure for table 'tx_consentbanner_domain_model_module'
 #
-CREATE TABLE tx_consentbanners_domain_model_module
+CREATE TABLE tx_consentbanner_domain_model_module
 (
 
     name                 varchar(255)         DEFAULT ''  NOT NULL,
@@ -68,12 +68,12 @@ CREATE TABLE tx_consentbanners_domain_model_module
     sorting_foreign      int(11)              DEFAULT '0',
     module_id            int(11)     unsigned DEFAULT NULL,
 
---     FOREIGN KEY (category) REFERENCES tx_consentbanners_domain_model_category (uid)
+--     FOREIGN KEY (category) REFERENCES tx_consentbanner_domain_model_category (uid)
 );
 #
-# Table structure for table 'tx_consentbanners_domain_model_banner'
+# Table structure for table 'tx_consentbanner_domain_model_banner'
 #
-CREATE TABLE tx_consentbanners_domain_model_banner
+CREATE TABLE tx_consentbanner_domain_model_banner
 (
     banner_title                varchar(255)         DEFAULT ''   NOT NULL,
     banner_description          text,
@@ -117,9 +117,9 @@ CREATE TABLE tx_consentbanners_domain_model_banner
 );
 
 #
-# Table structure for table 'tx_consentbanners_domain_model_group_category'
+# Table structure for table 'tx_consentbanner_domain_model_group_category'
 #
-CREATE TABLE tx_consentbanners_domain_model_group_category
+CREATE TABLE tx_consentbanner_domain_model_group_category
 (
 
     name              varchar(255)         DEFAULT ''  NOT NULL,
@@ -134,9 +134,9 @@ CREATE TABLE tx_consentbanners_domain_model_group_category
 
 );
 #
-# Table structure for table 'tx_consentbanners_domain_model_optin_module'
+# Table structure for table 'tx_consentbanner_domain_model_optin_module'
 #
-CREATE TABLE tx_consentbanners_domain_model_optin_module
+CREATE TABLE tx_consentbanner_domain_model_optin_module
 (
 
     name                 varchar(255)         DEFAULT ''  NOT NULL,
@@ -155,9 +155,9 @@ CREATE TABLE tx_consentbanners_domain_model_optin_module
 
 );
 #
-# Table structure for table 'tx_consentbanners_domain_model_consent'
+# Table structure for table 'tx_consentbanner_domain_model_consent'
 # Define table and fields since it has no TCA
-CREATE TABLE tx_consentbanners_domain_model_consent
+CREATE TABLE tx_consentbanner_domain_model_consent
 (
     identification_key varchar(40) DEFAULT '' NOT NULL,
     pid int(11) DEFAULT '0' NOT NULL,
@@ -167,9 +167,9 @@ CREATE TABLE tx_consentbanners_domain_model_consent
     PRIMARY KEY (identification_key)
 );
 -- #
--- # Table structure for table 'tx_consentbanners_module_categories_mm'
+-- # Table structure for table 'tx_consentbanner_module_categories_mm'
 -- #
--- CREATE TABLE tx_consentbanners_module_categories_mm
+-- CREATE TABLE tx_consentbanner_module_categories_mm
 -- (
 --     uid_local       int(11) unsigned DEFAULT '0' NOT NULL,
 --     uid_foreign     int(11) unsigned DEFAULT '0' NOT NULL,
@@ -180,9 +180,9 @@ CREATE TABLE tx_consentbanners_domain_model_consent
 --     KEY uid_foreign (uid_foreign)
 -- );
 -- #
--- # Table structure for table 'tx_consentbanners_module_categories_mm'
+-- # Table structure for table 'tx_consentbanner_module_categories_mm'
 -- #
--- CREATE TABLE tx_consentbanners_categories_banner_mm
+-- CREATE TABLE tx_consentbanner_categories_banner_mm
 -- (
 --     uid_local       int(11) unsigned DEFAULT '0' NOT NULL,
 --     uid_foreign     int(11) unsigned DEFAULT '0' NOT NULL,

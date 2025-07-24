@@ -8,7 +8,7 @@
 
 <f:section name="Content">
     <f:flashMessages/>
-    <h1><f:translate key="LLL:EXT:consentbanners/Resources/Private/Language/locallang_mod.xlf:consents.headline"/></h1>
+    <h1><f:translate key="LLL:EXT:consent_banner/Resources/Private/Language/locallang_mod.xlf:consents.headline"/></h1>
     <f:debug inline="1">{_all}</f:debug>
     <f:if condition="{data.consents}">
         <f:then>
@@ -23,9 +23,9 @@
         </f:then>
         <f:else>
             Keine Daten!!!
-            <!--            <a href="{be:uri.newRecord(table: 'tx_consentbanners_domain_model_settings', pid: currentRootPageId)}" class="btn btn-default" title="{f:translate(key: 'LLL:EXT:consentbanners/Resources/Private/Language/locallang_mod.xlf:action.settings.new.title')}">-->
+            <!--            <a href="{be:uri.newRecord(table: 'tx_consentbanner_domain_model_settings', pid: currentRootPageId)}" class="btn btn-default" title="{f:translate(key: 'LLL:EXT:consent_banner/Resources/Private/Language/locallang_mod.xlf:action.settings.new.title')}">-->
             <!--                <core:icon identifier="actions-add" size="small"/>-->
-            <!--                <f:translate key="LLL:EXT:consentbanners/Resources/Private/Language/locallang_mod.xlf:action.settings.new.title" />-->
+            <!--                <f:translate key="LLL:EXT:consent_banner/Resources/Private/Language/locallang_mod.xlf:action.settings.new.title" />-->
             <!--            </a>-->
         </f:else>
     </f:if>

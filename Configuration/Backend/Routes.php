@@ -1,5 +1,5 @@
 <?php
-use Bb\Consentbanners\Controller;
+use Bb\ConsentBanner\Controller;
 
 return [
 //    'web_CookiebannerManagement' => [

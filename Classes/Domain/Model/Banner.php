@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Bb\Consentbanners\Domain\Model;
+namespace Bb\ConsentBanner\Domain\Model;
 
 use TYPO3\CMS\Extbase\DomainObject\AbstractEntity;
 use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
@@ -10,7 +10,7 @@ use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
  * Banner
  *
  * Dieses Model repräsentiert einen Datensatz aus der Tabelle
- * 'tx_consentbanners_domain_model_banner'.
+ * 'tx_consentbanner_domain_model_banner'.
  *
  */
 class Banner extends AbstractEntity

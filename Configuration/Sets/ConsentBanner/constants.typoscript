@@ -1,1 +1,1 @@
-@import 'EXT:consentbanners/Configuration/TypoScript/constants.typoscript'
+@import 'EXT:consent_banner/Configuration/TypoScript/constants.typoscript'

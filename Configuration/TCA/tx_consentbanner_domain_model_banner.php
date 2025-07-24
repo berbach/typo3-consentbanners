@@ -36,9 +36,9 @@ return [
                 --div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:general,
                     --palette--;;content,
                     --palette--;;settings,
-                --div--;LLL:EXT:consentbanners/Resources/Private/Language/locallang_mod.xlf:tab.buttons,
-                    --palette--;LLL:EXT:consentbanners/Resources/Private/Language/locallang_mod.xlf:palette.buttonsDisplayName;buttonsDisplayName,
-                    --palette--;LLL:EXT:consentbanners/Resources/Private/Language/locallang_mod.xlf:palette.privacyPage;privacyPage,
+                --div--;LLL:EXT:consent_banner/Resources/Private/Language/locallang_mod.xlf:tab.buttons,
+                    --palette--;LLL:EXT:consent_banner/Resources/Private/Language/locallang_mod.xlf:palette.buttonsDisplayName;buttonsDisplayName,
+                    --palette--;LLL:EXT:consent_banner/Resources/Private/Language/locallang_mod.xlf:palette.privacyPage;privacyPage,
                 --div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:categories,
                     categories,
                 --div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:language,    
@@ -107,8 +107,8 @@ return [
                 'items' => [
                     ['label' => '', 'value' => 0],
                 ],
-                'foreign_table' => 'tx_consentbanners_domain_model_settings',
-                'foreign_table_where' => 'AND {#tx_consentbanners_domain_model_settings}.{#pid}=###CURRENT_PID### AND {#tx_consentbanners_domain_model_settings}.{#sys_language_uid} IN (-1,0)',
+                'foreign_table' => 'tx_consentbanner_domain_model_settings',
+                'foreign_table_where' => 'AND {#tx_consentbanner_domain_model_settings}.{#pid}=###CURRENT_PID### AND {#tx_consentbanner_domain_model_settings}.{#sys_language_uid} IN (-1,0)',
             ],
         ],
         'l10n_diffsource' => [
@@ -140,7 +140,7 @@ return [
 
         'title' => [
             'exclude' => true,
-            'label' => 'LLL:EXT:consentbanners/Resources/Private/Language/locallang_mod.xlf:field.title',
+            'label' => 'LLL:EXT:consent_banner/Resources/Private/Language/locallang_mod.xlf:field.title',
             'config' => [
                 'type' => 'input',
                 'size' => 50,
@@ -152,7 +152,7 @@ return [
 
         'description' => [
             'exclude' => true,
-            'label' => 'LLL:EXT:consentbanners/Resources/Private/Language/locallang_mod.xlf:field.description',
+            'label' => 'LLL:EXT:consent_banner/Resources/Private/Language/locallang_mod.xlf:field.description',
             'config' => [
                 'type' => 'text',
                 'eval' => 'trim',
@@ -164,13 +164,13 @@ return [
         'layout_type' => [
             'exclude' => true,
             'l10n_mode' => 'exclude',
-            'label' => 'LLL:EXT:consentbanners/Resources/Private/Language/locallang_mod.xlf:field.layoutType',
+            'label' => 'LLL:EXT:consent_banner/Resources/Private/Language/locallang_mod.xlf:field.layoutType',
             'config' => [
                 'type' => 'select',
                 'renderType' => 'selectSingle',
                 'items' => [
-                    ['label' => 'LLL:EXT:consentbanners/Resources/Private/Language/locallang_mod.xlf:field.layoutType.overlay', 'value' => 'bb-cb-overlay'],
-                    ['label' => 'LLL:EXT:consentbanners/Resources/Private/Language/locallang_mod.xlf:field.layoutType.fullWidthBottom', 'value' => 'bb-cb-bottom']
+                    ['label' => 'LLL:EXT:consent_banner/Resources/Private/Language/locallang_mod.xlf:field.layoutType.overlay', 'value' => 'bb-cb-overlay'],
+                    ['label' => 'LLL:EXT:consent_banner/Resources/Private/Language/locallang_mod.xlf:field.layoutType.fullWidthBottom', 'value' => 'bb-cb-bottom']
                 ],
                 'default' => 'bb-cb-overlay',
             ],
@@ -179,7 +179,7 @@ return [
         'privacy_page' => [
             'exclude' => true,
             'l10n_mode' => 'exclude',
-            'label' => 'LLL:EXT:consentbanners/Resources/Private/Language/locallang_mod.xlf:field.privacy_page',
+            'label' => 'LLL:EXT:consent_banner/Resources/Private/Language/locallang_mod.xlf:field.privacy_page',
             'config' => [
                 'type' => 'group',
                 'allowed' => 'pages',
@@ -204,22 +204,22 @@ return [
         'confirm_duration' => [
             'exclude' => true,
             'l10n_mode' => 'exclude',
-            'label' => 'LLL:EXT:consentbanners/Resources/Private/Language/locallang_mod.xlf:field.confirm_duration',
+            'label' => 'LLL:EXT:consent_banner/Resources/Private/Language/locallang_mod.xlf:field.confirm_duration',
             'config' => [
                 'type' => 'select',
                 'renderType' => 'selectSingle',
                 'default' => 20,
                 'items' => [
-                    ['label' => 'LLL:EXT:consentbanners/Resources/Private/Language/locallang_mod.xlf:field.confirm_duration.l10days', 'value' => 10],
-                    ['label' => 'LLL:EXT:consentbanners/Resources/Private/Language/locallang_mod.xlf:field.confirm_duration.l20days', 'value' => 20],
-                    ['label' => 'LLL:EXT:consentbanners/Resources/Private/Language/locallang_mod.xlf:field.confirm_duration.l30days', 'value' => 30],
+                    ['label' => 'LLL:EXT:consent_banner/Resources/Private/Language/locallang_mod.xlf:field.confirm_duration.l10days', 'value' => 10],
+                    ['label' => 'LLL:EXT:consent_banner/Resources/Private/Language/locallang_mod.xlf:field.confirm_duration.l20days', 'value' => 20],
+                    ['label' => 'LLL:EXT:consent_banner/Resources/Private/Language/locallang_mod.xlf:field.confirm_duration.l30days', 'value' => 30],
                 ],
             ],
         ],
 
         'privacy_page_label' => [
             'exclude' => true,
-            'label' => 'LLL:EXT:consentbanners/Resources/Private/Language/locallang_mod.xlf:field.privacy_page_label',
+            'label' => 'LLL:EXT:consent_banner/Resources/Private/Language/locallang_mod.xlf:field.privacy_page_label',
             'config' => [
                 'type' => 'input',
                 'size' => 50,
@@ -229,7 +229,7 @@ return [
 
         'accept_all' => [
             'exclude' => true,
-            'label' => 'LLL:EXT:consentbanners/Resources/Private/Language/locallang_mod.xlf:field.accept_all',
+            'label' => 'LLL:EXT:consent_banner/Resources/Private/Language/locallang_mod.xlf:field.accept_all',
             'config' => [
                 'type' => 'input',
                 'size' => 30,
@@ -239,7 +239,7 @@ return [
 
         'confirm_selection' => [
             'exclude' => true,
-            'label' => 'LLL:EXT:consentbanners/Resources/Private/Language/locallang_mod.xlf:field.confirm_selection',
+            'label' => 'LLL:EXT:consent_banner/Resources/Private/Language/locallang_mod.xlf:field.confirm_selection',
             'config' => [
                 'type' => 'input',
                 'size' => 30,
@@ -249,7 +249,7 @@ return [
 
         'save_and_close' => [
             'exclude' => true,
-            'label' => 'LLL:EXT:consentbanners/Resources/Private/Language/locallang_mod.xlf:field.save_and_close',
+            'label' => 'LLL:EXT:consent_banner/Resources/Private/Language/locallang_mod.xlf:field.save_and_close',
             'config' => [
                 'type' => 'input',
                 'size' => 30,
@@ -259,7 +259,7 @@ return [
 
         'advanced_settings' => [
             'exclude' => true,
-            'label' => 'LLL:EXT:consentbanners/Resources/Private/Language/locallang_mod.xlf:field.advanced_settings',
+            'label' => 'LLL:EXT:consent_banner/Resources/Private/Language/locallang_mod.xlf:field.advanced_settings',
             'config' => [
                 'type' => 'input',
                 'size' => 30,
@@ -269,7 +269,7 @@ return [
 
         'reject' => [
             'exclude' => true,
-            'label' => 'LLL:EXT:consentbanners/Resources/Private/Language/locallang_mod.xlf:field.reject',
+            'label' => 'LLL:EXT:consent_banner/Resources/Private/Language/locallang_mod.xlf:field.reject',
             'config' => [
                 'type' => 'input',
                 'size' => 30,
@@ -280,7 +280,7 @@ return [
         'show_categories' => [
             'exclude' => true,
             'l10n_mode' => 'exclude',
-            'label' => 'LLL:EXT:consentbanners/Resources/Private/Language/locallang_mod.xlf:field.show_categories',
+            'label' => 'LLL:EXT:consent_banner/Resources/Private/Language/locallang_mod.xlf:field.show_categories',
             'config' => [
                 'type' => 'check',
                 'renderType' => 'checkboxToggle',
@@ -303,7 +303,7 @@ return [
         'is_text_link' => [
             'exclude' => true,
             'l10n_mode' => 'exclude',
-            'label' => 'LLL:EXT:consentbanners/Resources/Private/Language/locallang_mod.xlf:field.is_text_link',
+            'label' => 'LLL:EXT:consent_banner/Resources/Private/Language/locallang_mod.xlf:field.is_text_link',
             'config' => [
                 'type' => 'check',
                 'renderType' => 'checkboxToggle',
@@ -326,10 +326,10 @@ return [
         'categories' => [
             'exclude' => true,
             'l10n_mode' => 'exclude',
-            'label' => 'LLL:EXT:consentbanners/Resources/Private/Language/locallang_mod.xlf:field.categories',
+            'label' => 'LLL:EXT:consent_banner/Resources/Private/Language/locallang_mod.xlf:field.categories',
             'config' => [
                 'type' => 'inline',
-                'foreign_table' => 'tx_consentbanners_domain_model_category',
+                'foreign_table' => 'tx_consentbanner_domain_model_category',
                 'foreign_field' => 'category_id',
                 'foreign_sortby' => 'sorting_foreign',
                 'foreign_label' => 'name',

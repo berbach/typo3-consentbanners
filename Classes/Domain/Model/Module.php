@@ -1,5 +1,5 @@
 <?php
-namespace Bb\Consentbanners\Domain\Model;
+namespace Bb\ConsentBanner\Domain\Model;
 
 use \TYPO3\CMS\Extbase\DomainObject\AbstractEntity;
 use TYPO3\CMS\Extbase\Persistence\ObjectStorage;

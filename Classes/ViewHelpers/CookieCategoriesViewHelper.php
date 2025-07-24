@@ -1,6 +1,6 @@
 <?php
 
-namespace Bb\Consentbanners\ViewHelpers;
+namespace Bb\ConsentBanner\ViewHelpers;
 
 use Closure;
 use Doctrine\DBAL\DBALException;

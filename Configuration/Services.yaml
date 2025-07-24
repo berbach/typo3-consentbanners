@@ -4,15 +4,15 @@ services:
     autoconfigure: true
     public: false
 
-  Bb\Consentbanners\:
+  Bb\ConsentBanner\:
     resource: '../Classes/*'
     exclude: '../Classes/Domain/Model/*'
 
-  Bb\Consentbanners\Controller\BackendConsentbannerController:
+  Bb\ConsentBanner\Controller\ManagementController:
     public: true
     tags: ['backend.controller']
 
-  Bb\Consentbanners\EventListener\TypoScriptModifier:
+  Bb\ConsentBanner\EventListener\TypoScriptModifier:
     tags:
       - name: event.listener
         identifier: 'TypoScriptModifier/NewAndEdit'

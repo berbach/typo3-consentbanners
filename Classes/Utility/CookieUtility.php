@@ -1,5 +1,5 @@
 <?php
-namespace Bb\Consentbanners\Utility;
+namespace Bb\ConsentBanner\Utility;
 
 
 class CookieUtility

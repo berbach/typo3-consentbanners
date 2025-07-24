@@ -1,6 +1,8 @@
 .DS_Store
 .idea
 .cache
+.ddev
+.Build
 .php_cs.cache
 nbproject
 node_modules

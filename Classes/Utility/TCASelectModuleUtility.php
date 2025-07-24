@@ -1,6 +1,6 @@
 <?php
 
-namespace Bb\Consentbanners\Utility;
+namespace Bb\ConsentBanner\Utility;
 
 use Doctrine\DBAL\DBALException;
 use Doctrine\DBAL\Driver\Exception;
@@ -18,11 +18,11 @@ class TCASelectModuleUtility
     public function getHtmlModules(&$params): void
     {
         $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)
-            ->getQueryBuilderForTable('tx_consentbanners_domain_model_module');
+            ->getQueryBuilderForTable('tx_consentbanner_domain_model_module');
         $queryBuilder->getRestrictions()->removeAll();
         $modules = $queryBuilder
             ->select('uid', 'name')
-            ->from('tx_consentbanners_domain_model_module')
+            ->from('tx_consentbanner_domain_model_module')
             ->where($queryBuilder->expr()->inSet('module_target', $queryBuilder->createNamedParameter('html')))
             ->executeQuery()
             ->fetchAllAssociative();

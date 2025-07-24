@@ -1,9 +1,9 @@
 <?php
 
-namespace Bb\Consentbanners\EventListener;
+namespace Bb\ConsentBanner\EventListener;
 
-use Bb\Consentbanners\Domain\Model\Module;
-use Bb\Consentbanners\Domain\Repository\ModuleRepository;
+use Bb\ConsentBanner\Domain\Model\Module;
+use Bb\ConsentBanner\Domain\Repository\ModuleRepository;
 use Doctrine\DBAL\Exception;
 use TYPO3\CMS\Backend\Controller\Event\BeforeFormEnginePageInitializedEvent;
 use TYPO3\CMS\Core\Database\Connection;
@@ -34,8 +34,8 @@ class TypoScriptModifier
         }
         if (!($event instanceof BeforeFormEnginePageInitializedEvent)
             || !$event->getRequest()->getParsedBody()
-            || !array_key_exists('tx_consentbanners_domain_model_module', $event->getRequest()->getParsedBody()['data'])
-            || !in_array(array_values($event->getRequest()->getQueryParams()['edit']['tx_consentbanners_domain_model_settings'])[0], ['edit', 'new'])
+            || !array_key_exists('tx_consentbanner_domain_model_module', $event->getRequest()->getParsedBody()['data'])
+            || !in_array(array_values($event->getRequest()->getQueryParams()['edit']['tx_consentbanner_domain_model_settings'])[0], ['edit', 'new'])
         ) {
             return;
         }
@@ -56,7 +56,7 @@ class TypoScriptModifier
      */
     private function getTargetChange(BeforeFormEnginePageInitializedEvent $event): array
     {
-        $updatedArray = $event->getRequest()->getParsedBody()['data']['tx_consentbanners_domain_model_module'];
+        $updatedArray = $event->getRequest()->getParsedBody()['data']['tx_consentbanner_domain_model_module'];
 
         $updatedData = array_values($updatedArray)[0];
         $updatedKey = array_keys($updatedArray)[0];
