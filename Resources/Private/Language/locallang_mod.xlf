@@ -44,6 +44,21 @@
                 <source>New Module</source>
             </trans-unit>
 
+            <trans-unit id="tab.banner">
+                <source>Banner</source>
+            </trans-unit>
+            <trans-unit id="tab.text_for_labels">
+                <source>Text for labels</source>
+            </trans-unit>
+            <trans-unit id="tab.essential_group">
+                <source>Essential group</source>
+            </trans-unit>
+            <trans-unit id="tab.other_group">
+                <source>Other groups</source>
+            </trans-unit>
+            <trans-unit id="tab.banner_setting">
+                <source>Banner setting</source>
+            </trans-unit>
             <trans-unit id="tab.javascript">
                 <source>JavaScripts</source>
             </trans-unit>
@@ -51,12 +66,17 @@
                 <source>Modules</source>
             </trans-unit>
 
-            <trans-unit id="tab.buttons">
-                <source>Buttons</source>
+            <trans-unit id="palette.buttonsLabelText">
+                <source>Buttons label name</source>
             </trans-unit>
-
-            <trans-unit id="palette.buttonsDisplayName">
-                <source>Buttons display name</source>
+            <trans-unit id="palette.cookieInfoLabels">
+                <source>Cookie information labels</source>
+            </trans-unit>
+            <trans-unit id="palette.cookieMoreInfoLabels">
+                <source>Cookie more information labels</source>
+            </trans-unit>
+            <trans-unit id="palette.cookieLifeTime">
+                <source>Cookie lifetime</source>
             </trans-unit>
             <trans-unit id="palette.privacyPage">
                 <source>Privacy Data</source>

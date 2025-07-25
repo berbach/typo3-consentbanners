@@ -16,7 +16,7 @@ return [
         'iconIdentifier' => 'module-cookie',
         'controllerActions' => [
             ManagementController::class => [
-                'settings', 'consents', 'delete'
+                'banner', 'consents', 'delete'
             ],
         ],
     ],

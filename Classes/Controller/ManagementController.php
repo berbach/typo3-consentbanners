@@ -65,12 +65,12 @@ class ManagementController extends ActionController
      * The module name of the backend module extending this class
      * @var string
      */
-    protected string $moduleName = 'site_consentbanners';
+    protected string $moduleName = 'consentbanner_management';
     /**
      * The extension key of the controller extending this class
      * @var string
      */
-    protected string $extKey = 'consentbanners';
+    protected string $extKey = 'consentbanner';
     /**
      * @var array
      */
@@ -307,7 +307,7 @@ class ManagementController extends ActionController
      * @return ResponseInterface the response with the content
      * @throws RouteNotFoundException
      */
-    public function settingsAction(): ResponseInterface
+    public function bannerAction(): ResponseInterface
     {
 
         $dataBanners = $this->settingsRepository->findByStorageIds([$this->rootPageId], (int)$this->current_sys_language, true);

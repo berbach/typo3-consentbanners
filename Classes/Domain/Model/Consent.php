@@ -15,9 +15,9 @@ class Consent extends AbstractEntity
     /**
      * pid
      *
-     * @var int
+     * @var int|null
      */
-    protected int $pid = 0;
+    protected ?int $pid = 0;
 
     /**
      * __construct

@@ -33,54 +33,107 @@ return [
     'types' => [
         '0' => [
             'showitem' => '
-                --div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:general,
-                    --palette--;;content,
-                    --palette--;;settings,
-                --div--;LLL:EXT:consent_banner/Resources/Private/Language/locallang_mod.xlf:tab.buttons,
-                    --palette--;LLL:EXT:consent_banner/Resources/Private/Language/locallang_mod.xlf:palette.buttonsDisplayName;buttonsDisplayName,
-                    --palette--;LLL:EXT:consent_banner/Resources/Private/Language/locallang_mod.xlf:palette.privacyPage;privacyPage,
-                --div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:categories,
-                    categories,
-                --div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:language,    
+                --div--;LLL:EXT:consent_banner/Resources/Private/Language/locallang_mod.xlf:tab.banner,
+                    --palette--;;banner,
+                    --palette--;;linksBannerMenu
+                --div--;LLL:EXT:consent_banner/Resources/Private/Language/locallang_mod.xlf:tab.text_for_labels,
+                    --palette--;;buttonsLabelText,
+                    --palette--;;cookieInfoLabels,
+                    --palette--;;cookieMoreInfoLabels,
+                --div--;LLL:EXT:consent_banner/Resources/Private/Language/locallang_mod.xlf:tab.essential_group,
+                    --palette--;;essential,
+                    --palette--;;essentialOptIns,
+                --div--;LLL:EXT:consent_banner/Resources/Private/Language/locallang_mod.xlf:tab.other_group,
+                    --palette--;;otherGroup,
+                --div--;LLL:EXT:consent_banner/Resources/Private/Language/locallang_mod.xlf:tab.banner_setting,
+                    --palette--;;hidden,
+                    --palette--;;cookieLifeTime,
                     --palette--;;language,
-                --div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:access,
-                    --palette--;;hidden,                
                 '
         ]
     ],
     'palettes' => [
-        'content' => [
+        'banner' => [
             'showitem' => '
-                    title,
-                --linebreak--,
-                    description
+                banner_title,
+                    --linebreak--,
+                banner_description,
+                    --linebreak--, 
+                banner_layout, is_text_link
             ',
         ],
-        'settings' => [
+        'cookieLifeTime' => [
+            'label' => 'LLL:EXT:consent_banner/Resources/Private/Language/locallang_mod.xlf:palette.cookieLifeTime',
             'showitem' => '
-                   layout_type, confirm_duration, show_categories, is_text_link
+                lifetime_banner, 
+                    --linebreak--,
+                lifetime_user_consent
+            ',
+        ],
+
+        'buttonsLabelText' => [
+            'label' => 'LLL:EXT:consent_banner/Resources/Private/Language/locallang_mod.xlf:palette.buttonsLabelText',
+            'showitem' => '
+                accept_all_text,
+                confirm_selection_text,
+                    --linebreak--, 
+                save_and_close_text,
+                advanced_settings_text,
+                    --linebreak--, 
+                accept_essential_text
+            ',
+        ],
+
+        'cookieInfoLabels' => [
+            'label' => 'LLL:EXT:consent_banner/Resources/Private/Language/locallang_mod.xlf:palette.cookieInfoLabels',
+            'showitem' => '
+                cookie_name_text,
+                cookie_lifetime_text,
+                    --linebreak--, 
+                cookie_provider_text,
+                cookie_purpose_text,
+                    --linebreak--, 
+                cookie_description_text
+            ',
+        ],
+
+        'cookieMoreInfoLabels' => [
+            'label' => 'LLL:EXT:consent_banner/Resources/Private/Language/locallang_mod.xlf:palette.cookieMoreInfoLabels',
+            'showitem' => '
+                cookie_infos_show_text,
+                cookie_infos_close_text,
+            ',
+        ],
+
+        'linksBannerMenu' => [
+            'showitem' => '
+                privacy_link,
+                    --linebreak--,
+                imprint_link
+            ',
+        ],
+        'essential' => [
+            'showitem' => '
+                essential_title,
+                    --linebreak--,
+                essential_description,
+            ',
+        ],
+        'essentialConsents' => [
+            'label' => 'LLL:EXT:consent_banner/Resources/Private/Language/locallang_mod.xlf:palette.essentialOptIns',
+            'showitem' => '
+                essential_consents    
+            ',
+        ],
+        'otherGroup' => [
+            'showitem' => '
+                group_consents
             ',
         ],
         'language' => [
             'showitem' => '
                 sys_language_uid,
                 l10n_parent
-            ',
-        ],
-        'buttonsDisplayName' => [
-            'showitem' => '
-                accept_all,
-                confirm_selection,
-                save_and_close,
-                advanced_settings,
-                reject
-            ',
-        ],
-        'privacyPage' => [
-            'showitem' => '
-                privacy_page,
-                    --linebreak--,
-                privacy_page_label
             ',
         ],
         'hidden' => [
@@ -138,9 +191,9 @@ return [
             ],
         ],
 
-        'title' => [
+        'banner_title' => [
             'exclude' => true,
-            'label' => 'LLL:EXT:consent_banner/Resources/Private/Language/locallang_mod.xlf:field.title',
+            'label' => 'LLL:EXT:consent_banner/Resources/Private/Language/locallang_mod.xlf:field.banner_title',
             'config' => [
                 'type' => 'input',
                 'size' => 50,
@@ -150,9 +203,9 @@ return [
         ],
 
 
-        'description' => [
+        'banner_description' => [
             'exclude' => true,
-            'label' => 'LLL:EXT:consent_banner/Resources/Private/Language/locallang_mod.xlf:field.description',
+            'label' => 'LLL:EXT:consent_banner/Resources/Private/Language/locallang_mod.xlf:field.banner_description',
             'config' => [
                 'type' => 'text',
                 'eval' => 'trim',
@@ -161,10 +214,10 @@ return [
             ]
         ],
 
-        'layout_type' => [
+        'banner_layout' => [
             'exclude' => true,
             'l10n_mode' => 'exclude',
-            'label' => 'LLL:EXT:consent_banner/Resources/Private/Language/locallang_mod.xlf:field.layoutType',
+            'label' => 'LLL:EXT:consent_banner/Resources/Private/Language/locallang_mod.xlf:field.banner_layout',
             'config' => [
                 'type' => 'select',
                 'renderType' => 'selectSingle',
@@ -172,74 +225,65 @@ return [
                     ['label' => 'LLL:EXT:consent_banner/Resources/Private/Language/locallang_mod.xlf:field.layoutType.overlay', 'value' => 'bb-cb-overlay'],
                     ['label' => 'LLL:EXT:consent_banner/Resources/Private/Language/locallang_mod.xlf:field.layoutType.fullWidthBottom', 'value' => 'bb-cb-bottom']
                 ],
-                'default' => 'bb-cb-overlay',
+                'default' => 'bb-cb-bottom',
             ],
         ],
 
-        'privacy_page' => [
+        'privacy_link' => [
             'exclude' => true,
             'l10n_mode' => 'exclude',
-            'label' => 'LLL:EXT:consent_banner/Resources/Private/Language/locallang_mod.xlf:field.privacy_page',
+            'label' => 'LLL:EXT:consent_banner/Resources/Private/Language/locallang_mod.xlf:field.privacy_link',
             'config' => [
-                'type' => 'group',
-                'allowed' => 'pages',
-                'maxitems' => 1,
-                'minitems' => 0,
-                'size' => 1,
-                'default' => 0,
-                'suggestOptions' => [
-                    'default' => [
-                        'additionalSearchFields' => 'title, nav_title, slug, subtitle',
-                        'addWhere' => 'AND pages.doktype = 1'
-                    ]
-                ],
-                'fieldControl' => [
-                    'elementBrowser' => [
-                        'disabled' => false,
-                    ],
-                ],
+                'type' => 'link',
+                'allowedTypes' => ['page'],
             ]
         ],
 
-        'confirm_duration' => [
+        'imprint_link' => [
             'exclude' => true,
             'l10n_mode' => 'exclude',
-            'label' => 'LLL:EXT:consent_banner/Resources/Private/Language/locallang_mod.xlf:field.confirm_duration',
+            'label' => 'LLL:EXT:consent_banner/Resources/Private/Language/locallang_mod.xlf:field.imprint_link',
+            'config' => [
+                'type' => 'link',
+                'allowedTypes' => ['page'],
+            ]
+        ],
+
+        'lifetime_banner' => [
+            'exclude' => true,
+            'l10n_mode' => 'exclude',
+            'label' => 'LLL:EXT:consent_banner/Resources/Private/Language/locallang_mod.xlf:field.lifetime_banner',
             'config' => [
                 'type' => 'select',
                 'renderType' => 'selectSingle',
                 'default' => 20,
                 'items' => [
-                    ['label' => 'LLL:EXT:consent_banner/Resources/Private/Language/locallang_mod.xlf:field.confirm_duration.l10days', 'value' => 10],
-                    ['label' => 'LLL:EXT:consent_banner/Resources/Private/Language/locallang_mod.xlf:field.confirm_duration.l20days', 'value' => 20],
-                    ['label' => 'LLL:EXT:consent_banner/Resources/Private/Language/locallang_mod.xlf:field.confirm_duration.l30days', 'value' => 30],
+                    ['label' => 'LLL:EXT:consent_banner/Resources/Private/Language/locallang_mod.xlf:field.lifetime_banner.l10days', 'value' => 10],
+                    ['label' => 'LLL:EXT:consent_banner/Resources/Private/Language/locallang_mod.xlf:field.lifetime_banner.l20days', 'value' => 20],
+                    ['label' => 'LLL:EXT:consent_banner/Resources/Private/Language/locallang_mod.xlf:field.lifetime_banner.l30days', 'value' => 30],
                 ],
             ],
         ],
 
-        'privacy_page_label' => [
+        'lifetime_user_consent' => [
             'exclude' => true,
-            'label' => 'LLL:EXT:consent_banner/Resources/Private/Language/locallang_mod.xlf:field.privacy_page_label',
+            'l10n_mode' => 'exclude',
+            'label' => 'LLL:EXT:consent_banner/Resources/Private/Language/locallang_mod.xlf:field.lifetime_banner',
             'config' => [
-                'type' => 'input',
-                'size' => 50,
-                'eval' => 'trim'
+                'type' => 'select',
+                'renderType' => 'selectSingle',
+                'default' => 20,
+                'items' => [
+                    ['label' => 'LLL:EXT:consent_banner/Resources/Private/Language/locallang_mod.xlf:field.lifetime_banner.l10days', 'value' => 10],
+                    ['label' => 'LLL:EXT:consent_banner/Resources/Private/Language/locallang_mod.xlf:field.lifetime_banner.l20days', 'value' => 20],
+                    ['label' => 'LLL:EXT:consent_banner/Resources/Private/Language/locallang_mod.xlf:field.lifetime_banner.l30days', 'value' => 30],
+                ],
             ],
         ],
 
-        'accept_all' => [
+        'accept_all_text' => [
             'exclude' => true,
-            'label' => 'LLL:EXT:consent_banner/Resources/Private/Language/locallang_mod.xlf:field.accept_all',
-            'config' => [
-                'type' => 'input',
-                'size' => 30,
-                'eval' => 'trim'
-            ],
-        ],
-
-        'confirm_selection' => [
-            'exclude' => true,
-            'label' => 'LLL:EXT:consent_banner/Resources/Private/Language/locallang_mod.xlf:field.confirm_selection',
+            'label' => 'LLL:EXT:consent_banner/Resources/Private/Language/locallang_mod.xlf:field.accept_all_text',
             'config' => [
                 'type' => 'input',
                 'size' => 30,
@@ -247,9 +291,9 @@ return [
             ],
         ],
 
-        'save_and_close' => [
+        'confirm_selection_text' => [
             'exclude' => true,
-            'label' => 'LLL:EXT:consent_banner/Resources/Private/Language/locallang_mod.xlf:field.save_and_close',
+            'label' => 'LLL:EXT:consent_banner/Resources/Private/Language/locallang_mod.xlf:field.confirm_selection_text',
             'config' => [
                 'type' => 'input',
                 'size' => 30,
@@ -257,9 +301,9 @@ return [
             ],
         ],
 
-        'advanced_settings' => [
+        'save_and_close_text' => [
             'exclude' => true,
-            'label' => 'LLL:EXT:consent_banner/Resources/Private/Language/locallang_mod.xlf:field.advanced_settings',
+            'label' => 'LLL:EXT:consent_banner/Resources/Private/Language/locallang_mod.xlf:field.save_and_close_text',
             'config' => [
                 'type' => 'input',
                 'size' => 30,
@@ -267,7 +311,37 @@ return [
             ],
         ],
 
-        'reject' => [
+        'advanced_settings_text' => [
+            'exclude' => true,
+            'label' => 'LLL:EXT:consent_banner/Resources/Private/Language/locallang_mod.xlf:field.advanced_settings_text',
+            'config' => [
+                'type' => 'input',
+                'size' => 30,
+                'eval' => 'trim'
+            ],
+        ],
+
+        'accept_essential_text' => [
+            'exclude' => true,
+            'label' => 'LLL:EXT:consent_banner/Resources/Private/Language/locallang_mod.xlf:field.accept_essential_text',
+            'config' => [
+                'type' => 'input',
+                'size' => 30,
+                'eval' => 'trim'
+            ],
+        ],
+
+        'cookie_infos_show_text' => [
+            'exclude' => true,
+            'label' => 'LLL:EXT:consent_banner/Resources/Private/Language/locallang_mod.xlf:field.cookie_infos_show_text',
+            'config' => [
+                'type' => 'input',
+                'size' => 30,
+                'eval' => 'trim'
+            ],
+        ],
+
+        'cookie_infos_close_text' => [
             'exclude' => true,
             'label' => 'LLL:EXT:consent_banner/Resources/Private/Language/locallang_mod.xlf:field.reject',
             'config' => [
@@ -277,27 +351,122 @@ return [
             ],
         ],
 
-        'show_categories' => [
+        'cookie_name_text' => [
+            'exclude' => true,
+            'label' => 'LLL:EXT:consent_banner/Resources/Private/Language/locallang_mod.xlf:field.cookie_name_text',
+            'config' => [
+                'type' => 'input',
+                'size' => 30,
+                'eval' => 'trim'
+            ],
+        ],
+
+        'cookie_lifetime_text' => [
+            'exclude' => true,
+            'label' => 'LLL:EXT:consent_banner/Resources/Private/Language/locallang_mod.xlf:field.cookie_lifetime_text',
+            'config' => [
+                'type' => 'input',
+                'size' => 30,
+                'eval' => 'trim'
+            ],
+        ],
+
+        'cookie_provider_text' => [
+            'exclude' => true,
+            'label' => 'LLL:EXT:consent_banner/Resources/Private/Language/locallang_mod.xlf:field.cookie_provider_text',
+            'config' => [
+                'type' => 'input',
+                'size' => 30,
+                'eval' => 'trim'
+            ],
+        ],
+
+        'cookie_purpose_text' => [
+            'exclude' => true,
+            'label' => 'LLL:EXT:consent_banner/Resources/Private/Language/locallang_mod.xlf:field.cookie_purpose_text',
+            'config' => [
+                'type' => 'input',
+                'size' => 30,
+                'eval' => 'trim'
+            ],
+        ],
+
+        'cookie_description_text' => [
+            'exclude' => true,
+            'label' => 'LLL:EXT:consent_banner/Resources/Private/Language/locallang_mod.xlf:field.cookie_description_text',
+            'config' => [
+                'type' => 'input',
+                'size' => 30,
+                'eval' => 'trim'
+            ],
+        ],
+
+
+        'essential_title' => [
+            'exclude' => true,
+            'label' => 'LLL:EXT:consent_banner/Resources/Private/Language/locallang_mod.xlf:field.essential_title',
+            'config' => [
+                'type' => 'input',
+                'size' => 50,
+                'eval' => 'trim',
+                'required' => true
+            ],
+        ],
+
+
+        'essential_description' => [
+            'exclude' => true,
+            'label' => 'LLL:EXT:consent_banner/Resources/Private/Language/locallang_mod.xlf:field.essential_description',
+            'config' => [
+                'type' => 'text',
+                'eval' => 'trim',
+                'cols' => 100,
+                'rows' => 10
+            ]
+        ],
+
+        'essential_consents' => [
+            'exclude' => false,
+            'l10n_mode' => 'exclude',
+            'label' => 'LLL:EXT:consent_banner/Resources/Private/Language/locallang_mod.xlf:field.essential_opt_ins',
+            'config' => [
+                'type' => 'inline',
+                'foreign_table' => 'tx_consentbanner_domain_model_optin_module',
+                'foreign_field' => 'group_id',
+                'foreign_sortby' => 'sorting_foreign',
+                'foreign_label' => 'name',
+                'maxitems' => 5,
+                'appearance' => [
+                    'newRecordLinkTitle' => 'Add optin for cookie',
+                    'useSortable' => true,
+                    'levelLinksPosition' => 'top',
+                    'enabledControls' => ['info' => false],
+                    'collapseAll' => 1,
+                    'expandSingle' => 1,
+                ],
+            ],
+        ],
+
+        'group_consents' => [
             'exclude' => true,
             'l10n_mode' => 'exclude',
-            'label' => 'LLL:EXT:consent_banner/Resources/Private/Language/locallang_mod.xlf:field.show_categories',
+            'label' => 'LLL:EXT:consent_banner/Resources/Private/Language/locallang_mod.xlf:field.group_consents',
             'config' => [
-                'type' => 'check',
-                'renderType' => 'checkboxToggle',
-                'items' => [
-                    [
-                        'label' =>  '',
-                        'labelChecked' => 'Enabled',
-                        'labelUnchecked' => 'Disabled',
-                    ],
+                'type' => 'inline',
+                'foreign_table' => 'tx_consentbanner_domain_model_group_category',
+                'foreign_field' => 'banner_id',
+                'foreign_sortby' => 'sorting_foreign',
+                'foreign_label' => 'group_title',
+                'maxitems' => 5,
+                'appearance' => [
+                    'newRecordLinkTitle' => 'Add group consents',
+                    'useSortable' => true,
+                    'levelLinksPosition' => 'top',
+                    'enabledControls' => ['info' => false],
+                    'collapseAll' => 1,
+                    'expandSingle' => 1,
                 ],
-                'eval' => 'maximumRecordsChecked',
-                'validation' => [
-                    'maximumRecordsChecked' => 2,
-                    'maximumRecordsCheckedInPid' => 1
-                ],
-
-            ]
+            ],
         ],
 
         'is_text_link' => [
@@ -322,27 +491,5 @@ return [
 
             ]
         ],
-
-        'categories' => [
-            'exclude' => true,
-            'l10n_mode' => 'exclude',
-            'label' => 'LLL:EXT:consent_banner/Resources/Private/Language/locallang_mod.xlf:field.categories',
-            'config' => [
-                'type' => 'inline',
-                'foreign_table' => 'tx_consentbanner_domain_model_category',
-                'foreign_field' => 'category_id',
-                'foreign_sortby' => 'sorting_foreign',
-                'foreign_label' => 'name',
-                'maxitems' => 5,
-                'appearance' => [
-                    'newRecordLinkTitle' => 'Add Cookie category',
-                    'useSortable' => true,
-                    'levelLinksPosition' => 'top',
-                    'enabledControls' => ['info' => false],
-                    'collapseAll' => 1,
-                    'expandSingle' => 1,
-                ],
-            ],
-        ]
     ],
 ];

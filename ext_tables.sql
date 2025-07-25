@@ -100,48 +100,49 @@ CREATE TABLE tx_consentbanner_domain_model_banner
     privacy_link                text,
     imprint_link                text,
 
-    essential_title             varchar(30)          DEFAULT ''   NOT NULL,
+    essential_title             varchar(150)         DEFAULT ''   NOT NULL,
     essential_description       text,
-    essential_opt_ins           int(11) unsigned     DEFAULT '0'  NOT NULL,
+    essential_consents          int(11) unsigned     DEFAULT '0'  NOT NULL,
 
-    group_categories            int(11) unsigned     DEFAULT '0'  NOT NULL,
+    group_consents              int(11) unsigned     DEFAULT '0'  NOT NULL,
 
-    is_text_link                smallint unsigned DEFAULT '0'  NOT NULL,
+    is_text_link                smallint unsigned    DEFAULT '0'  NOT NULL,
 
     lifetime_banner             int(11) unsigned     DEFAULT '20' NOT NULL,
     lifetime_user_consent       int(11) unsigned     DEFAULT '365' NOT NULL,
 
-    deleted                     smallint unsigned DEFAULT '0'  NOT NULL,
-    hidden                      smallint unsigned DEFAULT '0'  NOT NULL,
+    deleted                     smallint unsigned    DEFAULT '0'  NOT NULL,
+    hidden                      smallint unsigned    DEFAULT '0'  NOT NULL,
 
 );
 
 #
 # Table structure for table 'tx_consentbanner_domain_model_group_category'
 #
-CREATE TABLE tx_consentbanner_domain_model_group_category
+CREATE TABLE tx_consentbanner_domain_model_group_consents
 (
 
-    name              varchar(255)         DEFAULT ''  NOT NULL,
-    description       text,
-    modules           int(11) unsigned     DEFAULT '0' NOT NULL,
-    locked_and_active SMALLint(5) unsigned DEFAULT '0' NOT NULL,
-    sorting_foreign   int(11)              DEFAULT '0',
-    category_id       int(11)     unsigned DEFAULT NULL,
+    group_title                 varchar(255)         DEFAULT ''  NOT NULL,
+    group_description           text,
+    sorting_foreign             int(11)              DEFAULT '0',
+    banner_id                   int(11) unsigned     DEFAULT NULL,
+    consent_cookies             int(11) unsigned     DEFAULT '0' NOT NULL,
 
-    deleted           SMALLint(5) unsigned DEFAULT '0' NOT NULL,
-    hidden            SMALLint(5) unsigned DEFAULT '0' NOT NULL,
+    deleted                     smallint unsigned    DEFAULT '0' NOT NULL,
+    hidden                      smallint unsigned    DEFAULT '0' NOT NULL,
 
 );
 #
 # Table structure for table 'tx_consentbanner_domain_model_optin_module'
 #
-CREATE TABLE tx_consentbanner_domain_model_optin_module
+CREATE TABLE tx_consentbanner_domain_model_consent_cookies
 (
 
-    name                 varchar(255)         DEFAULT ''  NOT NULL,
-    description          text,
+    consent_title                 varchar(255)         DEFAULT ''  NOT NULL,
+    consent_description          text,
+
     module_target        varchar(255)         DEFAULT ''  NOT NULL,
+
     placeholder_headline varchar(255),
     placeholder          text,
 
