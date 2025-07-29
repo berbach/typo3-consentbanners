@@ -107,9 +107,7 @@ return [
 
         'linksBannerMenu' => [
             'showitem' => '
-                privacy_link,
-                    --linebreak--,
-                imprint_link
+                navigation_links
             ',
         ],
         'essential' => [
@@ -222,30 +220,35 @@ return [
                 'type' => 'select',
                 'renderType' => 'selectSingle',
                 'items' => [
-                    ['label' => 'LLL:EXT:consent_banner/Resources/Private/Language/locallang_mod.xlf:field.layoutType.overlay', 'value' => 'bb-cb-overlay'],
-                    ['label' => 'LLL:EXT:consent_banner/Resources/Private/Language/locallang_mod.xlf:field.layoutType.fullWidthBottom', 'value' => 'bb-cb-bottom']
+                    ['label' => 'LLL:EXT:consent_banner/Resources/Private/Language/locallang_mod.xlf:field.banner_layout.overlay', 'value' => 'bb-cb-overlay'],
+                    ['label' => 'LLL:EXT:consent_banner/Resources/Private/Language/locallang_mod.xlf:field.banner_layout.fullWidthBottom', 'value' => 'bb-cb-bottom']
                 ],
                 'default' => 'bb-cb-bottom',
             ],
         ],
 
-        'privacy_link' => [
+        'navigation_links' => [
             'exclude' => true,
             'l10n_mode' => 'exclude',
-            'label' => 'LLL:EXT:consent_banner/Resources/Private/Language/locallang_mod.xlf:field.privacy_link',
+            'label' => 'LLL:EXT:consent_banner/Resources/Private/Language/locallang_mod.xlf:field.navigation_links',
             'config' => [
-                'type' => 'link',
-                'allowedTypes' => ['page'],
-            ]
-        ],
-
-        'imprint_link' => [
-            'exclude' => true,
-            'l10n_mode' => 'exclude',
-            'label' => 'LLL:EXT:consent_banner/Resources/Private/Language/locallang_mod.xlf:field.imprint_link',
-            'config' => [
-                'type' => 'link',
-                'allowedTypes' => ['page'],
+                'type' => 'group',
+                'allowed' => 'pages',
+                'maxitems' => 2,
+                'minitems' => 0,
+                'size' => 2,
+                'default' => 0,
+                'suggestOptions' => [
+                    'default' => [
+                        'additionalSearchFields' => 'title, nav_title, slug',
+                        'addWhere' => 'AND pages.doktype = 1'
+                    ]
+                ],
+                'fieldControl' => [
+                    'elementBrowser' => [
+                        'disabled' => false,
+                    ],
+                ],
             ]
         ],
 
@@ -343,7 +346,7 @@ return [
 
         'cookie_infos_close_text' => [
             'exclude' => true,
-            'label' => 'LLL:EXT:consent_banner/Resources/Private/Language/locallang_mod.xlf:field.reject',
+            'label' => 'LLL:EXT:consent_banner/Resources/Private/Language/locallang_mod.xlf:field.cookie_infos_close_text',
             'config' => [
                 'type' => 'input',
                 'size' => 30,
@@ -425,19 +428,19 @@ return [
             ]
         ],
 
-        'essential_consents' => [
+        'essential_group_components' => [
             'exclude' => false,
             'l10n_mode' => 'exclude',
-            'label' => 'LLL:EXT:consent_banner/Resources/Private/Language/locallang_mod.xlf:field.essential_opt_ins',
+            'label' => 'LLL:EXT:consent_banner/Resources/Private/Language/locallang_mod.xlf:field.essential_group_components',
             'config' => [
                 'type' => 'inline',
-                'foreign_table' => 'tx_consentbanner_domain_model_optin_module',
+                'foreign_table' => 'tx_consentbanner_domain_model_consent_components',
                 'foreign_field' => 'group_id',
                 'foreign_sortby' => 'sorting_foreign',
                 'foreign_label' => 'name',
-                'maxitems' => 5,
+                'maxitems' => 10,
                 'appearance' => [
-                    'newRecordLinkTitle' => 'Add optin for cookie',
+                    'newRecordLinkTitle' => 'LLL:EXT:consent_banner/Resources/Private/Language/locallang_mod.xlf:field.essential_group_components.newRecordLinkTitle',
                     'useSortable' => true,
                     'levelLinksPosition' => 'top',
                     'enabledControls' => ['info' => false],
@@ -447,19 +450,19 @@ return [
             ],
         ],
 
-        'group_consents' => [
+        'consent_other_groups' => [
             'exclude' => true,
             'l10n_mode' => 'exclude',
-            'label' => 'LLL:EXT:consent_banner/Resources/Private/Language/locallang_mod.xlf:field.group_consents',
+            'label' => 'LLL:EXT:consent_banner/Resources/Private/Language/locallang_mod.xlf:field.consent_other_groups',
             'config' => [
                 'type' => 'inline',
-                'foreign_table' => 'tx_consentbanner_domain_model_group_category',
+                'foreign_table' => 'tx_consentbanner_domain_model_consent_groups',
                 'foreign_field' => 'banner_id',
                 'foreign_sortby' => 'sorting_foreign',
                 'foreign_label' => 'group_title',
                 'maxitems' => 5,
                 'appearance' => [
-                    'newRecordLinkTitle' => 'Add group consents',
+                    'newRecordLinkTitle' => 'LLL:EXT:consent_banner/Resources/Private/Language/locallang_mod.xlf:field.consent_other_groups.newRecordLinkTitle',
                     'useSortable' => true,
                     'levelLinksPosition' => 'top',
                     'enabledControls' => ['info' => false],
@@ -473,6 +476,7 @@ return [
             'exclude' => true,
             'l10n_mode' => 'exclude',
             'label' => 'LLL:EXT:consent_banner/Resources/Private/Language/locallang_mod.xlf:field.is_text_link',
+            'description' => 'LLL:EXT:consent_banner/Resources/Private/Language/locallang_mod.xlf:field.is_text_link.description',
             'config' => [
                 'type' => 'check',
                 'renderType' => 'checkboxToggle',

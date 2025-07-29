@@ -9,6 +9,7 @@
             <trans-unit id="mlang_labels_tabdescr">
                 <source>Admin consent banner</source>
             </trans-unit>
+
             <trans-unit id="module.label">
                 <source>Consent Banners</source>
             </trans-unit>
@@ -51,21 +52,22 @@
                 <source>Text for labels</source>
             </trans-unit>
             <trans-unit id="tab.essential_group">
-                <source>Essential group</source>
+                <source>Essential consent group</source>
             </trans-unit>
             <trans-unit id="tab.other_group">
-                <source>Other groups</source>
+                <source>Other consent groups</source>
             </trans-unit>
             <trans-unit id="tab.banner_setting">
                 <source>Banner setting</source>
             </trans-unit>
+
             <trans-unit id="tab.javascript">
                 <source>JavaScripts</source>
             </trans-unit>
             <trans-unit id="tab.modules">
                 <source>Modules</source>
             </trans-unit>
-
+            <!--Paletten-->
             <trans-unit id="palette.buttonsLabelText">
                 <source>Buttons label name</source>
             </trans-unit>
@@ -81,48 +83,148 @@
             <trans-unit id="palette.privacyPage">
                 <source>Privacy Data</source>
             </trans-unit>
-            <trans-unit id="field.title">
-                <source>Title</source>
+
+            <trans-unit id="field.banner_title">
+                <source>Banner title</source>
             </trans-unit>
-            <trans-unit id="field.privacy_page_label">
-                <source>Custom display name</source>
+            <trans-unit id="field.banner_description">
+                <source>Banner description</source>
             </trans-unit>
-            <trans-unit id="field.accept_all">
+            <trans-unit id="field.banner_layout">
+                <source>Layout type</source>
+            </trans-unit>
+            <trans-unit id="field.banner_layout.overlay">
+                <source>Overlay banner</source>
+            </trans-unit>
+            <trans-unit id="field.banner_layout.fullWidthBottom">
+                <source>Full width bottom banner</source>
+            </trans-unit>
+            <trans-unit id="field.accept_all_text">
                 <source>Accept all</source>
             </trans-unit>
-            <trans-unit id="field.confirm_selection">
+            <trans-unit id="field.confirm_selection_text">
                 <source>Confirm selection</source>
             </trans-unit>
-            <trans-unit id="field.save_and_close">
+            <trans-unit id="field.save_and_close_text">
                 <source>Save &amp; close</source>
             </trans-unit>
-            <trans-unit id="field.advanced_settings">
+            <trans-unit id="field.advanced_settings_text">
                 <source>Advanced settings</source>
             </trans-unit>
-            <trans-unit id="field.reject">
-                <source>Reject</source>
+            <trans-unit id="field.accept_essential_text">
+                <source>Essential accept</source>
             </trans-unit>
-            <trans-unit id="field.show_categories">
-                <source>Show Categories</source>
+
+            <trans-unit id="field.cookie_infos_show_text">
+                <source>Show cookie information</source>
             </trans-unit>
+            <trans-unit id="field.cookie_infos_close_text">
+                <source>Close cookie information</source>
+            </trans-unit>
+
+            <trans-unit id="field.cookie_name_text">
+                <source>Cookie name</source>
+            </trans-unit>
+            <trans-unit id="field.cookie_lifetime_text">
+                <source>Cookie lifetime</source>
+            </trans-unit>
+            <trans-unit id="field.cookie_provider_text">
+                <source>Cookie provider</source>
+            </trans-unit>
+            <trans-unit id="field.cookie_purpose_text">
+                <source>Cookie purpose</source>
+            </trans-unit>
+            <trans-unit id="field.cookie_description_text">
+                <source>Cookie description</source>
+            </trans-unit>
+
+            <trans-unit id="field.essential_title">
+                <source>Essential title</source>
+            </trans-unit>
+            <trans-unit id="field.essential_description">
+                <source>Essential description</source>
+            </trans-unit>
+            <trans-unit id="field.essential_group_components">
+                <source>Essential components</source>
+            </trans-unit>
+            <trans-unit id="field.essential_group_components.newRecordLinkTitle">
+                <source>Add component for essential</source>
+            </trans-unit>
+
+            <trans-unit id="field.consent_other_groups">
+                <source>Consent groups</source>
+            </trans-unit>
+            <trans-unit id="field.consent_other_groups.newRecordLinkTitle">
+                <source>Add consent group</source>
+            </trans-unit>
+
+            <trans-unit id="field.navigation_links">
+                <source>Privacy and imprint pages</source>
+            </trans-unit>
+
+            <trans-unit id="field.lifetime_banner">
+                <source>Lifetime banner</source>
+            </trans-unit>
+            <trans-unit id="field.lifetime_banner.l10days">
+                <source>10 Days</source>
+            </trans-unit>
+            <trans-unit id="field.lifetime_banner.l20days">
+                <source>20 Days</source>
+            </trans-unit>
+            <trans-unit id="field.lifetime_banner.l30days">
+                <source>30 Days</source>
+            </trans-unit>
+
+            <trans-unit id="field.lifetime_user_consent">
+                <source>Lifetime user consent</source>
+            </trans-unit>
+            <trans-unit id="field.lifetime_user_consent.l10days">
+                <source>10 Days</source>
+            </trans-unit>
+            <trans-unit id="field.lifetime_user_consent.l20days">
+                <source>20 Days</source>
+            </trans-unit>
+            <trans-unit id="field.lifetime_user_consent.l30days">
+                <source>30 Days</source>
+            </trans-unit>
+
             <trans-unit id="field.is_text_link">
                 <source>Is cookie setting text link</source>
             </trans-unit>
+            <trans-unit id="field.is_text_link.description">
+                <source>If the text link is active, a link to access the banner must be included in the footer. If the text link is not active, an icon will appear in the bottom left corner.</source>
+            </trans-unit>
+
+
+            <trans-unit id="field.unique_name">
+                <source>Unique name</source>
+            </trans-unit>
+
+
+            <trans-unit id="field.banner">
+                <source>Banner</source>
+            </trans-unit>
+            <trans-unit id="field.categories">
+                <source>Categories</source>
+            </trans-unit>
+            <trans-unit id="field.category">
+                <source>Category</source>
+            </trans-unit>
+
             <trans-unit id="field.name">
                 <source>Name</source>
-            </trans-unit>
-            <trans-unit id="field.description">
-                <source>Description</source>
             </trans-unit>
             <trans-unit id="field.target">
                 <source>Target</source>
             </trans-unit>
-            <trans-unit id="field.placeholder_headline">
-                <source>Placeholder Headline</source>
+
+            <trans-unit id="field.placeholder_title">
+                <source>Placeholder title</source>
             </trans-unit>
-            <trans-unit id="field.placeholder">
-                <source>Placeholder</source>
+            <trans-unit id="field.placeholder_description">
+                <source>Placeholder description</source>
             </trans-unit>
+
             <trans-unit id="field.accepted_script">
                 <source>Accepted Script</source>
             </trans-unit>
@@ -132,45 +234,8 @@
             <trans-unit id="field.modules">
                 <source>Modules</source>
             </trans-unit>
-            <trans-unit id="field.privacy_page">
-                <source>Privacy page</source>
-            </trans-unit>
-            <trans-unit id="field.confirm_duration">
-                <source>Confirmation duration</source>
-            </trans-unit>
-            <trans-unit id="field.confirm_duration.l10days">
-                <source>10 Days</source>
-            </trans-unit>
-            <trans-unit id="field.confirm_duration.l20days">
-                <source>20 Days</source>
-            </trans-unit>
-            <trans-unit id="field.confirm_duration.l30days">
-                <source>30 Days</source>
-            </trans-unit>
-            <trans-unit id="field.locked_and_active">
-                <source>locked and always active</source>
-            </trans-unit>
-            <trans-unit id="field.unique_name">
-                <source>Unique name</source>
-            </trans-unit>
-            <trans-unit id="field.banner">
-                <source>Banner</source>
-            </trans-unit>
-            <trans-unit id="field.layoutType">
-                <source>Layout Type</source>
-            </trans-unit>
-            <trans-unit id="field.categories">
-                <source>Categories</source>
-            </trans-unit>
-            <trans-unit id="field.category">
-                <source>Category</source>
-            </trans-unit>
-            <trans-unit id="field.layoutType.overlay">
-                <source>Overlay Banner</source>
-            </trans-unit>
-            <trans-unit id="field.layoutType.fullWidthBottom">
-                <source>Full Width Bottom Banner</source>
-            </trans-unit>
+
+
         </body>
     </file>
 </xliff>
