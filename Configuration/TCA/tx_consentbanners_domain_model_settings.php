@@ -316,7 +316,7 @@ return [
                 ],
                 'eval' => 'maximumRecordsChecked',
                 'validation' => [
-                    'maximumRecordsChecked' => 2,
+                    'maximumRecordsChecked' => 10,
                     'maximumRecordsCheckedInPid' => 1
                 ],
 

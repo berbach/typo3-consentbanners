@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Bb\Consentbanners\Controller;
@@ -119,8 +120,7 @@ class BackendConsentbannerController extends ActionController
         protected readonly ModuleRepository   $moduleRepository,
         protected readonly IconFactory $iconFactory,
         PageRenderer $pageRenderer
-    )
-    {
+    ) {
         $this->siteFinder = $siteFinder;
         $this->pageRenderer = $pageRenderer;
     }
@@ -135,10 +135,10 @@ class BackendConsentbannerController extends ActionController
     {
         $params = $this->request->getQueryParams();
 
-//        if (isset($params['rootPageId'], $params['sysLanguageUid'])) {
-//            $this->current_root_pid = (int)$params['rootPageId'];
-//            $this->current_sys_language = (int)$params['sysLanguageUid'];
-//        }
+        //        if (isset($params['rootPageId'], $params['sysLanguageUid'])) {
+        //            $this->current_root_pid = (int)$params['rootPageId'];
+        //            $this->current_sys_language = (int)$params['sysLanguageUid'];
+        //        }
 
         if (isset($params['tx_consentbanners_site_consentbanners']) && is_array($params['tx_consentbanners_site_consentbanners'])) {
             $current_action = $params['tx_consentbanners_site_consentbanners']['action'] ?? 'settings';
@@ -203,7 +203,6 @@ class BackendConsentbannerController extends ActionController
                                     'uri' => $this->getBuildRoute($this->moduleName, ['tx_consentbanners_site_consentbanners' => ['action' => $current_action, 'controller' => $current_controller], 'SET' => ['language' => $language->getLanguageId()], 'sysLanguageUid' => $language->getLanguageId(), 'rootPageId' => $rootPageSite->getRootPageId()])
 
                                 ];
-
                             } else {
                                 //Conf Create Settings in Language
                                 $edit = [
@@ -229,11 +228,9 @@ class BackendConsentbannerController extends ActionController
                                     'uri' => $this->getBuildRoute('record_edit', $edit)
 
                                 ];
-
                             }
                         }
                     }
-
                 } else {
                     $new = [
                         'edit' => [
@@ -278,7 +275,6 @@ class BackendConsentbannerController extends ActionController
             } else {
                 //FlashMassage
             }
-
         }
 
         $this->docHeaderMenu = $tempRootPageSides;
@@ -328,13 +324,13 @@ class BackendConsentbannerController extends ActionController
     {
 
 
-//        $this->pageRenderer->loadRequireJsModule('TYPO3/CMS/Backend/ContextMenu');
-//        $this->pageRenderer->loadRequireJsModule('TYPO3/CMS/Backend/Modal');
-//        $this->pageRenderer->loadRequireJsModule('TYPO3/CMS/Backend/Tooltip');
-//        $this->pageRenderer->loadRequireJsModule('TYPO3/CMS/Backend/AjaxDataHandler');
-//        $this->pageRenderer->loadRequireJsModule('TYPO3/CMS/Recordlist/Recordlist');
-//        $this->pageRenderer->loadRequireJsModule('TYPO3/CMS/Consentbanners/BackendFormHandler');
-//        $this->pageRenderer->loadRequireJsModule('TYPO3/CMS/Consentbanners/BackendModalPrompts');
+        //        $this->pageRenderer->loadRequireJsModule('TYPO3/CMS/Backend/ContextMenu');
+        //        $this->pageRenderer->loadRequireJsModule('TYPO3/CMS/Backend/Modal');
+        //        $this->pageRenderer->loadRequireJsModule('TYPO3/CMS/Backend/Tooltip');
+        //        $this->pageRenderer->loadRequireJsModule('TYPO3/CMS/Backend/AjaxDataHandler');
+        //        $this->pageRenderer->loadRequireJsModule('TYPO3/CMS/Recordlist/Recordlist');
+        //        $this->pageRenderer->loadRequireJsModule('TYPO3/CMS/Consentbanners/BackendFormHandler');
+        //        $this->pageRenderer->loadRequireJsModule('TYPO3/CMS/Consentbanners/BackendModalPrompts');
 
         $this->registerAsideMenu();
         $this->registerDocHeaderButton();
@@ -545,7 +541,8 @@ class BackendConsentbannerController extends ActionController
                 $viewButton->setClasses($button['classes']);
             }
 
-            if ($button['displayConditions'] === null ||
+            if (
+                $button['displayConditions'] === null ||
                 (
                     array_key_exists($this->request->getControllerName(), $button['displayConditions']) &&
                     in_array($this->request->getControllerActionName(), $button['displayConditions'][$this->request->getControllerName()], true)

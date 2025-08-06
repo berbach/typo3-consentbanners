@@ -2,7 +2,7 @@
 
 namespace Bb\Consentbanners\Domain\Repository;
 
-use Doctrine\DBAL\Exception;
+use Doctrine\DBAL\Exception as DBALException;
 use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\QueryBuilder;
@@ -33,7 +33,7 @@ class SettingsRepository extends Repository
      * @param bool $useIgnoreEnable
      * @return object|null
      */
-    public function findByStorageIds(array $storageIds, int $languageId = null, bool $useIgnoreEnable = false): ?object
+    public function findByStorageIds(array $storageIds, ?int $languageId = null, bool $useIgnoreEnable = false): ?object
     {
         $query = $this->createQuery();
         /* @var $querySettings Typo3QuerySettings */
@@ -41,11 +41,11 @@ class SettingsRepository extends Repository
 
         $querySettings->setStoragePageIds($storageIds);
 
-        if($languageId > 0) {
+        if ($languageId > 0) {
             $querySettings->setLanguageUid((int)$languageId);
         }
 
-        if($useIgnoreEnable) {
+        if ($useIgnoreEnable) {
             $querySettings->setIgnoreEnableFields(true);
         }
 
@@ -59,10 +59,10 @@ class SettingsRepository extends Repository
      * @param int $pid PID of record
      * @param bool $useDeleteClause Use the deleteClause to check if a record is deleted (default TRUE)
      * @return array|null Returns the row if found, otherwise NULL
-     * @throws Exception
+     * @throws \Exception
      * @throws DBALException
      */
-    public function getRecordSettingsInLanguage(int $pid, int $languageId, int $originalId = null, bool $useDeleteClause = true): ?array
+    public function getRecordSettingsInLanguage(int $pid, int $languageId, ?int $originalId = null, bool $useDeleteClause = true): ?array
     {
         $isLocalized = false;
         if (isset($GLOBALS['TCA'][self::TABLE_NAME]['ctrl']) && is_array($GLOBALS['TCA'][self::TABLE_NAME]['ctrl'])) {
@@ -88,7 +88,7 @@ class SettingsRepository extends Repository
                         $queryBuilder->expr()->eq($tcaCtrl['languageField'], $queryBuilder->createNamedParameter($languageId, Connection::PARAM_INT))
                     );
 
-                if(!is_null($originalId)){
+                if (!is_null($originalId)) {
                     $queryBuilder->andWhere(
                         $queryBuilder->expr()->eq($tcaCtrl['transOrigPointerField'], $queryBuilder->createNamedParameter($originalId, Connection::PARAM_INT))
                     );
@@ -98,7 +98,7 @@ class SettingsRepository extends Repository
 
                 $row = $queryBuilder->executeQuery()->fetchAssociative();
 
-                if($row){
+                if ($row) {
                     return $row;
                 }
             }
