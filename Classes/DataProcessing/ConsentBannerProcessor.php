@@ -4,18 +4,18 @@ namespace Bb\Consentbanners\DataProcessing;
 
 use Bb\Consentbanners\Utility\CookieUtility;
 use Bb\Consentbanners\Domain\Repository\SettingsRepository;
-use Doctrine\DBAL\DBALException;
+use Doctrine\DBAL\Exception as DBALException;
 use Doctrine\DBAL\Driver\Exception;
 use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\Core\Context\Context;
 use TYPO3\CMS\Core\Context\Exception\AspectNotFoundException;
 use TYPO3\CMS\Core\Core\RequestId;
 use TYPO3\CMS\Core\Database\ConnectionPool;
+use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Domain\Repository\PageRepository;
 use \TYPO3\CMS\Core\Page\AssetCollector;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\MathUtility;
-use TYPO3\CMS\Extbase\Utility\DebuggerUtility;
 use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
 use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
 use TYPO3\CMS\Frontend\ContentObject\DataProcessorInterface;
@@ -41,13 +41,13 @@ class ConsentBannerProcessor implements DataProcessorInterface
 
         if (!$consentPreferences) {
             $consentAccepted = false;
-        }else{
+        } else {
             $consentPreferences = json_decode($consentPreferences, true);
             $consentAccepted = true;
         }
 
         $tempBanner = [];
-        if($banner && $banner->getCategories()){
+        if ($banner && $banner->getCategories()) {
             $privacyPage = [];
 
             if (MathUtility::canBeInterpretedAsInteger($banner->getPrivacyPage())) {
@@ -58,11 +58,11 @@ class ConsentBannerProcessor implements DataProcessorInterface
                     $privacyPage['label'] = $banner->getPrivacyPageLabel();
                 } else {
                     $pageRecord = $this->getRecord('pages', $banner->getPrivacyPage(), 'uid, pid, ' . $GLOBALS['TCA']['pages']['ctrl']['languageField'] . ', nav_title, title');
-                    if(!empty($pageRecord['nav_title'])){
+                    if (!empty($pageRecord['nav_title'])) {
                         $privacyPage['label'] = $pageRecord['nav_title'];
-                    }elseif (!empty($pageRecord['title'])){
+                    } elseif (!empty($pageRecord['title'])) {
                         $privacyPage['label'] = $pageRecord['title'];
-                    }else{
+                    } else {
                         $privacyPage['label'] = "";
                     }
                 }
@@ -91,20 +91,22 @@ class ConsentBannerProcessor implements DataProcessorInterface
             $tempCategories = [];
             $tempModules = [];
             $tempRejectedScript = '';
-            foreach ($banner->getCategories() as $category){
+            foreach ($banner->getCategories() as $category) {
                 $lockedAndActive = $category->getLockedAndActive();
                 $tempCategories[] = ['uid' => $category->getUid(), 'name' => $category->getName(), 'description' => $category->getDescription(), 'lockedAndActive' => (bool)$lockedAndActive];
 
-                if($category->getModules()->count() > 0) {
-                    foreach ($category->getModules() as $module){
+                if ($category->getModules()->count() > 0) {
+                    foreach ($category->getModules() as $module) {
                         $tempModules[] = ['uid' => $module->getUid(), 'name' => $module->getName(), 'description' => $module->getDescription(), 'category' => ['uid' => $category->getUid()]];
 
                         if (!$consentPreferences && $module->getRejectedScript() !== '') {
                             $tempRejectedScript .= $this->clearJavaScript($module->getRejectedScript());
                         }
 
-                        if(!empty($consentPreferences) && is_array($consentPreferences) && array_key_exists($module->getUid(), $consentPreferences)) {
-                            if(!is_bool($consentPreferences[$module->getUid()])){continue;}
+                        if (!empty($consentPreferences) && is_array($consentPreferences) && array_key_exists($module->getUid(), $consentPreferences)) {
+                            if (!is_bool($consentPreferences[$module->getUid()])) {
+                                continue;
+                            }
 
                             if ($consentPreferences[$module->getUid()] && $module->getAcceptedScript() !== '') {
                                 $tempRejectedScript .= $this->clearJavaScript($module->getAcceptedScript());
@@ -122,7 +124,7 @@ class ConsentBannerProcessor implements DataProcessorInterface
             GeneralUtility::makeInstance(AssetCollector::class)
                 ->addInlineJavaScript(
                     'consent_data',
-                    'var bbConsentBanner=' . json_encode($tempBanner) . ';'.$tempRejectedScript,
+                    'var bbConsentBanner=' . json_encode($tempBanner) . ';' . $tempRejectedScript,
                     ['nonce' => $this->resolveNonceValue()],
                     ['priority' => true]
                 );
@@ -150,9 +152,9 @@ class ConsentBannerProcessor implements DataProcessorInterface
                     ->select(...GeneralUtility::trimExplode(',', $fields, true))
                     ->from($table)
                     ->where(
-                        $queryBuilder->expr()->eq('uid', $queryBuilder->createNamedParameter($uid, \PDO::PARAM_INT))
+                        $queryBuilder->expr()->eq('uid', $queryBuilder->createNamedParameter($uid, Connection::PARAM_INT))
                     )
-                    ->execute()
+                    ->executeQuery()
                     ->fetchAssociative();
 
                 if ($row) {
@@ -191,12 +193,12 @@ class ConsentBannerProcessor implements DataProcessorInterface
      * @param string $value
      * @return string $value
      */
-    protected function clearJavaScript(string $value):string
+    protected function clearJavaScript(string $value): string
     {
         $value = preg_replace('#/\*.*?\*/#s', '', $value);
         $value = preg_replace('/.*<script.*>(.*?)<\/script>.*$/is', '$1', $value);
         $value = str_replace(["\t\r\n", "\n", "\r", "var "], ['', '', '', 'var__'], $value);
-        $value = preg_replace('/\s+/', '',$value);
+        $value = preg_replace('/\s+/', '', $value);
         return str_replace("var__", 'var ', $value);
     }
 

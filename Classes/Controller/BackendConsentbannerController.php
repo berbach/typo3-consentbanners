@@ -155,11 +155,6 @@ class BackendConsentbannerController extends ActionController
 
         $this->initializeRootPages();
 
-        //        if (isset($params['rootPageId'], $params['sysLanguageUid'])) {
-        //            $this->current_root_pid = (int)$params['rootPageId'];
-        //            $this->current_sys_language = (int)$params['sysLanguageUid'];
-        //        }
-
         $this->banner = $this->settingsRepository->findByStorageIds([$this->rootPageId], (int)$this->current_sys_language, true);
 
         if (isset($params['tx_consentbanners_site_consentbanners']) && is_array($params['tx_consentbanners_site_consentbanners'])) {
