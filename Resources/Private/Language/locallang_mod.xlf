@@ -1,27 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
-	<file source-language="en" datatype="plaintext" original="EXT:consentbanners/Resources/Private/Language/locallang_mod.xlf" date="2021-07-29T16:10:22Z" product-name="consentbanners">
-		<header/>
-		<body>
-			<trans-unit id="mlang_labels_tablabel">
-				<source>Consent Banner</source>
-			</trans-unit>
-			<trans-unit id="mlang_labels_tabdescr">
-				<source>Admin consent banner</source>
-			</trans-unit>
-			<trans-unit id="module.label">
-				<source>Consent Banners</source>
-			</trans-unit>
-			<trans-unit id="settings.headline">
+    <file source-language="en" datatype="plaintext" original="EXT:consentbanners/Resources/Private/Language/locallang_mod.xlf" date="2021-07-29T16:10:22Z" product-name="consentbanners">
+        <header/>
+        <body>
+            <trans-unit id="mlang_labels_tablabel">
+                <source>Consent Banner</source>
+            </trans-unit>
+            <trans-unit id="mlang_labels_tabdescr">
+                <source>Admin consent banner</source>
+            </trans-unit>
+            <trans-unit id="module.label">
+                <source>Consent Banners</source>
+            </trans-unit>
+            <trans-unit id="settings.headline">
                 <source>Settings Consent Banner</source>
             </trans-unit>
             <trans-unit id="categories.headline">
-                <source>Consent Banner Categories</source>
+                <source>Categories Consent Banner</source>
             </trans-unit>
             <trans-unit id="modules.headline">
-                <source>Consent Banner Modules</source>
+                <source>Modules Consent Banner</source>
             </trans-unit>
-			<trans-unit id="action.settings.title">
+            <trans-unit id="action.settings.title">
                 <source>Settings Banner</source>
             </trans-unit>
             <trans-unit id="action.categories.title">
@@ -144,6 +144,6 @@
             <trans-unit id="field.layoutType.fullWidthBottom">
                 <source>Full Width Bottom Banner</source>
             </trans-unit>
-		</body>
-	</file>
+        </body>
+    </file>
 </xliff>

@@ -18,10 +18,11 @@
             <div class="layout-one-columns">
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                        <span>Consent Category Modules</span>
+                        <span>Modules</span>
                     </div>
-                    <table class="table table-hover">
-                        <thead>
+                    <div class="table-fit">
+                        <table class="table table-hover">
+                            <thead>
                             <tr>
                                 <th class="col-icon nowrap">
                                     <f:if condition="{defaultLanguageId} == {currentLanguageId}">
@@ -30,18 +31,20 @@
                                         </a>
                                     </f:if>
                                 </th>
+                                <th class="col-check nowrap">&nbsp;</th>
                                 <th class="col-md-4 col-responsive nowrap">
                                     <span>Name</span>
                                 </th>
                                 <th class="col-control col-responsive nowrap">&nbsp;</th>
                             </tr>
-                        </thead>
-                        <tbody>
+                            </thead>
+                            <tbody>
                             <f:for each="{data.modules}" as="module">
                                 <tr>
                                     <td class="col-icon nowrap">
                                         <span>#{module.uid}</span>
                                     </td>
+                                    <th class="col-check nowrap">&nbsp;</th>
                                     <td class="col-md-4 col-responsive nowrap">
                                         <span>{module.name}</span>
                                         <f:if condition="{module.target}">
@@ -69,16 +72,19 @@
                                     </td>
                                 </tr>
                             </f:for>
-                        </tbody>
-                    </table>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </f:then>
         <f:else>
-            <a href="{be:uri.newRecord(table: 'tx_consentbanners_domain_model_module', pid: currentRootPageId)}" class="btn btn-default" title="{f:translate(key: 'LLL:EXT:consentbanners/Resources/Private/Language/locallang_mod.xlf:action.modules.new.title')}">
-                <core:icon identifier="actions-add" size="small"/>
-                <f:translate key="LLL:EXT:consentbanners/Resources/Private/Language/locallang_mod.xlf:action.modules.new.title" />
-            </a>
+            <f:if condition="{data.banner}">
+                <a href="{be:uri.newRecord(table: 'tx_consentbanners_domain_model_module', pid: currentRootPageId)}" class="btn btn-default" title="{f:translate(key: 'LLL:EXT:consentbanners/Resources/Private/Language/locallang_mod.xlf:action.modules.new.title')}">
+                    <core:icon identifier="actions-add" size="small"/>
+                    <f:translate key="LLL:EXT:consentbanners/Resources/Private/Language/locallang_mod.xlf:action.modules.new.title" />
+                </a>
+            </f:if>
         </f:else>
     </f:if>
 </f:section>

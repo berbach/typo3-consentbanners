@@ -12,7 +12,6 @@
 
 <f:section name="Content">
     <f:flashMessages/>
-
     <f:if condition="{data.banner}">
         <f:then>
             <div class="layout-one-columns">
@@ -23,68 +22,68 @@
                     <div class="table-fit">
                         <table class="table">
                             <thead>
-                                <tr>
-                                    <th class="col-label col-responsive">
-                                        <span>Title</span>
-                                    </th>
-                                    <th class="col-content col-responsive nowrap">
+                            <tr>
+                                <th class="col-label col-responsive">
+                                    <span>Title</span>
+                                </th>
+                                <th class="col-content col-responsive nowrap">
                                         <span>
                                             {data.banner.title}
                                         </span>
-                                    </th>
-                                    <th class="col-control col-responsive nowrap">
-                                        <div class="btn-group">
-                                            <a href="{be:uri.editRecord(uid: data.banner.uid, table: 'tx_consentbanners_domain_model_settings', returnUrl: '{returnUrl}')}" class="btn btn-default" title="Edit Consent Banner">
-                                                <core:icon identifier="actions-open" size="small"/>
-                                            </a>
-                                        </div>
-                                    </th>
-                                </tr>
+                                </th>
+                                <th class="col-control col-responsive nowrap">
+                                    <div class="btn-group">
+                                        <a href="{be:uri.editRecord(uid: data.banner.uid, table: 'tx_consentbanners_domain_model_settings', returnUrl: '{returnUrl}')}" class="btn btn-default" title="Edit Consent Banner">
+                                            <core:icon identifier="actions-open" size="small"/>
+                                        </a>
+                                    </div>
+                                </th>
+                            </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <th class="col-label col-responsive">
-                                        <span>Description</span>
-                                    </th>
-                                    <td class="col-content col-responsive nowrap">
+                            <tr>
+                                <th class="col-label col-responsive">
+                                    <span>Description</span>
+                                </th>
+                                <td class="col-content col-responsive nowrap">
                                         <span>
                                             {data.banner.description}
                                         </span>
-                                    </td>
-                                    <td class="col-control nowrap">&nbsp;</td>
-                                </tr>
+                                </td>
+                                <td class="col-control nowrap">&nbsp;</td>
+                            </tr>
 
-                                <tr>
-                                    <th class="col-label col-responsive">
-                                        <span>Layout Type</span>
-                                    </th>
-                                    <td class="col-content col-responsive nowrap">
-                                        <f:switch expression="{data.banner.layoutType}">
-                                            <f:case value="bb-cb-overlay">
+                            <tr>
+                                <th class="col-label col-responsive">
+                                    <span>Layout Type</span>
+                                </th>
+                                <td class="col-content col-responsive nowrap">
+                                    <f:switch expression="{data.banner.layoutType}">
+                                        <f:case value="bb-cb-overlay">
                                                 <span>
                                                     <f:translate key="LLL:EXT:consentbanners/Resources/Private/Language/locallang_mod.xlf:field.layoutType.overlay" />
                                                 </span>
-                                            </f:case>
-                                            <f:case value="bb-cb-bottom">
+                                        </f:case>
+                                        <f:case value="bb-cb-bottom">
                                                 <span>
                                                     <f:translate key="LLL:EXT:consentbanners/Resources/Private/Language/locallang_mod.xlf:field.layoutType.fullWidthBottom" />
                                                 </span>
-                                            </f:case>
-                                        </f:switch>
-                                    </td>
-                                    <td class="col-control nowrap">&nbsp;</td>
-                                </tr>
-                                <tr>
-                                    <th class="col-label col-responsive">
-                                        <span>Categories</span>
-                                    </th>
-                                    <td class="col-content col-responsive nowrap">
-                                        <f:for each="{data.banner.categories}" as="category" iteration="i">
-                                            {category.name}<f:if condition="!{i.isLast}">, </f:if>
-                                        </f:for>
-                                    </td>
-                                    <td class="col-control nowrap">&nbsp;</td>
-                                </tr>
+                                        </f:case>
+                                    </f:switch>
+                                </td>
+                                <td class="col-control nowrap">&nbsp;</td>
+                            </tr>
+                            <tr>
+                                <th class="col-label col-responsive">
+                                    <span>Categories</span>
+                                </th>
+                                <td class="col-content col-responsive nowrap">
+                                    <f:for each="{data.banner.categories}" as="category" iteration="i">
+                                        {category.name}<f:if condition="!{i.isLast}">, </f:if>
+                                    </f:for>
+                                </td>
+                                <td class="col-control nowrap">&nbsp;</td>
+                            </tr>
                             </tbody>
                         </table>
                     </div>

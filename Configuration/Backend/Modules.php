@@ -7,11 +7,10 @@ use Bb\Consentbanners\Controller\BackendConsentbannerController;
 return [
     'site_consentbanners' => [
         'parent' => 'site',
-        'position' => ['top'],
+        'position' => ['after' => 'web_ts'],
         'access' => 'admin',
         'workspaces' => 'live',
         'path' => '/module/site/consentbanners',
-        'aliases' => ['site_ConsentbannersManagement'],
         'labels' => 'LLL:EXT:consentbanners/Resources/Private/Language/locallang_mod.xlf:module.label',
         'extensionName' => 'Consentbanners',
         'iconIdentifier' => 'module-cookie',

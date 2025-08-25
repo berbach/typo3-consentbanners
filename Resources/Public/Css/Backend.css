@@ -6,7 +6,6 @@
 }
 .module-docheader{
     padding-left: 324px;
-    border-left: 1px solid #cccccc;
 }
 .module-docheader:before{
     display: block;
@@ -26,7 +25,6 @@
 }
 .bb-cb--settings-navigation{
     width: 300px;
-    border-right: 1px solid #cccccc;
     padding: 5px;
 }
 .bb-cb--settings-content{
@@ -140,7 +138,7 @@ th.col-icon {
 }
 .col-check {
     text-align: center;
-    max-width: 50px;
+    width: 50px;
 }
 
 .separate.btn, .btn-group .btn + .separate.btn {
