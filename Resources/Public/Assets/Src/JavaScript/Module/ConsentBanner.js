@@ -77,7 +77,7 @@ function ConsentBanner(node) {
     console.log('ConsentBanner loaded')
     const typeofIsAndValueIsNot = (variable, type, value) => typeof variable === type && variable !== value
     // Data
-    JSON.parse(document.getElementById('bbBannerData').innerHTML
+    this.jsonData = JSON.parse(document.getElementById('bbBannerData').innerHTML)
     // this.bbConsentBanner = typeofIsAndValueIsNot(bbConsentBanner, 'object', '') ? bbConsentBanner : null;
     // this.cookieName = typeofIsAndValueIsNot(this.bbConsentBanner.cName, 'string', '') ? bbConsentBanner.cName : 'BbConsentPreference';
     // bbConsentBannerCookieName = this.cookieName

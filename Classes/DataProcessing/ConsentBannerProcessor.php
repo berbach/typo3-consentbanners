@@ -42,7 +42,7 @@ class ConsentBannerProcessor implements DataProcessorInterface
      */
     public function process(ContentObjectRenderer $cObj, array $contentObjectConfiguration, array $processorConfiguration, array $processedData): array
     {
-        DebuggerUtility::var_dump(Environment::toArray());
+
         $settings = $contentObjectConfiguration['settings.'] ?? [];
         $requestSite = $this->getTypo3Request()->getAttribute('site');
         $consentPreferences = CookieUtility::getCookieValue(self::$cName);
@@ -51,9 +51,7 @@ class ConsentBannerProcessor implements DataProcessorInterface
         $resourceCompressor = GeneralUtility::makeInstance(ResourceCompressor::class);
         /* @var Banner $banner */
         $banner = $bannerRepository->findByRootPageId($requestSite->getRootPageId(), $this->getCurrentLanguage());
-DebuggerUtility::var_dump($banner);
-DebuggerUtility::var_dump($this->getTypo3Request());
-DebuggerUtility::var_dump($this->getCurrentLanguage());
+
         if (!$consentPreferences) {
             $consentAccepted = false;
         }else{
@@ -237,6 +235,7 @@ DebuggerUtility::var_dump($this->getCurrentLanguage());
     {
         return GeneralUtility::makeInstance(RequestId::class)->nonce->consume();
     }
+
 
 
 }
