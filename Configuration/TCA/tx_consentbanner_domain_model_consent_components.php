@@ -3,7 +3,7 @@
 return [
     'ctrl' => [
         'title' => 'Consent components',
-        'label' => 'name',
+        'label' => 'component_title',
         'sortby' => 'sorting',
         'tstamp' => 'tstamp',
         'crdate' => 'crdate',
@@ -48,21 +48,21 @@ return [
     'palettes' => [
         'header' => [
             'showitem' => '
-                name,
+                component_title,
             ',
         ],
         'content' => [
             'showitem' => '
-                description,
+                component_description,
                 --linebreak--,
                 module_target
             ',
         ],
         'placeholder' => [
             'showitem' => '
-                placeholder_headline,
+                placeholder_title,
                 --linebreak--,
-                placeholder,
+                placeholder_description,
             ',
         ],
         'language' => [
@@ -102,8 +102,8 @@ return [
                 'items' => [
                     ['label' => '', 'value' => 0],
                 ],
-                'foreign_table' => 'tx_consentbanner_domain_model_module',
-                'foreign_table_where' => 'AND {#tx_consentbanner_domain_model_module}.{#pid}=###CURRENT_PID### AND {#tx_consentbanner_domain_model_module}.{#sys_language_uid} IN (-1,0)',
+                'foreign_table' => 'tx_consentbanner_domain_model_consent_components',
+                'foreign_table_where' => 'AND {#tx_consentbanner_domain_model_consent_components}.{#pid}=###CURRENT_PID### AND {#tx_consentbanner_domain_model_consent_components}.{#sys_language_uid} IN (-1,0)',
             ],
         ],
         'l10n_diffsource' => [
@@ -133,7 +133,7 @@ return [
             ],
         ],
 
-        'name' => [
+        'component_title' => [
             'exclude' => true,
             'label' => 'LLL:EXT:consent_banner/Resources/Private/Language/locallang_mod.xlf:field.name',
             'config' => [
@@ -144,7 +144,7 @@ return [
             ],
         ],
 
-        'description' => [
+        'component_description' => [
             'exclude' => true,
             'label' => 'LLL:EXT:consent_banner/Resources/Private/Language/locallang_mod.xlf:field.description',
             'config' => [
@@ -166,7 +166,7 @@ return [
             ]
         ],
 
-        'placeholder_headline' => [
+        'placeholder_title' => [
             'exclude' => true,
             'label' => 'LLL:EXT:consent_banner/Resources/Private/Language/locallang_mod.xlf:field.placeholder_headline',
             'config' => [
@@ -176,7 +176,7 @@ return [
             ],
         ],
 
-        'placeholder' => [
+        'placeholder_description' => [
             'exclude' => true,
             'label' => 'LLL:EXT:consent_banner/Resources/Private/Language/locallang_mod.xlf:field.placeholder',
             'config' => [
@@ -208,7 +208,7 @@ return [
             ]
         ],
 
-        'module_id' => [
+        'group_id' => [
             'config' => [
                 'type' => 'passthrough',
             ],

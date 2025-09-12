@@ -37,7 +37,7 @@ CREATE TABLE tx_consentbanner_domain_model_banner
 
     essential_title                 varchar(150)         DEFAULT ''   NOT NULL,
     essential_description           text,
-    essential_group_components      int(11) unsigned     DEFAULT '0'  NOT NULL,
+    essential_components            int(11) unsigned     DEFAULT '0'  NOT NULL,
 
     consent_other_groups            int(11) unsigned     DEFAULT '0'  NOT NULL,
 

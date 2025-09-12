@@ -2,25 +2,21 @@
 
 namespace Bb\ConsentBanner\Domain\Repository;
 
-use Doctrine\DBAL\DBALException;
-use Doctrine\DBAL\Driver\Exception;
-use TYPO3\CMS\Backend\Utility\BackendUtility;
+use Doctrine\DBAL\Exception;
 use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\QueryBuilder;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Persistence\Generic\QuerySettingsInterface;
 use TYPO3\CMS\Extbase\Persistence\Generic\Typo3QuerySettings;
 use TYPO3\CMS\Extbase\Persistence\QueryInterface;
 use TYPO3\CMS\Extbase\Persistence\Repository;
 
 
-class ModuleRepository extends Repository
+class ComponentRepository extends Repository
 {
     /**
      * @var string
      */
-    public const TABLE_NAME = 'tx_consentbanner_domain_model_module';
+    public const TABLE_NAME = 'tx_consentbanner_domain_model_consent_components';
 
     protected $defaultOrderings = [
         'uid' => QueryInterface::ORDER_ASCENDING
@@ -34,7 +30,7 @@ class ModuleRepository extends Repository
 
     public function initializeObject(): void
     {
-        /* @var $querySettings \TYPO3\CMS\Extbase\Persistence\Generic\Typo3QuerySettings */
+        /* @var Typo3QuerySettings $querySettings */
         $querySettings = $this->createQuery()->getQuerySettings();
 //        $querySettings->setRespectSysLanguage(false);
 //        $querySettings->setLanguageOverlayMode(false);
@@ -42,22 +38,17 @@ class ModuleRepository extends Repository
     }
 
     /**
-     * @param array $storageIds
+     * @param int $rootPageId
      * @param int|null $languageId
      * @param bool $useIgnoreEnable
      * @return object|null
      */
-    public function findByStorageIds(array $storageIds, int $languageId = null, bool $useIgnoreEnable = false): ?object
+    public function findByRootPageId(int $rootPageId, ?int $languageId = null, bool $useIgnoreEnable = false): ?object
     {
         $query = $this->createQuery();
         /* @var $querySettings Typo3QuerySettings */
         $querySettings = $query->getQuerySettings();
-
-        $querySettings->setStoragePageIds($storageIds);
-
-        if ($languageId > 0) {
-            $querySettings->setLanguageUid((int)$languageId);
-        }
+        $querySettings->setStoragePageIds([$rootPageId]);
 
         if ($useIgnoreEnable) {
             $querySettings->setIgnoreEnableFields(true);
@@ -65,17 +56,21 @@ class ModuleRepository extends Repository
 
         $this->setDefaultQuerySettings($querySettings);
 
+        if (!is_null($languageId) && ($languageId > 0))
+        {
+            $query->matching($query->equals($GLOBALS['TCA'][self::TABLE_NAME]['ctrl']['languageField'], $languageId));
+        }
+
         return $query->execute();
     }
 
     /**
-     * @param null $id
+     * @param int $id
      * @param null $order
      * @return array|bool
-     * @throws DBALException
      * @throws Exception
      */
-    public function findModules($id = null, $order = null): array|bool
+    public function findModules(int $id, $order = null): array|bool
     {
         $queryBuilder = $this->getQueryBuilderForTable();
         $statement = $queryBuilder

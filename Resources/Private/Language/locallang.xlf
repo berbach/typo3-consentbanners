@@ -1,12 +1,12 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-<xliff version="1.0">
-	<file source-language="en" datatype="plaintext" original="messages" date="2019-08-12T13:45:24Z" product-name="consentbanners">
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+	<file source-language="en" datatype="plaintext" original="EXT:consent_banner/Resources/Private/Language/locallang.xlf" date="2019-08-12T13:45:24Z" product-name="consentbanner">
 		<header/>
 		<body>
 			<trans-unit id="cookiebanner.saveAndClose">
 				<source>Save &amp; close</source>
 			</trans-unit>
-			<trans-unit id="cookiebanner.confirmSelection">
+			<trans-unit id="banner.confirmSelection">
 				<source>Confirm selection</source>
 			</trans-unit>
 			<trans-unit id="cookiebanner.acceptAll">

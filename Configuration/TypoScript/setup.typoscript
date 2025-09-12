@@ -46,7 +46,7 @@ lib.consentbanners {
         settings < plugin.tx_consentbanner.settings
 
         dataProcessing {
-            10 = Bb\Consentbanners\DataProcessing\ConsentBannerProcessor
+            10 = Bb\ConsentBanner\DataProcessing\ConsentBannerProcessor
         }
     }
 }

@@ -5,7 +5,7 @@ defined('TYPO3') || die();
 
 call_user_func(static function () {
     TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addStaticFile(
-        'consentbanners',
+        'consent_banner',
         'Configuration/TypoScript/',
         'Consent Banner'
     );

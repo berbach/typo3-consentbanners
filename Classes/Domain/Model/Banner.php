@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Bb\ConsentBanner\Domain\Model;
 
+use TYPO3\CMS\Extbase\Annotation\ORM\Lazy;
 use TYPO3\CMS\Extbase\DomainObject\AbstractEntity;
 use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
 
@@ -123,16 +124,18 @@ class Banner extends AbstractEntity
     /**
      * essential OptIns
      *
-     * @var ObjectStorage<Module>
+     * @var ObjectStorage<Component>
      */
-    protected ObjectStorage $essentialOptIns;
+    #[Lazy]
+    protected ObjectStorage $essentialComponents;
 
     /**
      * group categories
      *
-     * @var ObjectStorage<Category>
+     * @var ObjectStorage<Group>
      */
-    protected ObjectStorage $groupCategories;
+    #[Lazy]
+    protected ObjectStorage $consentOtherGroups;
 
     /**
      * @var bool
@@ -153,8 +156,17 @@ class Banner extends AbstractEntity
      * __construct
      */
     public function __construct() {
-        $this->essentialOptIns = new ObjectStorage();
-        $this->groupCategories = new ObjectStorage();
+        $this->initializeObject();
+
+    }
+
+    /**
+     * Called again with initialize object, as fetching an entity from the DB does not use the constructor
+     */
+    public function initializeObject(): void
+    {
+        $this->essentialComponents ??= new ObjectStorage();
+        $this->consentOtherGroups = new ObjectStorage();
     }
     /**
      * Returns the $bannerTitle
@@ -556,77 +568,77 @@ class Banner extends AbstractEntity
         $this->essentialDescription = $essentialDescription;
     }
     /**
-     * Adds a essential OptIn
+     * Adds a essential Component
      *
-     * @param Module $essentialOptIn
+     * @param Component $essentialComponent
      */
-    public function addEssentialOptIn(Module $essentialOptIn): void
+    public function addEssentialComponent(Component $essentialComponent): void
     {
-        $this->essentialOptIns->attach($essentialOptIn);
+        $this->essentialComponents->attach($essentialComponent);
     }
     /**
-     * Removes a essential OptIn
+     * Removes a essential Component
      *
-     * @param Module $essentialOptIn
+     * @param Component $essentialComponent
      */
-    public function removeEssentialOptIn(Module $essentialOptIn): void
+    public function removeEssentialComponent(Component $essentialComponent): void
     {
-        $this->essentialOptIns->detach($essentialOptIn);
+        $this->essentialComponents->detach($essentialComponent);
     }
     /**
-     * Returns the essential OptIns
+     * Returns the essential Components
      *
-     * @return ObjectStorage<Module> $essentialOptIns
+     * @return ObjectStorage<Component> $essentialComponents
      */
-    public function getEssentialOptIns(): ObjectStorage
+    public function getEssentialComponents(): ObjectStorage
     {
-        return $this->essentialOptIns;
+        return $this->essentialComponents;
     }
     /**
-     * Sets the essential OptIns
+     * Sets the essential Components
      *
-     * @param ObjectStorage<Module> $essentialOptIns
+     * @param ObjectStorage<Component> $essentialComponents
      */
-    public function setEssentialOptIns(ObjectStorage $essentialOptIns): void
+    public function setEssentialComponents(ObjectStorage $essentialComponents): void
     {
-        $this->essentialOptIns = $essentialOptIns;
+        $this->essentialComponents = $essentialComponents;
     }
     /**
      * Add a group category
      *
-     * @param Category $groupCategory
+     * @param Group $consentOtherGroup
      */
-    public function addGroupCategory(Category $groupCategory): void
+    public function addConsentOtherGroup(Group $consentOtherGroup): void
     {
-        $this->groupCategories->attach($groupCategory);
+        $this->consentOtherGroups->attach($consentOtherGroup);
     }
     /**
      * Removes a group category
      *
-     * @param Category $groupCategory The group category to be removed
+     * @param Group $consentOtherGroup The group category to be removed
      */
-    public function removeGroupCategory(Category $groupCategory): void
+    public function removeConsentOtherGroup(Group $consentOtherGroup): void
     {
-        $this->groupCategories->detach($groupCategory);
+        $this->consentOtherGroups->detach($consentOtherGroup);
     }
     /**
      * Returns the group Categories
      *
-     * @return ObjectStorage<Category> $groupCategories
+     * @return ObjectStorage<Group> $consentOtherGroups
      */
-    public function getGroupCategories(): ObjectStorage
+    public function getConsentOtherGroups(): ObjectStorage
     {
-        return $this->groupCategories;
+        return $this->consentOtherGroups;
     }
     /**
      * Sets the group Categories
      *
-     * @param ObjectStorage<Category> $groupCategories
+     * @param ObjectStorage<Group> $consentOtherGroups
      * @return void
      */
-    public function setGroupCategories(ObjectStorage $groupCategories): void
+    public function setConsentOtherGroups(ObjectStorage $consentOtherGroups): void
     {
-        $this->groupCategories = $groupCategories;
+        $this->consentOtherGroups = $consentOtherGroups;
     }
 
     public function getIsTextLink(): bool

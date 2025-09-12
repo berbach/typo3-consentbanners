@@ -2,7 +2,7 @@
 return [
     'ctrl' => [
         'title' => 'Consent groups',
-        'label' => 'name',
+        'label' => 'group_title',
         'sortby' => 'sorting',
         'tstamp' => 'tstamp',
         'crdate' => 'crdate',
@@ -31,9 +31,9 @@ return [
         '0' => [
             'showitem' => '
                 --div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:general,
-                    name,description,locked_and_active,
+                    group_title,group_description,
                 --div--;LLL:EXT:consent_banner/Resources/Private/Language/locallang_mod.xlf:tab.modules,
-                    modules,
+                    group_components,
                 --div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:language,
                     --palette--;;language,
                 --div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:access,
@@ -72,8 +72,8 @@ return [
                 'items' => [
                     ['label' => '', 'value' => 0],
                 ],
-                'foreign_table' => 'tx_consentbanner_domain_model_category',
-                'foreign_table_where' => 'AND {#tx_consentbanner_domain_model_category}.{#pid}=###CURRENT_PID### AND {#tx_consentbanner_domain_model_category}.{#sys_language_uid} IN (-1,0)',
+                'foreign_table' => 'tx_consentbanner_domain_model_consent_groups',
+                'foreign_table_where' => 'AND {#tx_consentbanner_domain_model_consent_groups}.{#pid}=###CURRENT_PID### AND {#tx_consentbanner_domain_model_consent_groups}.{#sys_language_uid} IN (-1,0)',
             ],
         ],
         'l10n_diffsource' => [
@@ -103,7 +103,7 @@ return [
             ],
         ],
 
-        'name' => [
+        'group_title' => [
             'exclude' => true,
             'label' => 'LLL:EXT:consent_banner/Resources/Private/Language/locallang_mod.xlf:field.name',
             'config' => [
@@ -115,7 +115,7 @@ return [
         ],
 
 
-        'description' => [
+        'group_description' => [
             'exclude' => true,
             'label' => 'LLL:EXT:consent_banner/Resources/Private/Language/locallang_mod.xlf:field.description',
             'config' => [
@@ -126,39 +126,18 @@ return [
             ]
         ],
 
-        'locked_and_active' => [
-            'exclude' => true,
-            'l10n_mode' => 'exclude',
-            'label' => 'LLL:EXT:consent_banner/Resources/Private/Language/locallang_mod.xlf:field.locked_and_active',
-            'config' => [
-                'type' => 'check',
-                'renderType' => 'checkboxLabeledToggle',
-                'items' => [
-                    [
-                        'label' => '',
-                        'labelChecked' => 'Enable locked and active',
-                        'labelUnchecked' => 'Disabled locked and active',
-                    ],
-                ],
-                'eval' => 'maximumRecordsChecked',
-                'validation' => [
-                    'maximumRecordsChecked' => 2,
-                    'maximumRecordsCheckedInPid' => 1
-                ],
 
-            ]
-        ],
 
-        'modules' => [
+        'group_components' => [
             'exclude' => false,
             'l10n_mode' => 'exclude',
             'label' => 'LLL:EXT:consent_banner/Resources/Private/Language/locallang_mod.xlf:field.modules',
             'config' => [
                 'type' => 'inline',
-                'foreign_table' => 'tx_consentbanner_domain_model_module',
-                'foreign_field' => 'module_id',
+                'foreign_table' => 'tx_consentbanner_domain_model_consent_components',
+                'foreign_field' => 'group_id',
                 'foreign_sortby' => 'sorting_foreign',
-                'foreign_label' => 'name',
+                'foreign_label' => 'component_title',
                 'maxitems' => 5,
                 'appearance' => [
                     'newRecordLinkTitle' => 'Add Cookie module',
@@ -173,7 +152,7 @@ return [
             ],
         ],
 
-        'category_id' => [
+        'banner_id' => [
             'config' => [
                 'type' => 'passthrough',
             ],

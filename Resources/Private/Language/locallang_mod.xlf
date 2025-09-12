@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
-    <file source-language="en" datatype="plaintext" original="EXT:consent_banner/Resources/Private/Language/locallang_mod.xlf" date="2021-07-29T16:10:22Z" product-name="consentbanners">
+    <file source-language="en" datatype="plaintext" original="EXT:consent_banner/Resources/Private/Language/locallang_mod.xlf" date="2021-07-29T16:10:22Z" product-name="consentbanner">
         <header/>
         <body>
             <trans-unit id="mlang_labels_tablabel">
@@ -13,12 +13,13 @@
             <trans-unit id="module.label">
                 <source>Consent Banners</source>
             </trans-unit>
-            <trans-unit id="settings.headline">
+            <trans-unit id="banner.headline">
                 <source>Consent Banner Management</source>
             </trans-unit>
             <trans-unit id="consents.headline">
-                <source>Consent Management Platform</source>
+                <source>Consent Data Platform</source>
             </trans-unit>
+
             <trans-unit id="categories.headline">
                 <source>Consent Banner Categories</source>
             </trans-unit>
@@ -35,8 +36,8 @@
             <trans-unit id="action.modules.title">
                 <source>Modules</source>
             </trans-unit>
-            <trans-unit id="action.settings.new.title">
-                <source>New Consent Banner</source>
+            <trans-unit id="action.banner.new.title">
+                <source>Create Consent Banner</source>
             </trans-unit>
             <trans-unit id="action.categories.new.title">
                 <source>New Category</source>
@@ -94,10 +95,10 @@
                 <source>Layout type</source>
             </trans-unit>
             <trans-unit id="field.banner_layout.overlay">
-                <source>Overlay banner</source>
+                <source>Overlay banner, positioned at the center</source>
             </trans-unit>
             <trans-unit id="field.banner_layout.fullWidthBottom">
-                <source>Full width bottom banner</source>
+                <source>Full-width banner, positioned at the bottom</source>
             </trans-unit>
             <trans-unit id="field.accept_all_text">
                 <source>Accept all</source>
