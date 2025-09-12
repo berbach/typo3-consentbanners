@@ -1,11 +1,10 @@
 <?php
 
 use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
-
 return [
     'ctrl' => [
         'title' => 'Consent Banner',
-        'label' => 'title',
+        'label' => 'banner_title',
         'sortby' => 'sorting',
         'tstamp' => 'tstamp',
         'crdate' => 'crdate',
@@ -42,7 +41,7 @@ return [
                     --palette--;;cookieMoreInfoLabels,
                 --div--;LLL:EXT:consent_banner/Resources/Private/Language/locallang_mod.xlf:tab.essential_group,
                     --palette--;;essential,
-                    --palette--;;essentialOptIns,
+                    --palette--;;essentialConsents,
                 --div--;LLL:EXT:consent_banner/Resources/Private/Language/locallang_mod.xlf:tab.other_group,
                     --palette--;;otherGroup,
                 --div--;LLL:EXT:consent_banner/Resources/Private/Language/locallang_mod.xlf:tab.banner_setting,
@@ -120,12 +119,12 @@ return [
         'essentialConsents' => [
             'label' => 'LLL:EXT:consent_banner/Resources/Private/Language/locallang_mod.xlf:palette.essentialOptIns',
             'showitem' => '
-                essential_consents    
+                essential_components    
             ',
         ],
         'otherGroup' => [
             'showitem' => '
-                group_consents
+                consent_other_groups
             ',
         ],
         'language' => [
@@ -158,8 +157,8 @@ return [
                 'items' => [
                     ['label' => '', 'value' => 0],
                 ],
-                'foreign_table' => 'tx_consentbanner_domain_model_settings',
-                'foreign_table_where' => 'AND {#tx_consentbanner_domain_model_settings}.{#pid}=###CURRENT_PID### AND {#tx_consentbanner_domain_model_settings}.{#sys_language_uid} IN (-1,0)',
+                'foreign_table' => 'tx_consentbanner_domain_model_banner',
+                'foreign_table_where' => 'AND {#tx_consentbanner_domain_model_banner}.{#pid}=###CURRENT_PID### AND {#tx_consentbanner_domain_model_banner}.{#sys_language_uid} IN (-1,0)',
             ],
         ],
         'l10n_diffsource' => [
@@ -185,6 +184,11 @@ return [
                         'label' => '',
                         'invertStateDisplay' => true,
                     ]
+                ],
+                'eval' => 'maximumRecordsChecked',
+                'validation' => [
+                    'maximumRecordsChecked' => 2,
+                    'maximumRecordsCheckedInPid' => 1
                 ],
             ],
         ],
@@ -271,7 +275,7 @@ return [
         'lifetime_user_consent' => [
             'exclude' => true,
             'l10n_mode' => 'exclude',
-            'label' => 'LLL:EXT:consent_banner/Resources/Private/Language/locallang_mod.xlf:field.lifetime_banner',
+            'label' => 'LLL:EXT:consent_banner/Resources/Private/Language/locallang_mod.xlf:field.lifetime_user_consent',
             'config' => [
                 'type' => 'select',
                 'renderType' => 'selectSingle',
@@ -298,9 +302,12 @@ return [
             'exclude' => true,
             'label' => 'LLL:EXT:consent_banner/Resources/Private/Language/locallang_mod.xlf:field.confirm_selection_text',
             'config' => [
-                'type' => 'input',
-                'size' => 30,
-                'eval' => 'trim'
+                'type' => 'user',
+                'renderType' => 'inputCurrentLanguagePlaceholder',
+                'parameters' => [
+                    'localizationTranslate' => 'LLL:EXT:consent_banner/Resources/Private/Language/locallang.xlf:banner.confirmSelection',
+                ],
+
             ],
         ],
 
@@ -428,16 +435,15 @@ return [
             ]
         ],
 
-        'essential_group_components' => [
-            'exclude' => false,
-            'l10n_mode' => 'exclude',
+        'essential_components' => [
+            'exclude' => true,
             'label' => 'LLL:EXT:consent_banner/Resources/Private/Language/locallang_mod.xlf:field.essential_group_components',
             'config' => [
                 'type' => 'inline',
                 'foreign_table' => 'tx_consentbanner_domain_model_consent_components',
                 'foreign_field' => 'group_id',
                 'foreign_sortby' => 'sorting_foreign',
-                'foreign_label' => 'name',
+                'foreign_label' => 'component_title',
                 'maxitems' => 10,
                 'appearance' => [
                     'newRecordLinkTitle' => 'LLL:EXT:consent_banner/Resources/Private/Language/locallang_mod.xlf:field.essential_group_components.newRecordLinkTitle',
@@ -452,7 +458,6 @@ return [
 
         'consent_other_groups' => [
             'exclude' => true,
-            'l10n_mode' => 'exclude',
             'label' => 'LLL:EXT:consent_banner/Resources/Private/Language/locallang_mod.xlf:field.consent_other_groups',
             'config' => [
                 'type' => 'inline',
@@ -474,7 +479,6 @@ return [
 
         'is_text_link' => [
             'exclude' => true,
-            'l10n_mode' => 'exclude',
             'label' => 'LLL:EXT:consent_banner/Resources/Private/Language/locallang_mod.xlf:field.is_text_link',
             'description' => 'LLL:EXT:consent_banner/Resources/Private/Language/locallang_mod.xlf:field.is_text_link.description',
             'config' => [
@@ -497,3 +501,4 @@ return [
         ],
     ],
 ];
+

@@ -22,4 +22,10 @@ call_user_func(static function () {
             }
         }'
     );
+
+    $GLOBALS['TYPO3_CONF_VARS']['SYS']['formEngine']['nodeRegistry']['1757502493'] = [
+        'nodeName' => 'inputCurrentLanguagePlaceholder',
+        'priority' => 40,
+        'class' => \Bb\ConsentBanner\Form\Element\InputCurrentLanguagePlaceholder::class,
+    ];
 });

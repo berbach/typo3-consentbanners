@@ -5,14 +5,20 @@ namespace Bb\ConsentBanner\Domain\Model;
 use TYPO3\CMS\Extbase\DomainObject\AbstractEntity;
 use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
 
-class Category extends AbstractEntity
+class Group extends AbstractEntity
 {
     /**
      * name
      *
      * @var string
      */
-    protected string $name = '';
+    protected string $groupTitle = '';
+    /**
+     * description
+     *
+     * @var string
+     */
+    protected string $groupDescription = '';
     /**
      * show uri
      *
@@ -20,23 +26,11 @@ class Category extends AbstractEntity
      */
     protected string $showUri = '';
     /**
-     * description
-     *
-     * @var string
-     */
-    protected string $description = '';
-    /**
      * The categories the offer is assigned to
      *
-     * @var ObjectStorage<Module>
+     * @var ObjectStorage<Component>
      */
-    protected ObjectStorage $modules;
-    /**
-     * locked_and_active
-     *
-     * @var int
-     */
-    protected int $lockedAndActive;
+    protected ObjectStorage $groupComponents;
     /**
      * hidden
      *
@@ -53,65 +47,54 @@ class Category extends AbstractEntity
      * __construct
      */
     public function __construct() {
-        //Do not remove the next line: It would break the functionality
+        $this->initializeObject();
+    }
+    /**
+     * Called again with initialize object, as fetching an entity from the DB does not use the constructor
+     */
+    public function initializeObject(): void
+    {
+        $this->GroupComponents ??= new ObjectStorage();
     }
     /**
      * Returns the name
      *
-     * @return string $name
+     * @return string $groupTitle
      */
-    public function getName(): string
+    public function getGroupTitle(): string
     {
-        return $this->name;
+        return $this->groupTitle;
     }
     /**
      * Sets the name
      *
-     * @param string $name
+     * @param string $groupTitle
      * @return void
      */
-    public function setName(string $name): void
+    public function setGroupTitle(string $groupTitle): void
     {
-        $this->name = $name;
+        $this->groupTitle = $groupTitle;
     }
     /**
      * Returns the description
      *
-     * @return string $description
+     * @return string $groupDescription
      */
-    public function getDescription(): string
+    public function getGroupDescription(): string
     {
-        return $this->description;
+        return $this->groupDescription;
     }
     /**
      * Sets the description
      *
-     * @param string $description
+     * @param string $groupDescription
      * @return void
      */
-    public function setDescription(string $description): void
+    public function setGroupDescription(string $groupDescription): void
     {
-        $this->description = $description;
+        $this->groupDescription = $groupDescription;
     }
-    /**
-     * Returns the locked And Active
-     *
-     * @return int
-     */
-    public function getLockedAndActive():int
-    {
-        return $this->lockedAndActive;
-    }
-    /**
-     * Sets the locked And Active
-     *
-     * @param int $lockedAndActive
-     * @return void
-     */
-    public function setLockedAndActive(int $lockedAndActive):void
-    {
-        $this->lockedAndActive = $lockedAndActive;
-    }
+
     /**
      * Returns the hidden
      *
@@ -173,40 +156,40 @@ class Category extends AbstractEntity
     /**
      * Adds a module
      *
-     * @param Module $module
+     * @param Component $component
      */
-    public function addModules(Module $module): void
+    public function addGroupComponent(Component $component): void
     {
-        $this->modules->attach($module);
+        $this->groupComponents->attach($component);
     }
 
     /**
-     * Removes a Module
+     * Removes a component
      *
-     * @param Module $moduleToRemove The Module to be removed
+     * @param Component $component The component to be removed
      */
-    public function removeModules(Module $moduleToRemove): void
+    public function removeGroupComponent(Component $component): void
     {
-        $this->modules->detach($moduleToRemove);
+        $this->groupComponents->detach($component);
     }
 
     /**
-     * Returns the modules
+     * Returns the components
      *
-     * @return ObjectStorage<Module> $modules
+     * @return ObjectStorage<Component> $groupComponents
      */
-    public function getModules(): ObjectStorage
+    public function getGroupComponents(): ObjectStorage
     {
-        return $this->modules;
+        return $this->groupComponents;
     }
 
     /**
-     * Sets the module
+     * Sets the components
      *
-     * @param ObjectStorage<Module> $modules
+     * @param ObjectStorage<Component> $groupComponents
      */
-    public function setModules(ObjectStorage $modules): void
+    public function setGroupComponents(ObjectStorage $groupComponents): void
     {
-        $this->modules = $modules;
+        $this->groupComponents = $groupComponents;
     }
 }

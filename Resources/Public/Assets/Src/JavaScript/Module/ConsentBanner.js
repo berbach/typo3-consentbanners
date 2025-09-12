@@ -70,31 +70,35 @@ if (!('fromEntries' in Object))
  * */
 
 // needed for the types to work properly
-bbConsentBanner = bbConsentBanner || null
+// bbConsentBanner = bbConsentBanner || null
 let bbConsentBannerCookieName = ''
 
 function ConsentBanner(node) {
+    console.log('ConsentBanner loaded')
     const typeofIsAndValueIsNot = (variable, type, value) => typeof variable === type && variable !== value
     // Data
-    this.bbConsentBanner = typeofIsAndValueIsNot(bbConsentBanner, 'object', '') ? bbConsentBanner : null;
-    this.cookieName = typeofIsAndValueIsNot(this.bbConsentBanner.cName, 'string', '') ? bbConsentBanner.cName : 'BbConsentPreference';
-    bbConsentBannerCookieName = this.cookieName
-    this.confirmDuration = typeofIsAndValueIsNot(this.bbConsentBanner.confirmDuration, 'number', 0) ? this.bbConsentBanner.confirmDuration : 20;
-    this.categories = typeof bbConsentBanner.categories === 'object' && bbConsentBanner.categories.length !== 0 ? bbConsentBanner.categories : null;
-    this.modules = typeof bbConsentBanner.modules === 'object' && bbConsentBanner.modules.length !== 0 ? bbConsentBanner.modules : null;
-    this.isBottomLayout = !typeofIsAndValueIsNot(this.bbConsentBanner.layoutType, 'string', 'bb-cb-bottom');
-    // Elements
-    this.banner = null
-    this.form = null
-    this.acceptButton = null
-    this.saveButton = null
-    this.moreButton = null
-    this.confirmButton = null
-    this.rejectButton = null
+    JSON.parse(document.getElementById('bbBannerData').innerHTML
+    // this.bbConsentBanner = typeofIsAndValueIsNot(bbConsentBanner, 'object', '') ? bbConsentBanner : null;
+    // this.cookieName = typeofIsAndValueIsNot(this.bbConsentBanner.cName, 'string', '') ? bbConsentBanner.cName : 'BbConsentPreference';
+    // bbConsentBannerCookieName = this.cookieName
+    // this.confirmDuration = typeofIsAndValueIsNot(this.bbConsentBanner.confirmDuration, 'number', 0) ? this.bbConsentBanner.confirmDuration : 20;
+    // this.categories = typeof bbConsentBanner.categories === 'object' && bbConsentBanner.categories.length !== 0 ? bbConsentBanner.categories : null;
+    // this.modules = typeof bbConsentBanner.modules === 'object' && bbConsentBanner.modules.length !== 0 ? bbConsentBanner.modules : null;
+    // this.isBottomLayout = !typeofIsAndValueIsNot(this.bbConsentBanner.layoutType, 'string', 'bb-cb-bottom');
+    // // Elements
+    // this.banner = null
+    // this.form = null
+    // this.acceptButton = null
+    // this.saveButton = null
+    // this.moreButton = null
+    // this.confirmButton = null
+    // this.rejectButton = null
 
     this.preferences = JSON.parse(cookieUtils.get(this.cookieName));
 
     this.init = () => {
+        console.log('ConsentBanner init')
+        console.log(JSON.parse(document.getElementById('bbBannerData').innerHTML))
         if (this.bbConsentBanner.isTextLink === false && node.classList.contains("bb-text-widget")) {
             return false;
         }

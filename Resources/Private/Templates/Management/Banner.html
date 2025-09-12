@@ -1,0 +1,100 @@
+<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
+      xmlns:core="http://typo3.org/ns/TYPO3/CMS/Core/ViewHelpers"
+      xmlns:be="http://typo3.org/ns/TYPO3/CMS/Backend/ViewHelpers"
+      data-namespace-typo3-fluid="true">
+
+<f:layout name="Module" />
+
+<f:section name="Content">
+    <f:flashMessages/>
+
+    <h1><f:translate key="LLL:EXT:consent_banner/Resources/Private/Language/locallang_mod.xlf:banner.headline"/></h1>
+    <f:debug inline="1">{_all}</f:debug>
+    <f:if condition="{data}">
+        <f:then>
+            <div class="layout-one-columns">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <span>Consent Banner</span>
+                    </div>
+                    <div class="table-fit">
+                        <table class="table">
+                            <thead>
+                            <tr>
+                                <th class="col-label col-responsive">
+                                    <span>Title</span>
+                                </th>
+                                <th class="col-content col-responsive nowrap">
+                                        <span>
+                                            {data.bannerTitle}
+                                        </span>
+                                </th>
+                                <th class="col-control col-responsive nowrap">
+                                    <div class="btn-group">
+                                        <be:link.editRecord uid="{data.uid}" table="tx_consentbanner_domain_model_banner" class="btn btn-default">
+                                            <core:icon identifier="actions-open" size="small"/>
+                                        </be:link.editRecord>
+                                    </div>
+                                </th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <th class="col-label col-responsive">
+                                    <span>Description</span>
+                                </th>
+                                <td class="col-content col-responsive nowrap">
+                                        <span>
+                                            {data.bannerDescription}
+                                        </span>
+                                </td>
+                                <td class="col-control nowrap">&nbsp;</td>
+                            </tr>
+
+                            <tr>
+                                <th class="col-label col-responsive">
+                                    <span>Layout Type</span>
+                                </th>
+                                <td class="col-content col-responsive nowrap">
+                                    <f:switch expression="{data.bannerLayout}">
+                                        <f:case value="bb-cb-overlay">
+                                            <span>
+                                                <f:translate key="LLL:EXT:consent_banner/Resources/Private/Language/locallang_mod.xlf:field.banner_layout.overlay" />
+                                            </span>
+                                        </f:case>
+                                        <f:case value="bb-cb-bottom">
+                                            <span>
+                                                <f:translate key="LLL:EXT:consent_banner/Resources/Private/Language/locallang_mod.xlf:field.banner_layout.fullWidthBottom" />
+                                            </span>
+                                        </f:case>
+                                    </f:switch>
+                                </td>
+                                <td class="col-control nowrap">&nbsp;</td>
+                            </tr>
+                            <tr>
+                                <th class="col-label col-responsive">
+                                    <span>Consent groups</span>
+                                </th>
+                                <td class="col-content col-responsive nowrap">
+                                    {data.essentialTitle}<f:if condition="{data.consentOtherGroups}">, </f:if>
+                                    <f:for each="{data.consentOtherGroups}" as="groupData" iteration="i">
+                                        {groupData.groupTitle}<f:if condition="!{i.isLast}">, </f:if>
+                                    </f:for>
+                                </td>
+                                <td class="col-control nowrap">&nbsp;</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </f:then>
+        <f:else>
+            <be:link.newRecord table="tx_consentbanner_domain_model_banner" pid="{currentRootPageId}" returnUrl="{returnUrl}" defaultValues="{defaultValues}" class="btn btn-default">
+                <core:icon identifier="actions-add" size="small"/>
+                <f:translate key="LLL:EXT:consent_banner/Resources/Private/Language/locallang_mod.xlf:action.banner.new.title" />
+            </be:link.newRecord>
+        </f:else>
+    </f:if>
+</f:section>
+</html>

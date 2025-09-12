@@ -5,7 +5,7 @@ use \TYPO3\CMS\Extbase\DomainObject\AbstractEntity;
 use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
 
 
-class Module extends AbstractEntity
+class Component extends AbstractEntity
 {
     /**
      * pid
@@ -18,13 +18,13 @@ class Module extends AbstractEntity
      *
      * @var string
      */
-    protected string $name = '';
+    protected string $componentTitle = '';
     /**
      * description
      *
      * @var string
      */
-    protected string $description = '';
+    protected string $componentDescription = '';
     /**
      * rejected_script
      *
@@ -48,13 +48,13 @@ class Module extends AbstractEntity
      *
      * @var string
      */
-    protected string $placeholderHeadline = '';
+    protected string $placeholderTitle = '';
     /**
      * target
      *
      * @var string
      */
-    protected string $placeholder = '';
+    protected string $placeholderDescription = '';
     /**
      * show uri
      *
@@ -92,24 +92,24 @@ class Module extends AbstractEntity
     }
 
     /**
-     * Returns the name
+     * Returns the componentTitle
      *
-     * @return string $name
+     * @return string $componentTitle
      */
-    public function getName(): string
+    public function getComponentTitle(): string
     {
-        return $this->name;
+        return $this->componentTitle;
     }
 
     /**
-     * Sets the name
+     * Sets the componentTitle
      *
-     * @param string $name
+     * @param string $componentTitle
      * @return void
      */
-    public function setName(string $name): void
+    public function setComponentTitle(string $componentTitle): void
     {
-        $this->name = $name;
+        $this->componentTitle = $componentTitle;
     }
 
     /**
@@ -155,24 +155,24 @@ class Module extends AbstractEntity
     }
 
     /**
-     * Returns the description
+     * Returns the componentDescription
      *
-     * @return string $description
+     * @return string $componentDescription
      */
-    public function getDescription(): string
+    public function getComponentDescription(): string
     {
-        return $this->description;
+        return $this->componentDescription;
     }
 
     /**
-     * Sets the description
+     * Sets the componentDescription
      *
-     * @param string $description
+     * @param string $componentDescription
      * @return void
      */
-    public function setDescription(string $description): void
+    public function setComponentDescription(string $componentDescription): void
     {
-        $this->description = $description;
+        $this->componentDescription = $componentDescription;
     }
 
     /**
@@ -196,44 +196,44 @@ class Module extends AbstractEntity
         $this->moduleTarget = $moduleTarget;
     }
     /**
-     * Returns the placeholder headline
+     * Returns the placeholder title
      *
-     * @return string $placeholderHeadline
+     * @return string $placeholderTitle
      */
-    public function getPlaceholderHeadline(): string
+    public function getPlaceholderTitle(): string
     {
-        return $this->placeholderHeadline;
+        return $this->placeholderTitle;
     }
 
     /**
-     * Sets the placeholder headline
+     * Sets the placeholder title
      *
-     * @param string $placeholderHeadline
+     * @param string $placeholderTitle
      * @return void
      */
-    public function setPlaceholderHeadline(string $placeholderHeadline): void
+    public function setPlaceholderTitle(string $placeholderTitle): void
     {
-        $this->placeholderHeadline = $placeholderHeadline;
+        $this->placeholderTitle = $placeholderTitle;
     }
     /**
      * Returns the placeholder
      *
-     * @return string $placeholder
+     * @return string $placeholderDescription
      */
-    public function getPlaceholder(): string
+    public function getPlaceholderDescription(): string
     {
-        return $this->placeholder;
+        return $this->placeholderDescription;
     }
 
     /**
      * Sets the placeholder
      *
-     * @param string $placeholder
+     * @param string $placeholderDescription
      * @return void
      */
-    public function setPlaceholder(string $placeholder): void
+    public function setPlaceholderDescription(string $placeholderDescription): void
     {
-        $this->placeholder = $placeholder;
+        $this->placeholderDescription = $placeholderDescription;
     }
 
     /**

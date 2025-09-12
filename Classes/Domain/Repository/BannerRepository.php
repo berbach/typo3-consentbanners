@@ -28,36 +28,25 @@ class BannerRepository extends Repository
         parent::__construct();
     }
     /**
-     * @param array $storageIds
-     * @param int|null $languageId
-     * @param bool $useIgnoreEnable
+     * @param int $rootPageId
+     * @param int $languageId
      * @return object|null
      */
-    public function findByStorageIds(array $storageIds, int $languageId = null, bool $useIgnoreEnable = false): ?object
+    public function findByRootPageId(int $rootPageId, int $languageId): ?object
     {
         $query = $this->createQuery();
         /* @var $querySettings Typo3QuerySettings */
         $querySettings = $query->getQuerySettings();
-
-        $querySettings->setStoragePageIds($storageIds);
-
-//        if($languageId > 0) {
-//            $querySettings->setLanguageUid((int)$languageId);
-//        }
-//
-//        if($useIgnoreEnable) {
-//            $querySettings->setIgnoreEnableFields(true);
-//        }
-
+        $querySettings->setStoragePageIds([$rootPageId]);
         $this->setDefaultQuerySettings($querySettings);
 
-//        $query->matching(
-//            $query->logicalNot(
-//                $query->equals('uid', (!$returnRawQueryResult ? $topNews[0]?->getUid() : $topNews[0]['uid']))
-//            )
-//        );
+        $query->setLimit(1);
+        $query->matching($query->equals($GLOBALS['TCA'][self::TABLE_NAME]['ctrl']['languageField'], $languageId));
 
-        return $query->execute();
+        if ($query->execute()->count()){
+            return $query->execute()->getFirst();
+        }
+        return null;
     }
 
     /**
@@ -66,9 +55,8 @@ class BannerRepository extends Repository
      * @param bool $useDeleteClause Use the deleteClause to check if a record is deleted (default TRUE)
      * @return array|null Returns the row if found, otherwise NULL
      * @throws Exception
-     * @throws DBALException
      */
-    public function getRecordSettingsInLanguage(int $pid, int $languageId, int $originalId = null, bool $useDeleteClause = true): ?array
+    public function getRecordBannerInLanguage(int $pid, int $languageId, ?int $originalId = null, bool $useDeleteClause = true): ?array
     {
         $isLocalized = false;
         if (isset($GLOBALS['TCA'][self::TABLE_NAME]['ctrl']) && is_array($GLOBALS['TCA'][self::TABLE_NAME]['ctrl'])) {
@@ -77,7 +65,6 @@ class BannerRepository extends Repository
 
             if ($pid && $isLocalized) {
                 $queryBuilder = $this->getQueryBuilderForTable();
-
                 $queryBuilder->getRestrictions()->removeAll();
 
                 // should the delete clause be used
@@ -86,11 +73,10 @@ class BannerRepository extends Repository
                 }
 
                 $queryBuilder
-                    ->select('uid', 'pid', 'title', 'sys_language_uid')
+                    ->select('uid', 'pid', 'banner_title', 'sys_language_uid')
                     ->from(self::TABLE_NAME)
                     ->where(
                         $queryBuilder->expr()->eq('pid', $queryBuilder->createNamedParameter($pid, Connection::PARAM_INT)),
-
                         $queryBuilder->expr()->eq($tcaCtrl['languageField'], $queryBuilder->createNamedParameter($languageId, Connection::PARAM_INT))
                     );
 

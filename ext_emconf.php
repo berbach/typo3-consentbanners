@@ -13,7 +13,7 @@
 $EM_CONF[$_EXTKEY] = [
     'title' => 'Consent Banner',
     'description' => 'Consent Banner Extension with Javascript.',
-    'category' => 'plugin',
+    'category' => 'fe',
     'author' => 'Andreas Schulze',
     'author_company' => 'berbach GmbH',
     'author_email' => 'schulze@berbach.de',
@@ -21,7 +21,12 @@ $EM_CONF[$_EXTKEY] = [
     'version' => '1.0.0',
     'constraints' => [
         'depends' => [
-            'typo3' => '13.3.0-13.99.99',
+            'php' => '8.4.0-8.5.99',
+            'typo3' => '13.4.1-13.99.99',
+            'backend' => '13.4.1-13.99.99',
+            'extbase' => '13.4.1-13.99.99',
+            'fluid' => '13.4.1-13.99.99',
+            'frontend' => '13.4.1-13.99.99',
         ],
         'conflicts' => []
     ]

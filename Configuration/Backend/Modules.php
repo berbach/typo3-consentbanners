@@ -10,7 +10,7 @@ return [
         'position' => ['after' => 'web_ts'],
         'access' => 'admin',
         'workspaces' => 'live',
-        'path' => '/module/site/consent_banner',
+        'path' => '/module/consent-banner',
         'labels' => 'LLL:EXT:consent_banner/Resources/Private/Language/locallang_mod.xlf:module.label',
         'extensionName' => 'ConsentBanner',
         'iconIdentifier' => 'module-cookie',

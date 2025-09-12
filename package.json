@@ -10,12 +10,12 @@
     "license": "(MIT)",
     "main": "Base.js",
     "scripts": {
-        "build": "webpack build --mode=production --config style.webpack.js && webpack build --mode=production --config script.webpack.js",
-        "build:dev": "webpack build --mode=development --config style.webpack.js && webpack build --mode=development --config script.webpack.js",
-        "script:dev": "webpack build --mode=development --config script.webpack.js",
-        "style:dev": "webpack build --mode=development --config style.webpack.js",
-        "script": "webpack --mode=production --config script.webpack.js",
-        "style": "webpack --mode=production --config style.webpack.js"
+        "build": "../../node_modules/.bin/webpack build --mode=production --config style.webpack.js && webpack build --mode=production --config script.webpack.js",
+        "build:dev": "../../node_modules/.bin/webpack build --mode=development --config style.webpack.js && webpack build --mode=development --config script.webpack.js",
+        "script:dev": "../../node_modules/.bin/webpack build --mode=development --config script.webpack.js",
+        "style:dev": "../../node_modules/.bin/webpack build --mode=development --config style.webpack.js",
+        "script": "../../node_modules/.bin/webpack --mode=production --config script.webpack.js",
+        "style": "../../node_modules/.bin/webpack --mode=production --config style.webpack.js"
     },
     "dependencies": {
         "bezier-easing": "^2.1.0",

@@ -34,7 +34,7 @@ let CbModulesManager = function () {
                                 BbCb[value].init(el);
                                 Debug.log("Module", value, "initialized");
                             })
-                            .catch(error => Debug.log("Module", value, "ERROR", error));
+                            // .catch(error => Debug.log("Module", value, "ERROR", error));
                     }
                 })
             } else {

@@ -6,6 +6,9 @@
 <f:layout name="Default"/>
 
 <f:section name="Main">
+    <!--googleoff: index-->
+    <div class="bb-consentbanner {data.consentBanner.layoutType}" data-module-cb="ConsentBanner" data-nosnippet tabindex="-1"></div>
+    <!--googleon: index-->
     <f:if condition="{data.consentBanner}">
         <f:if condition="{data.consentBanner.consentAccepted}">
             <f:then>
