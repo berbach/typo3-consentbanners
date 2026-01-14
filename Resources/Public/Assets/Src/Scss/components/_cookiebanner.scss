@@ -490,26 +490,41 @@ $max-width: $container-max-width !default;
         }
     }
 
-    &-button.#{variables.$prefix}widget {
-        position: fixed;
-        left: 12px;
-        bottom: 12px;
+    &-button{
 
-        width: 50px;
-        height: 50px;
+        &.#{variables.$prefix}icon-widget {
+            position: fixed;
+            left: 12px;
+            bottom: 12px;
 
-        border-radius: 50%;
+            width: 50px;
+            height: 50px;
 
-        background: url('../Image/checkbox.svg') no-repeat center, variables.$secondary;
-        background-size: 18px;
-        box-shadow: 0 1px 8px rgba(0, 0, 0, .1);
+            border-radius: 50%;
 
-        cursor: pointer;
+            background: url('../Image/checkbox.svg') no-repeat center, variables.$secondary;
+            background-size: 18px;
+            box-shadow: 0 1px 8px rgba(0, 0, 0, .1);
 
-        z-index: 50;
+            cursor: pointer;
 
-        &.hidden {
-            display: none;
+            z-index: 50;
+
+            &.hidden {
+                display: none;
+            }
+        }
+    }
+    &-link{
+        &.#{variables.$prefix}text-widget {
+            background-color: inherit;
+            font-size: inherit;
+            font-family: inherit;
+            font-weight: inherit;
+            line-height: inherit;
+            cursor: pointer;
+            color: inherit;
+            border: 0;
         }
     }
 

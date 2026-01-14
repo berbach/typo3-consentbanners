@@ -3,29 +3,68 @@
 	<file source-language="en" target-language="de" datatype="plaintext" original="messages" date="2019-08-12T13:45:24Z" product-name="consentbanner">
 		<header/>
 		<body>
-			<trans-unit id="cookiebanner.saveAndClose">
+			<trans-unit id="save_and_close_text">
 				<target>Speichern &amp; schließen</target>
 			</trans-unit>
-			<trans-unit id="banner.confirmSelection">
+			<trans-unit id="confirm_selection_text">
 				<target>Auswahl bestätigen</target>
 			</trans-unit>
-			<trans-unit id="cookiebanner.acceptAll">
+			<trans-unit id="accept_all_text">
 				<target>Alle akzeptieren</target>
 			</trans-unit>
-			<trans-unit id="cookiebanner.reject">
-				<target>Ablehnen</target>
+			<trans-unit id="accept_essential_text">
+				<target>Nur Essenzielle akzeptieren</target>
 			</trans-unit>
-			<trans-unit id="cookiebanner.advancedSettings">
+			<trans-unit id="advanced_settings_text">
 				<target>Erweiterte Einstellungen</target>
 			</trans-unit>
-            <trans-unit id="cookiebanner.closeBtn">
+            <trans-unit id="close_text">
                 <target>Einstellung schließen</target>
             </trans-unit>
+
+            <trans-unit id="cookie_infos_show_text">
+                <target>Cookie Information anzeigen</target>
+            </trans-unit>
+            <trans-unit id="cookie_infos_close_text">
+                <target>Cookie Information schließen</target>
+            </trans-unit>
+
+            <trans-unit id="cookie_name_text">
+                <target>Cookie Name</target>
+            </trans-unit>
+            <trans-unit id="cookie_lifetime_text">
+                <target>Cookie Laufzeit</target>
+            </trans-unit>
+            <trans-unit id="cookie_provider_text">
+                <target>Cookie Anbieter</target>
+            </trans-unit>
+            <trans-unit id="cookie_purpose_text">
+                <target>Cookie Zweck</target>
+            </trans-unit>
+            <trans-unit id="cookie_description_text">
+                <target>Cookie Beschreibung</target>
+            </trans-unit>
+
+            <trans-unit id="button_widget_text">
+                <target>Cookie Einstellung ändern</target>
+            </trans-unit>
+            <trans-unit id="text_link_text">
+                <target>Cookie</target>
+            </trans-unit>
+
+            <trans-unit id="essential_title_text">
+                <target>Essenzielle</target>
+            </trans-unit>
+            
             <trans-unit id="placeholder.removed.html">
                 <target>Drittanbieter HTML wurde entfernt.</target>
             </trans-unit>
             <trans-unit id="placeholderHeadline.removed.html">
                 <target>Drittanbieter HTML</target>
+            </trans-unit>
+
+            <trans-unit id="label.cookie_setting">
+                <target>Cookie Einstellung</target>
             </trans-unit>
 		</body>
 	</file>

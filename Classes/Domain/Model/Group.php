@@ -2,11 +2,24 @@
 
 namespace Bb\ConsentBanner\Domain\Model;
 
+use TYPO3\CMS\Extbase\Annotation\ORM\Lazy;
 use TYPO3\CMS\Extbase\DomainObject\AbstractEntity;
 use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
 
 class Group extends AbstractEntity
 {
+    /**
+     * group id
+     *
+     * @var string
+     */
+    protected string $groupId = '';
+    /**
+     * group id
+     *
+     * @var string
+     */
+    protected string $groupHash = '';
     /**
      * name
      *
@@ -30,6 +43,7 @@ class Group extends AbstractEntity
      *
      * @var ObjectStorage<Component>
      */
+    #[Lazy]
     protected ObjectStorage $groupComponents;
     /**
      * hidden
@@ -54,7 +68,7 @@ class Group extends AbstractEntity
      */
     public function initializeObject(): void
     {
-        $this->GroupComponents ??= new ObjectStorage();
+        $this->groupComponents = new ObjectStorage();
     }
     /**
      * Returns the name
@@ -191,5 +205,25 @@ class Group extends AbstractEntity
     public function setGroupComponents(ObjectStorage $groupComponents): void
     {
         $this->groupComponents = $groupComponents;
+    }
+
+    public function getGroupId(): string
+    {
+        return $this->groupId;
+    }
+
+    public function setGroupId(string $groupId): void
+    {
+        $this->groupId = $groupId;
+    }
+
+    public function getGroupHash(): string
+    {
+        return $this->groupHash;
+    }
+
+    public function setGroupHash(string $groupHash): void
+    {
+        $this->groupHash = $groupHash;
     }
 }

@@ -19,6 +19,14 @@ class Banner extends AbstractEntity
     /**
      * @var string
      */
+    protected string $bannerId = '';
+    /**
+     * @var string
+     */
+    protected string $bannerHash = '';
+    /**
+     * @var string
+     */
     protected string $bannerTitle = '';
 
     /**
@@ -29,7 +37,7 @@ class Banner extends AbstractEntity
     /**
      * @var string
      */
-    protected string $bannerLayout = '';
+    protected string $bannerLayout = 'cb-bottom';
 
     /**
      * @var string
@@ -102,15 +110,19 @@ class Banner extends AbstractEntity
     protected string $cookieDescriptionText = '';
 
     /**
-     * @var string
+     * @var string|null
      */
-    protected string $privacyLink = '';
+    protected ?string $bannerNavigation = null;
+
 
     /**
      * @var string
      */
-    protected string $imprintLink = '';
-
+    protected string $essentialGroupId = '';
+    /**
+     * @var string
+     */
+    protected string $essentialGroupHash = '';
     /**
      * @var string
      */
@@ -138,20 +150,46 @@ class Banner extends AbstractEntity
     protected ObjectStorage $consentOtherGroups;
 
     /**
+     * @var int
+     */
+    protected int $privacySettingsVariant = 10;
+
+    /**
+     * @var string
+     */
+    protected string $textLinkPosition = 'last';
+
+    /**
+     * @var string
+     */
+    protected string $textLinkText = '';
+    /**
+     * @var string
+     */
+    protected string $buttonWidgetPosition = 'left';
+    /**
+     * @var string
+     */
+    protected string $buttonWidgetText = '';
+
+    /**
+     * @var string
+     */
+    protected string $targetFooterNavigation = '';
+
+    /**
+     * @var int
+     */
+    protected int $lifetimeBanner = 14;
+
+    /**
+     * @var int
+     */
+    protected int $lifetimeUserConsent = 1095;
+    /**
      * @var bool
      */
-    protected bool $isTextLink = false;
-
-    /**
-     * @var int
-     */
-    protected int $lifetimeBanner = 20;
-
-    /**
-     * @var int
-     */
-    protected int $lifetimeUserConsent = 365;
-
+    protected bool $hidden;
     /**
      * __construct
      */
@@ -165,8 +203,27 @@ class Banner extends AbstractEntity
      */
     public function initializeObject(): void
     {
-        $this->essentialComponents ??= new ObjectStorage();
+        $this->essentialComponents = new ObjectStorage();
         $this->consentOtherGroups = new ObjectStorage();
+    }
+    /**
+     * Returns the $bannerTitle
+     *
+     * @return bool $bannerTitle
+     */
+    public function getBannerActive(): bool
+    {
+        return !$this->hidden;
+    }
+    /**
+     * Sets the $bannerTitle
+     *
+     * @param bool $hidden
+     * @return void
+     */
+    public function setBannerActive(bool $hidden): void
+    {
+        $this->hidden = $hidden;
     }
     /**
      * Returns the $bannerTitle
@@ -492,44 +549,6 @@ class Banner extends AbstractEntity
         $this->cookieDescriptionText = $cookieDescriptionText;
     }
     /**
-     * Returns the $privacyLink
-     *
-     * @return string $privacyLink
-     */
-    public function getPrivacyLink(): string
-    {
-        return $this->privacyLink;
-    }
-    /**
-     * Sets the privacy Link
-     *
-     * @param string $privacyLink
-     * @return void
-     */
-    public function setPrivacyLink(string $privacyLink): void
-    {
-        $this->privacyLink = $privacyLink;
-    }
-    /**
-     * Returns the $imprintLink
-     *
-     * @return string $imprintLink
-     */
-    public function getImprintLink(): string
-    {
-        return $this->imprintLink;
-    }
-    /**
-     * Sets the imprint Link
-     *
-     * @param string $imprintLink
-     * @return void
-     */
-    public function setImprintLink(string $imprintLink): void
-    {
-        $this->imprintLink = $imprintLink;
-    }
-    /**
      * Returns the $essentialTitle
      *
      * @return string $essentialTitle
@@ -641,16 +660,6 @@ class Banner extends AbstractEntity
         $this->consentOtherGroups = $consentOtherGroups;
     }
 
-    public function getIsTextLink(): bool
-    {
-        return $this->isTextLink;
-    }
-
-    public function setIsTextLink(bool $isTextLink): void
-    {
-        $this->isTextLink = $isTextLink;
-    }
-
     public function getLifetimeBanner(): int
     {
         return $this->lifetimeBanner;
@@ -669,5 +678,115 @@ class Banner extends AbstractEntity
     public function setLifetimeUserConsent(int $lifetimeUserConsent): void
     {
         $this->lifetimeUserConsent = $lifetimeUserConsent;
+    }
+
+    public function getBannerNavigation(): ?string
+    {
+        return $this->bannerNavigation;
+    }
+
+    public function setBannerNavigation(?string $bannerNavigation): void
+    {
+        $this->bannerNavigation = $bannerNavigation;
+    }
+
+    public function getPrivacySettingsVariant(): int
+    {
+        return $this->privacySettingsVariant;
+    }
+
+    public function setPrivacySettingsVariant(int $privacySettingsVariant): void
+    {
+        $this->privacySettingsVariant = $privacySettingsVariant;
+    }
+
+    public function getTextLinkPosition(): string
+    {
+        return $this->textLinkPosition;
+    }
+
+    public function setTextLinkPosition(string $textLinkPosition): void
+    {
+        $this->textLinkPosition = $textLinkPosition;
+    }
+
+    public function getButtonWidgetPosition(): string
+    {
+        return $this->buttonWidgetPosition;
+    }
+
+    public function setButtonWidgetPosition(string $buttonWidgetPosition): void
+    {
+        $this->buttonWidgetPosition = $buttonWidgetPosition;
+    }
+
+    public function getTargetFooterNavigation(): string
+    {
+        return $this->targetFooterNavigation;
+    }
+
+    public function setTargetFooterNavigation(string $targetFooterNavigation): void
+    {
+        $this->targetFooterNavigation = $targetFooterNavigation;
+    }
+
+    public function getTextLinkText(): string
+    {
+        return $this->textLinkText;
+    }
+
+    public function setTextLinkText(string $textLinkText): void
+    {
+        $this->textLinkText = $textLinkText;
+    }
+
+    public function getButtonWidgetText(): string
+    {
+        return $this->buttonWidgetText;
+    }
+
+    public function setButtonWidgetText(string $buttonWidgetText): void
+    {
+        $this->buttonWidgetText = $buttonWidgetText;
+    }
+
+    public function getEssentialGroupId(): string
+    {
+        return $this->essentialGroupId;
+    }
+
+    public function setEssentialGroupId(string $essentialGroupId): void
+    {
+        $this->essentialGroupId = $essentialGroupId;
+    }
+
+    public function getEssentialGroupHash(): string
+    {
+        return $this->essentialGroupHash;
+    }
+
+    public function setEssentialGroupHash(string $essentialGroupHash): void
+    {
+        $this->essentialGroupHash = $essentialGroupHash;
+    }
+
+    public function getBannerId(): string
+    {
+        return $this->bannerId;
+    }
+
+    public function setBannerId(string $bannerId): void
+    {
+        $this->bannerId = $bannerId;
+    }
+
+    public function getBannerHash(): string
+    {
+        return $this->bannerHash;
+    }
+
+    public function setBannerHash(string $bannerHash): void
+    {
+        $this->bannerHash = $bannerHash;
     }
 }

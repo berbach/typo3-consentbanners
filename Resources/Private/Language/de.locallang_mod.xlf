@@ -12,6 +12,20 @@
             <trans-unit id="mlang_tabs_tab" resname="mlang_tabs_tab">
                 <target>Zustimmungsbanner</target>
             </trans-unit>
+
+
+            <trans-unit id="field.privacy_settings_variant">
+                <target>Schaltflächen Variante „Datenschutzeinstellungen“</target>
+            </trans-unit>
+            <trans-unit id="field.privacy_settings_variant.description">
+                <target>Varianten der Schaltfläche, um die Einwilligung der Datenschutzeinstellungen zu ändern.</target>
+            </trans-unit>
+            <trans-unit id="field.privacy_settings_variant.text_link">
+                <source>Textlink in der Fußzeilennavigation</source>
+            </trans-unit>
+            <trans-unit id="field.privacy_settings_variant.button_widget">
+                <target>Schaltflächen-Widget unten im Ansichtsfenster</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

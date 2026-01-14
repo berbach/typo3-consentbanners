@@ -1,32 +1,22 @@
-const path = require('path');
-const fileHelper = require('./fileHelper');
-const webpack = require('webpack');
-const {CleanWebpackPlugin} = require('clean-webpack-plugin');
+const path = require('node:path');
+const {CleanWebpackPlugin}  = require('clean-webpack-plugin');
 const TerserPlugin = require("terser-webpack-plugin");
+const webpack = require('webpack');
+const file = require('./fileHelper');
 
 const isDevelopment = process.env.npm_lifecycle_event.includes('dev');
+const ROOT = path.resolve(__dirname + '/Resources/Public/');
+const SRC = path.join(ROOT, 'Assets');
+const JavaScriptDir = path.join(SRC, 'JavaScript');
+const ModulesDir = path.join(JavaScriptDir, 'Module');
 
-const config = {
-    target: ['web', 'es5'],
-    entry: fileHelper.getEntries(
-        [
-            './Resources/Public/Assets/Src/JavaScript/*.js',
-            './Resources/Public/Assets/Src/JavaScript/Module/*.js',
-        ]),
-    /**
-     * The "output" property is what our build files will be named and where the
-     * build file will be placed
-     */
+const OutputDir = path.resolve(__dirname + '/Resources/Public/', 'Dist');
+
+const umdConfig = {
+    target: ['web'],
+    entry: file.getJsModuleEntries(ModulesDir),
     output: {
-        /**
-         * Again, the "[name]" place holder will be replaced with each key in our
-         * "entry" object and will name the build file "main.js"
-         */
-        //filename: '[name].js',
         filename: (chunkData) => {
-            if (['BaseCookieBanner'].includes(chunkData.chunk.name))
-                return 'JavaScript/[name].js'
-
             return 'JavaScript/Module/[name].js'
         },
         chunkFilename: (chunkData) => {
@@ -40,11 +30,54 @@ const config = {
             return 'JavaScript/Chunks/' + name
         },
         library: {
-            name: ["BbCb", "[name]"],
+            name: ["CbModule", "[name]"],
             type: 'umd'
         },
-        path: path.resolve(__dirname + '/Resources/Public/', 'Dist'),
+        iife: true,
+        path: OutputDir,
     },
+    plugins: [
+        new CleanWebpackPlugin({
+            protectWebpackAssets: false,
+            cleanOnceBeforeBuildPatterns: ['JavaScript/Module/*.js', 'JavaScript/Module/*.js.map']
+        }),
+        new webpack.ProgressPlugin()
+    ],
+};
+
+const esmConfig = {
+    target: ['web'],
+    entry: file.getJsEntries(JavaScriptDir),
+    output: {
+        filename: 'JavaScript/[name].js',
+        chunkFilename: (chunkData) => {
+            if (typeof chunkData.chunk.id !== 'string') {
+                console.warn('Set optimization.chunkIds to "named" for readable chunk names.')
+                return 'JavaScript/Chunks/[id].js'
+            }
+            const namedId = chunkData.chunk.id.replace(/_js.*?$/, '.js').split('_')
+            let name = namedId.pop()
+            name = namedId.pop() + '.' + name
+            return 'JavaScript/Chunks/' + name
+        },
+        // library: {
+        //     //name: ["CbModule", "[name]"],
+        //     type: 'var'
+        // },
+        iife: true,
+        pathinfo: false,
+        path: OutputDir,
+    },
+    plugins: [
+        new CleanWebpackPlugin({
+            protectWebpackAssets: false,
+            cleanOnceBeforeBuildPatterns: ['JavaScript/*.js', 'JavaScript/*.js.map']
+        }),
+        new webpack.ProgressPlugin()
+    ],
+};
+
+const globalScriptConfig = {
     module: {
         rules: [
             {
@@ -107,14 +140,10 @@ const config = {
             new TerserPlugin({minify: TerserPlugin.uglifyJsMinify})
         ],
     },
-    plugins: [
-        new webpack.ProgressPlugin(),
-        new CleanWebpackPlugin({
-            protectWebpackAssets: false,
-            cleanOnceBeforeBuildPatterns: ['JavaScript/**/*.js', 'JavaScript/**/*.js.map']
-        })
-    ],
-};
+
+}
+
+const config = {};
 
 module.exports = (env, argv) => {
     if (argv.mode === 'development') {
@@ -124,6 +153,7 @@ module.exports = (env, argv) => {
 
     if (argv.mode === 'production') {
         config.mode = 'production';
+        config.devtool = false
     }
-    return config;
+    return [{...esmConfig, ...globalScriptConfig, ...config}, {...umdConfig, ...globalScriptConfig, ...config}];
 };

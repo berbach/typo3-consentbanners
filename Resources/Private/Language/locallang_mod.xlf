@@ -61,12 +61,14 @@
             <trans-unit id="tab.banner_setting">
                 <source>Banner setting</source>
             </trans-unit>
-
+            <trans-unit id="tab.placeholder">
+                <source>Placeholder</source>
+            </trans-unit>
             <trans-unit id="tab.javascript">
                 <source>JavaScripts</source>
             </trans-unit>
-            <trans-unit id="tab.modules">
-                <source>Modules</source>
+            <trans-unit id="tab.components">
+                <source>Components</source>
             </trans-unit>
             <!--Paletten-->
             <trans-unit id="palette.buttonsLabelText">
@@ -79,7 +81,19 @@
                 <source>Cookie more information labels</source>
             </trans-unit>
             <trans-unit id="palette.cookieLifeTime">
-                <source>Cookie lifetime</source>
+                <source>Banner and user consent lifetime</source>
+            </trans-unit>
+            <trans-unit id="palette.bannerLayout">
+                <source>Banner Display</source>
+            </trans-unit>
+            <trans-unit id="palette.bannerPrivacySettingsVariant">
+                <source>Banner opener settings</source>
+            </trans-unit>
+            <trans-unit id="palette.bannerTextLinkVariant">
+                <source>Text-link variant settings</source>
+            </trans-unit>
+            <trans-unit id="palette.bannerButtonWidgetVariant">
+                <source>Button-widget variant settings</source>
             </trans-unit>
             <trans-unit id="palette.privacyPage">
                 <source>Privacy Data</source>
@@ -100,6 +114,7 @@
             <trans-unit id="field.banner_layout.fullWidthBottom">
                 <source>Full-width banner, positioned at the bottom</source>
             </trans-unit>
+
             <trans-unit id="field.accept_all_text">
                 <source>Accept all</source>
             </trans-unit>
@@ -159,43 +174,113 @@
                 <source>Add consent group</source>
             </trans-unit>
 
-            <trans-unit id="field.navigation_links">
-                <source>Privacy and imprint pages</source>
+            <trans-unit id="field.banner_navigation">
+                <source>Links at the bottom of the banner window (Add Imprint and Data Police)</source>
             </trans-unit>
 
             <trans-unit id="field.lifetime_banner">
                 <source>Lifetime banner</source>
             </trans-unit>
-            <trans-unit id="field.lifetime_banner.l10days">
-                <source>10 Days</source>
+            <trans-unit id="field.lifetime_banner.description">
+                <source>The length of time the banner is displayed again</source>
             </trans-unit>
-            <trans-unit id="field.lifetime_banner.l20days">
-                <source>20 Days</source>
+            <trans-unit id="field.lifetime_banner.l14days">
+                <source>14 Days</source>
             </trans-unit>
-            <trans-unit id="field.lifetime_banner.l30days">
-                <source>30 Days</source>
+            <trans-unit id="field.lifetime_banner.l21days">
+                <source>21 Days</source>
+            </trans-unit>
+            <trans-unit id="field.lifetime_banner.l28days">
+                <source>28 Days</source>
             </trans-unit>
 
             <trans-unit id="field.lifetime_user_consent">
                 <source>Lifetime user consent</source>
             </trans-unit>
-            <trans-unit id="field.lifetime_user_consent.l10days">
-                <source>10 Days</source>
+            <trans-unit id="field.lifetime_user_consent.description">
+                <source>Duration of the user's saved selection</source>
             </trans-unit>
-            <trans-unit id="field.lifetime_user_consent.l20days">
-                <source>20 Days</source>
+            <trans-unit id="field.lifetime_user_consent.l1year">
+                <source>1 Year</source>
             </trans-unit>
-            <trans-unit id="field.lifetime_user_consent.l30days">
-                <source>30 Days</source>
+            <trans-unit id="field.lifetime_user_consent.l2years">
+                <source>2 Years</source>
+            </trans-unit>
+            <trans-unit id="field.lifetime_user_consent.l3years">
+                <source>3 Years</source>
             </trans-unit>
 
-            <trans-unit id="field.is_text_link">
+            <trans-unit id="field.target_footer_navigation">
                 <source>Is cookie setting text link</source>
             </trans-unit>
-            <trans-unit id="field.is_text_link.description">
+            <trans-unit id="field.target_footer_navigation.description">
                 <source>If the text link is active, a link to access the banner must be included in the footer. If the text link is not active, an icon will appear in the bottom left corner.</source>
             </trans-unit>
 
+            <trans-unit id="field.privacy_settings_variant">
+                <source>Button variant “Privacy settings”</source>
+            </trans-unit>
+            <trans-unit id="field.privacy_settings_variant.description">
+                <source>Variants of the button to change the consent to the privacy settings.</source>
+            </trans-unit>
+            <trans-unit id="field.privacy_settings_variant.text_link">
+                <source>Text link in the footer navigation</source>
+            </trans-unit>
+            <trans-unit id="field.privacy_settings_variant.button_widget">
+                <source><strong>Button widget</strong> in the at the bottom of the viewport</source>
+            </trans-unit>
+
+            <trans-unit id="field.button_widget_position">
+                <source>Position the button widget in the viewport</source>
+            </trans-unit>
+            <trans-unit id="field.button_widget_position.left">
+                <source>Left bottom</source>
+            </trans-unit>
+            <trans-unit id="field.button_widget_position.right">
+                <source>Right bottom</source>
+            </trans-unit>
+            <trans-unit id="field.button_widget_text">
+                <source>Button widget text</source>
+            </trans-unit>
+            <trans-unit id="field.button_widget_text.description">
+                <source>If the field is left empty, the default text is "Cookie settings change".</source>
+            </trans-unit>
+
+            <trans-unit id="field.text_link_position">
+                <source>Position the text link in the footer navigation</source>
+            </trans-unit>
+            <trans-unit id="field.text_link_position.description">
+                <source>Select whether to place the text link at the beginning or end of the menu</source>
+            </trans-unit>
+            <trans-unit id="field.text_link_position.first">
+                <source>First element</source>
+            </trans-unit>
+            <trans-unit id="field.text_link_position.last">
+                <source>Last element</source>
+            </trans-unit>
+            <trans-unit id="field.text_link_text">
+                <source>Link text for the link in the footer navigation</source>
+            </trans-unit>
+            <trans-unit id="field.text_link_text.description">
+                <source>If the field is left empty, the default text is "Cookie".</source>
+            </trans-unit>
+
+            <trans-unit id="field.target_footer_navigation">
+                <source>Class or Id name from the footer navigation</source>
+            </trans-unit>
+            <trans-unit id="field.target_footer_navigation.description">
+                <source>Example classname .class_example or id #id_example</source>
+            </trans-unit>
+
+            <trans-unit id="field.banner_active">
+                <source>Banner activate</source>
+            </trans-unit>
+            <trans-unit id="field.banner_active.on">
+                <source>Activate</source>
+            </trans-unit>
+            <trans-unit id="field.banner_active.off">
+                <source>Disable</source>
+            </trans-unit>
 
             <trans-unit id="field.unique_name">
                 <source>Unique name</source>
@@ -212,11 +297,21 @@
                 <source>Category</source>
             </trans-unit>
 
-            <trans-unit id="field.name">
-                <source>Name</source>
+            <trans-unit id="field.group_title">
+                <source>Group title</source>
             </trans-unit>
-            <trans-unit id="field.target">
-                <source>Target</source>
+            <trans-unit id="field.group_description">
+                <source>Group description</source>
+            </trans-unit>
+
+            <trans-unit id="field.component_title">
+                <source>Component title</source>
+            </trans-unit>
+            <trans-unit id="field.component_description">
+                <source>Component description</source>
+            </trans-unit>
+            <trans-unit id="field.component_ce_target">
+                <source>Target Content Element</source>
             </trans-unit>
 
             <trans-unit id="field.placeholder_title">
@@ -232,10 +327,12 @@
             <trans-unit id="field.rejected_script">
                 <source>Rejected Script</source>
             </trans-unit>
-            <trans-unit id="field.modules">
-                <source>Modules</source>
+            <trans-unit id="field.group_components">
+                <source>Consent components</source>
             </trans-unit>
-
+            <trans-unit id="field.group_components.add">
+                <source>Add Consent component</source>
+            </trans-unit>
 
         </body>
     </file>

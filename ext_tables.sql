@@ -10,44 +10,53 @@ CREATE TABLE tt_content
 #
 CREATE TABLE tx_consentbanner_domain_model_banner
 (
-    banner_title                    varchar(255)         DEFAULT ''   NOT NULL,
+    banner_id                       varchar(30)       DEFAULT ''          NOT NULL,
+    banner_hash                     varchar(30)       DEFAULT ''          NOT NULL,
+
+    banner_title                    varchar(255)      DEFAULT ''          NOT NULL,
     banner_description              text,
-    banner_layout                   varchar(20)          DEFAULT ''   NOT NULL,
+    banner_layout                   varchar(20)       DEFAULT 'cb-bottom' NOT NULL,
+    banner_navigation               longtext          DEFAULT NULL,
 
-    user_identification_text        varchar(30)          DEFAULT ''   NOT NULL,
-    provider_description_text       varchar(30)          DEFAULT ''   NOT NULL,
+    user_identification_text        varchar(30)       DEFAULT ''          NOT NULL,
+    provider_description_text       varchar(30)       DEFAULT ''          NOT NULL,
 
-    accept_all_text                 varchar(30)          DEFAULT ''   NOT NULL,
-    confirm_selection_text          varchar(30)          DEFAULT ''   NOT NULL,
-    save_and_close_text             varchar(30)          DEFAULT ''   NOT NULL,
-    advanced_settings_text          varchar(30)          DEFAULT ''   NOT NULL,
-    accept_essential_text           varchar(30)          DEFAULT ''   NOT NULL,
+    accept_all_text                 varchar(30)       DEFAULT ''          NOT NULL,
+    confirm_selection_text          varchar(30)       DEFAULT ''          NOT NULL,
+    save_and_close_text             varchar(30)       DEFAULT ''          NOT NULL,
+    advanced_settings_text          varchar(30)       DEFAULT ''          NOT NULL,
+    accept_essential_text           varchar(30)       DEFAULT ''          NOT NULL,
 
-    cookie_infos_show_text          varchar(30)          DEFAULT ''   NOT NULL,
-    cookie_infos_close_text         varchar(30)          DEFAULT ''   NOT NULL,
+    cookie_infos_show_text          varchar(30)       DEFAULT ''          NOT NULL,
+    cookie_infos_close_text         varchar(30)       DEFAULT ''          NOT NULL,
 
-    cookie_name_text                varchar(30)          DEFAULT ''   NOT NULL,
-    cookie_lifetime_text            varchar(30)          DEFAULT ''   NOT NULL,
-    cookie_provider_text            varchar(30)          DEFAULT ''   NOT NULL,
-    cookie_purpose_text             varchar(30)          DEFAULT ''   NOT NULL,
-    cookie_description_text         varchar(30)          DEFAULT ''   NOT NULL,
+    cookie_name_text                varchar(30)       DEFAULT ''          NOT NULL,
+    cookie_lifetime_text            varchar(30)       DEFAULT ''          NOT NULL,
+    cookie_provider_text            varchar(30)       DEFAULT ''          NOT NULL,
+    cookie_purpose_text             varchar(30)       DEFAULT ''          NOT NULL,
+    cookie_description_text         varchar(30)       DEFAULT ''          NOT NULL,
 
-    privacy_link                    text,
-    imprint_link                    text,
+    essential_group_id              varchar(30)       DEFAULT ''          NOT NULL,
+    essential_group_hash            varchar(30)       DEFAULT ''          NOT NULL,
 
-    essential_title                 varchar(150)         DEFAULT ''   NOT NULL,
+    essential_title                 varchar(150)      DEFAULT ''          NOT NULL,
     essential_description           text,
-    essential_components            int(11) unsigned     DEFAULT '0'  NOT NULL,
+    essential_components            int(11) unsigned  DEFAULT '0'         NOT NULL,
 
-    consent_other_groups            int(11) unsigned     DEFAULT '0'  NOT NULL,
+    consent_other_groups            int(11) unsigned  DEFAULT '0'         NOT NULL,
 
-    is_text_link                    smallint unsigned    DEFAULT '0'  NOT NULL,
+    privacy_settings_variant        int(11) unsigned  DEFAULT '10'        NOT NULL,
+    button_widget_position          varchar(30)       DEFAULT 'left'      NOT NULL,
+    button_widget_text              varchar(30)       DEFAULT ''          NOT NULL,
+    text_link_position              varchar(30)       DEFAULT 'last'      NOT NULL,
+    text_link_text                  varchar(30)       DEFAULT ''          NOT NULL,
+    target_footer_navigation        varchar(150)      DEFAULT ''          NOT NULL,
 
-    lifetime_banner                 int(11) unsigned     DEFAULT '20' NOT NULL,
-    lifetime_user_consent           int(11) unsigned     DEFAULT '365' NOT NULL,
+    lifetime_banner                 int(11) unsigned  DEFAULT '14'        NOT NULL,
+    lifetime_user_consent           int(11) unsigned  DEFAULT '1095'      NOT NULL,
 
-    deleted                         smallint unsigned    DEFAULT '0'  NOT NULL,
-    hidden                          smallint unsigned    DEFAULT '0'  NOT NULL,
+    deleted                         smallint unsigned DEFAULT '0'         NOT NULL,
+    hidden                          smallint unsigned DEFAULT '0'         NOT NULL,
 
 );
 
@@ -56,16 +65,18 @@ CREATE TABLE tx_consentbanner_domain_model_banner
 #
 CREATE TABLE tx_consentbanner_domain_model_consent_groups
 (
+    group_id              varchar(30)          DEFAULT ''  NOT NULL,
+    group_hash            varchar(30)          DEFAULT ''  NOT NULL,
 
-    group_title                 varchar(255)         DEFAULT ''  NOT NULL,
-    group_description           text,
-    group_components            int(11) unsigned     DEFAULT '0' NOT NULL,
+    group_title           varchar(255)         DEFAULT ''  NOT NULL,
+    group_description     text,
+    group_components      int(11) unsigned     DEFAULT '0' NOT NULL,
 
-    sorting_foreign             int(11)              DEFAULT '0',
-    banner_id                   int(11) unsigned     DEFAULT NULL,
+    sorting_foreign       int(11)              DEFAULT '0',
+    banner_id             int(11) unsigned     DEFAULT NULL,
 
-    deleted                     smallint unsigned    DEFAULT '0' NOT NULL,
-    hidden                      smallint unsigned    DEFAULT '0' NOT NULL,
+    deleted               smallint unsigned    DEFAULT '0' NOT NULL,
+    hidden                smallint unsigned    DEFAULT '0' NOT NULL,
 
 );
 #
@@ -73,11 +84,13 @@ CREATE TABLE tx_consentbanner_domain_model_consent_groups
 #
 CREATE TABLE tx_consentbanner_domain_model_consent_components
 (
+    component_id                varchar(30)          DEFAULT ''  NOT NULL,
+    component_hash              varchar(30)          DEFAULT ''  NOT NULL,
 
     component_title             varchar(255)         DEFAULT ''  NOT NULL,
     component_description       text,
 
-    module_target               varchar(255)         DEFAULT ''  NOT NULL,
+    component_ce_target         varchar(255)         DEFAULT ''  NOT NULL,
 
     placeholder_title           varchar(255),
     placeholder_description     text,
@@ -87,16 +100,16 @@ CREATE TABLE tx_consentbanner_domain_model_consent_components
 
     sorting_foreign             int(11)              DEFAULT '0',
     group_id                    int(11)     unsigned DEFAULT NULL,
-
+    group_parent                varchar(30)          DEFAULT ''  NOT NULL,
     hidden                      smallint unsigned DEFAULT '0' NOT NULL,
     deleted                     smallint unsigned DEFAULT '0' NOT NULL
 );
 #
-# Table structure for table 'tx_consentbanner_domain_model_consent_registrations'
+# Table structure for table 'tx_consentbanner_domain_model_consent_log'
 # -- Define table and fields since it has no TCA
-CREATE TABLE tx_consentbanner_domain_model_consent_registrations
+CREATE TABLE tx_consentbanner_domain_model_consent_log
 (
-    identification_key          varchar(40) DEFAULT '' NOT NULL,
+    identification_key          varchar(64) DEFAULT '' NOT NULL,
     pid                         int(11) DEFAULT '0' NOT NULL,
     -- Weitere Felder hier
 

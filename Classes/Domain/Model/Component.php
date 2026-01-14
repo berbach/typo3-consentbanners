@@ -13,6 +13,19 @@ class Component extends AbstractEntity
      * @var int | null
      */
     protected ?int $pid = null;
+
+    /**
+     * name
+     *
+     * @var string
+     */
+    protected string $componentId = '';
+    /**
+     * name
+     *
+     * @var string
+     */
+    protected string $componentHash = '';
     /**
      * name
      *
@@ -295,5 +308,25 @@ class Component extends AbstractEntity
     public function setShowUri(string $showUri): void
     {
         $this->showUri = $showUri;
+    }
+
+    public function getComponentId(): string
+    {
+        return $this->componentId;
+    }
+
+    public function setComponentId(string $componentId): void
+    {
+        $this->componentId = $componentId;
+    }
+
+    public function getComponentHash(): string
+    {
+        return $this->componentHash;
+    }
+
+    public function setComponentHash(string $componentHash): void
+    {
+        $this->componentHash = $componentHash;
     }
 }

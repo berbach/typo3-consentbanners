@@ -56,12 +56,12 @@ page {
     1633505733 < lib.consentbanners
 
     includeCSS {
-        consentbanner = EXT:consent_banner/Resources/Public/Dist/Css/CookieBanner.css
+        consentbanner = EXT:consent_banner/Resources/Public/Dist/Css/ConsentBanner.css
         consentbanner.forceOnTop = 1
     }
 
     includeJSFooter {
-        consentbanner = EXT:consent_banner/Resources/Public/Dist/JavaScript/BaseCookieBanner.js
+        consentbanner = EXT:consent_banner/Resources/Public/Dist/JavaScript/CbLoader.js
         consentbanner.async = 1
         consentbanner.excludeFromConcatenation = 1
         consentbanner.disableCompression = 1
@@ -71,5 +71,28 @@ page {
 tt_content.html {
     templateRootPaths {
         200 = EXT:consent_banner/Resources/Private/Templates/
+    }
+}
+
+ajax_page = PAGE
+ajax_page {
+    typeNum = 1765532288
+    config {
+        disableAllHeaderCode = 1
+        additionalHeaders = Content-type:application/json
+        xhtml_cleaning = 0
+        admPanel = 0
+        debug = 0
+        no_cache = 1
+    }
+
+    10 = USER
+    10 {
+        userFunc = TYPO3\CMS\Extbase\Core\Bootstrap->run
+        extensionName = ConsentBanner
+        pluginName = Consent
+        vendorName = Bb
+        controller = Ajax
+        action = mainAction
     }
 }

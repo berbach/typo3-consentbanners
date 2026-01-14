@@ -32,7 +32,7 @@ return [
             'showitem' => '
                 --div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:general,
                     group_title,group_description,
-                --div--;LLL:EXT:consent_banner/Resources/Private/Language/locallang_mod.xlf:tab.modules,
+                --div--;LLL:EXT:consent_banner/Resources/Private/Language/locallang_mod.xlf:tab.components,
                     group_components,
                 --div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:language,
                     --palette--;;language,
@@ -103,9 +103,21 @@ return [
             ],
         ],
 
+        'group_id' => [
+            'config' => [
+                'type' => 'passthrough'
+            ],
+        ],
+
+        'group_hash' => [
+            'config' => [
+                'type' => 'passthrough'
+            ],
+        ],
+
         'group_title' => [
             'exclude' => true,
-            'label' => 'LLL:EXT:consent_banner/Resources/Private/Language/locallang_mod.xlf:field.name',
+            'label' => 'LLL:EXT:consent_banner/Resources/Private/Language/locallang_mod.xlf:field.group_title',
             'config' => [
                 'type' => 'input',
                 'size' => 50,
@@ -117,12 +129,12 @@ return [
 
         'group_description' => [
             'exclude' => true,
-            'label' => 'LLL:EXT:consent_banner/Resources/Private/Language/locallang_mod.xlf:field.description',
+            'label' => 'LLL:EXT:consent_banner/Resources/Private/Language/locallang_mod.xlf:field.group_description',
             'config' => [
                 'type' => 'text',
                 'eval' => 'trim',
-                'cols' => 80,
-                'rows' => 20
+                'cols' => 100,
+                'rows' => 10
             ]
         ],
 
@@ -131,16 +143,19 @@ return [
         'group_components' => [
             'exclude' => false,
             'l10n_mode' => 'exclude',
-            'label' => 'LLL:EXT:consent_banner/Resources/Private/Language/locallang_mod.xlf:field.modules',
+            'label' => 'LLL:EXT:consent_banner/Resources/Private/Language/locallang_mod.xlf:field.group_components',
             'config' => [
                 'type' => 'inline',
                 'foreign_table' => 'tx_consentbanner_domain_model_consent_components',
                 'foreign_field' => 'group_id',
                 'foreign_sortby' => 'sorting_foreign',
                 'foreign_label' => 'component_title',
+                'foreign_match_fields' => [
+                    'group_parent' => 'other_group',
+                ],
                 'maxitems' => 5,
                 'appearance' => [
-                    'newRecordLinkTitle' => 'Add Cookie module',
+                    'newRecordLinkTitle' => 'LLL:EXT:consent_banner/Resources/Private/Language/locallang_mod.xlf:field.group_components.add',
                     'useSortable' => true,
                     'levelLinksPosition' => 'top',
                     'enabledControls' => ['info' => false],

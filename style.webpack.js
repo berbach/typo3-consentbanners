@@ -1,85 +1,78 @@
-'use strict'
-
-const path = require('path');
-const webpack = require('webpack');
-const autoprefixer = require('autoprefixer')
+const path = require('node:path');
 const {CleanWebpackPlugin} = require('clean-webpack-plugin');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
-const fileHelper = require('./fileHelper');
+const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
+const webpack = require('webpack');
+const file = require('./fileHelper');
 
 const isDevelopment = process.env.npm_lifecycle_event.includes('dev');
 
+const ROOT = path.resolve(__dirname + '/Resources/Public/');
+const SRC = path.join(ROOT, 'Assets');
+const ScssDir = path.join(SRC, 'Scss');
+
+const OutputDir = path.resolve(__dirname + '/Resources/Public/', 'Dist');
+
 const config = {
-    target: "web",
-    entry: fileHelper.getEntries([
-        './Resources/Public/Assets/Src/Scss/Styles.scss'
-    ]),
+    target: 'web',
+    stats: {
+        warnings: false,
+        //errorDetails: false,
+        //loggingDebug: ["sass-loader"],
+    },
+    entry: file.getScssEntries(ScssDir),
     /**
      * The "output" property is what our build files will be named and where the
      * build file will be placed
      */
     output: {
-        /**
-         * Again, the "[name]" place holder will be replaced with each key in our
-         * "entry" object and will name the build file "main.js"
-         */
-        filename: 'Css/CookieBanner.js',
+        filename: 'Css/[name].js',
         /**
          * We need to provide an absolute path to the root of our project and
-         * thats exactly what this line is doing
+         * that's exactly what this line is doing
          */
-        path: path.resolve(__dirname + '/Resources/Public/', 'Dist')
+        path: OutputDir,
     },
     cache: {
         type: 'filesystem',
     },
-    stats: {
-
-    },
     module: {
         rules: [
             {
-                test: /\.(sa|sc)ss$/,
+                test: /\.s[ac]ss$/,
+                exclude: /node_modules/,
                 use: [{
                     loader: MiniCssExtractPlugin.loader,
                 }, {
-                        loader: "css-loader",
-                        options: {
-                            importLoaders: 1,
-                            sourceMap: true,
-                            //publicPath: '../Css'
-                        }
-                    },
-                    {
-                        loader: "postcss-loader",
-                        options: {
-                            sourceMap: true,
-                            postcssOptions: {
-                                plugins: [
-                                    autoprefixer
-                                ]
-                            }
-                        }
-                    },
-                    {
-                        loader: "sass-loader",
-                        options: {
-                            implementation: require("sass"),
-                            sourceMap: true,
-                            sassOptions: {
-                                quietDeps: true
-                            },
+                    loader: 'css-loader',
+                    options: {
+                        importLoaders: 1,
+                        sourceMap: isDevelopment,
+                    }
+                }, {
+                    loader: 'postcss-loader',
+                    options: {
+                        sourceMap: isDevelopment,
+                        postcssOptions: {
+                            config: path.resolve(__dirname, "postcss.config.js"),
                         }
                     }
-                ]
+                }, {
+                    loader: 'sass-loader',
+                    options: {
+                        sourceMap: isDevelopment,
+                        sassOptions: {
+                            outputStyle: isDevelopment ? "expanded" : "expanded",
+                            quietDeps: true
+                        },
+                    }
+                }]
             },
             {
                 test: /\.(svg|png|jpe?g|gif)$/i,
                 type: 'asset/resource',
                 generator: {
                     filename: 'Images/[name][ext]',
-                    // publicPath: '../',
                 },
             },
             {
@@ -87,9 +80,7 @@ const config = {
                 type: 'asset/resource',
                 generator: {
                     filename: 'Fonts/[name][ext]',
-                    // publicPath: '../',
                 },
-
             },
         ],
     },
@@ -101,34 +92,25 @@ const config = {
         minimize: !isDevelopment,
         minimizer: [
             new CssMinimizerPlugin({
-                parallel: 4,
-                minimizerOptions: [{
-                    level: {
-                        1: {
-                            // roundingPrecision: "all=3,px=5",
-                        },
-                        2: {
-                            restructureRules: true
-                        },
-                    },
-                }, {
+                parallel: true,
+                minify: CssMinimizerPlugin.cssnanoMinify,
+                minimizerOptions: {
                     preset: [
                         "default",
                         {
-                            discardComments: {removeAll: true}
-                        }
-                    ]
-                }],
-                minify: [
-                    CssMinimizerPlugin.cleanCssMinify,
-                    CssMinimizerPlugin.cssnanoMinify,
-                    CssMinimizerPlugin.cssoMinify,
-                ],
-            })
+                            discardUnused: true,
+                            mergeIdents: true,
+                            reduceIdents: true,
+                            zindex: false,
+                            discardComments: { removeAll: true },
+                        },
+                    ],
+                },
+            }),
         ]
     },
     resolve: {
-        extensions: ['css', 'scss', 'sass']
+        extensions: ['.css', '.scss', '.sass']
     },
     performance: {
         hints: false
@@ -137,18 +119,19 @@ const config = {
         new MiniCssExtractPlugin({
             filename: 'Css/[name].css',
             chunkFilename: 'Css/[id].css',
-            ignoreOrder: true,
         }),
         new CleanWebpackPlugin({
+            // needed to delete the js files
             protectWebpackAssets: false,
-            leanOnceBeforeBuildPatterns: ['Css/**/*.css', 'Css/**/*.css.map'],
-            cleanAfterEveryBuildPatterns: ['Css/**/CookieBanner.js.map', 'Css/**/CookieBanner.js']
+            cleanOnceBeforeBuildPatterns: ['Css/**/*.css', 'Css/**/*.css.map'],
+            cleanAfterEveryBuildPatterns: ['Css/**/Style.js.map', 'Css/**/Style.js', 'Css/**/Rte.js.map', 'Css/**/Rte.js', 'Css/**/Print.js.map', 'Css/**/Print.js', 'Css/**/*.js.map', 'Css/**/*.js']
         }),
+        new webpack.ProgressPlugin(),
     ],
 
 };
-module.exports = (env, argv) => {
 
+module.exports = (env, argv) => {
     if (argv.mode === 'development') {
         config.mode = 'development';
         config.devtool = 'source-map';

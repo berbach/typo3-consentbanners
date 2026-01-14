@@ -74,7 +74,7 @@ if (!('fromEntries' in Object))
 let bbConsentBannerCookieName = ''
 
 function ConsentBanner(node) {
-    console.log('ConsentBanner loaded')
+    console.log('ConsentBanner JavaScript loaded')
     const typeofIsAndValueIsNot = (variable, type, value) => typeof variable === type && variable !== value
     // Data
     this.jsonData = JSON.parse(document.getElementById('bbBannerData').innerHTML)
@@ -98,7 +98,7 @@ function ConsentBanner(node) {
 
     this.init = () => {
         console.log('ConsentBanner init')
-        console.log(JSON.parse(document.getElementById('bbBannerData').innerHTML))
+        console.table(this.jsonData)
         if (this.bbConsentBanner.isTextLink === false && node.classList.contains("bb-text-widget")) {
             return false;
         }
@@ -432,7 +432,7 @@ function ConsentBanner(node) {
 let initiated = false;
 
 export function init(node) {
-    let CB = new ConsentBanner(node)
+    let CB = new ConsventBanner(node)
     CB.init();
 
     if (initiated)

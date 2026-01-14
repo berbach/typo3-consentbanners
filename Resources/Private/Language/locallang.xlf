@@ -3,29 +3,71 @@
 	<file source-language="en" datatype="plaintext" original="EXT:consent_banner/Resources/Private/Language/locallang.xlf" date="2019-08-12T13:45:24Z" product-name="consentbanner">
 		<header/>
 		<body>
-			<trans-unit id="cookiebanner.saveAndClose">
-				<source>Save &amp; close</source>
-			</trans-unit>
-			<trans-unit id="banner.confirmSelection">
-				<source>Confirm selection</source>
-			</trans-unit>
-			<trans-unit id="cookiebanner.acceptAll">
-				<source>Accept all</source>
-			</trans-unit>
-			<trans-unit id="cookiebanner.reject">
-				<source>Reject</source>
-			</trans-unit>
-			<trans-unit id="cookiebanner.advancedSettings">
-				<source>Advanced settings</source>
-			</trans-unit>
-            <trans-unit id="cookiebanner.closeBtn">
+            <trans-unit id="accept_all_text">
+                <source>Accept all</source>
+            </trans-unit>
+            <trans-unit id="confirm_selection_text">
+                <source>Confirm selection</source>
+            </trans-unit>
+            <trans-unit id="save_and_close_text">
+                <source>Save &amp; close</source>
+            </trans-unit>
+            <trans-unit id="advanced_settings_text">
+                <source>Advanced settings</source>
+            </trans-unit>
+            <trans-unit id="accept_essential_text">
+                <source>Accept only essential</source>
+            </trans-unit>
+            <trans-unit id="close_text">
                 <source>Close settings</source>
             </trans-unit>
+
+            <trans-unit id="cookie_infos_show_text">
+                <source>Show cookie information</source>
+            </trans-unit>
+            <trans-unit id="cookie_infos_close_text">
+                <source>Close cookie information</source>
+            </trans-unit>
+
+            <trans-unit id="cookie_name_text">
+                <source>Cookie name</source>
+            </trans-unit>
+            <trans-unit id="cookie_lifetime_text">
+                <source>Cookie lifetime</source>
+            </trans-unit>
+            <trans-unit id="cookie_provider_text">
+                <source>Cookie provider</source>
+            </trans-unit>
+            <trans-unit id="cookie_purpose_text">
+                <source>Cookie purpose</source>
+            </trans-unit>
+            <trans-unit id="cookie_description_text">
+                <source>Cookie description</source>
+            </trans-unit>
+
+            <trans-unit id="button_widget_text">
+                <source>Cookie settings change</source>
+            </trans-unit>
+            <trans-unit id="text_link_text">
+                <source>Cookie</source>
+            </trans-unit>
+
+
+
+            <trans-unit id="essential_title_text">
+                <source>Essential</source>
+            </trans-unit>
+            
             <trans-unit id="placeholder.removed.html">
                 <source>Third-party HTML has been removed.</source>
             </trans-unit>
             <trans-unit id="placeholderHeadline.removed.html">
                 <source>Third-party HTML</source>
+            </trans-unit>
+
+
+            <trans-unit id="label.cookie_setting">
+                <source>Cookie setting</source>
             </trans-unit>
 		</body>
 	</file>

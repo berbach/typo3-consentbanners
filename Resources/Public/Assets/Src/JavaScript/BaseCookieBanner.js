@@ -1,52 +1,52 @@
+import './Lib/PublicPath';
 import Debug from './Lib/debug';
+import BrowserFingerprint from "../../JavaScript/Lib/fingerprint-generator";
 
 window.DEVMODE = process.env.NODE_ENV !== 'production' ?? false;
 
 Debug.setDevMode(DEVMODE);
 
-let CbModulesManager = function () {
-    this.bodyNode = document.querySelector('body');
+const CbModulesManager = function ()  {
 
-    this.init = () => {
-        this.getModuleNodes();
-    };
+    this.basePath = window.__BASE_PUBLIC_PATH__ || './';
 
-    this.getModuleNodes = () => {
-        let eMod = document.querySelectorAll('[data-module-cb]');
+    this.init = () => this.getModuleNodes();
 
-        for (let index in eMod) {
-            const el = eMod[index]
-            if (!(el instanceof HTMLElement)) continue
-            let module = el.dataset.moduleCb
 
-            if (module !== 'undefined') {
-                let moduleArr = module.split(" ");
-                moduleArr.forEach((value) => {
+    this.getModuleNodes = async () => {
+        const fingerprint = new BrowserFingerprint();
+        const [hash] = await Promise.all([fingerprint.generateHash()]);
+        console.log(hash);
+        console.log(hash === 'e6771f56478b3bdaabb184da49cd07d3d794464d83cc2f39eac75cbd7f6b559f')
+        const eMod = document.querySelectorAll('[data-module-cb]');
+        eMod.forEach(el => {
+            if (!(el instanceof HTMLElement)) return;
 
-                    if (!supportsStaticImport()) {
-                        this.loadScript(`./Module/${value}.js`, () => {
-                            BbCb[value].init(el);
-                        });
-                    } else {
-                        this.importModule(`./Module/${value}.js`)
-                            .then((m) => {
-                                Debug.log(BbCb[value]);
-                                BbCb[value].init(el);
-                                Debug.log("Module", value, "initialized");
-                            })
-                            // .catch(error => Debug.log("Module", value, "ERROR", error));
-                    }
-                })
-            } else {
-                Debug.log("Module name not found, called by", el);
-            }
-        }
+            const modules = el.dataset.moduleCb?.split(' ') || [];
+            const options = el.dataset.options || '';
+
+            modules.forEach(moduleName => {
+                if (!moduleName) return;
+                this.loadModule(moduleName, el, options);
+            });
+        });
     }
 
-    this.importModule = (url) => {
-        try {
-            return import(/*webpackIgnore: true*/`${url}`);
-        } catch (err) {}
+    this.loadModule = (moduleName, el, options) => {
+        if (!this.supportsStaticImport()) {
+            this.loadScript(`${this.basePath}JavaScript/Module/${moduleName}.js`, () => {
+                window.CbModule[moduleName].init(el, options);
+                Debug.log('Module loaded with script', { ModuleName: moduleName, Element: el, options });
+            });
+        } else {
+            import(/*webpackIgnore: true*/ `${this.basePath}JavaScript/Module/${moduleName}.js`)
+                .then(m => {
+                    window.CbModule[moduleName].init(el, options);
+                    Debug.log('Module loaded with import()', { ModuleName: moduleName, Element: el, options });
+                })
+                .catch(err => console.log('Module ' + moduleName + ' Error: '+ err.stack));
+
+        }
     }
 
     this.toAbsoluteURL = function (url) {
@@ -56,25 +56,22 @@ let CbModulesManager = function () {
     }
 
     this.loadScript = function (url, cb) {
-        let script = document.createElement('script'),
-            loaded;
-        script.setAttribute('src', this.toAbsoluteURL(url));
+        const script = document.createElement('script');
+        let loaded;
+        script.src = this.toAbsoluteURL(url);
         if (cb) {
-            script.onreadystatechange = script.onload = function () {
-                if (!loaded) {
-                    cb();
-                }
+            script.onload = script.onreadystatechange = function () {
+                if (!loaded) cb();
                 loaded = true;
             };
         }
-        document.getElementsByTagName('head')[0].appendChild(script);
+        document.head.appendChild(script);
     }
-    // https://gist.github.com/ebidel/3201b36f59f26525eb606663f7b487d0
-    const supportsStaticImport = function() {
+
+    this.supportsStaticImport = function() {
         const script = document.createElement('script');
         return 'noModule' in script;
     }
 };
 
-let Node = new CbModulesManager();
-Node.init();
+new CbModulesManager().init();

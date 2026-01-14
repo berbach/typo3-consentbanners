@@ -34,9 +34,10 @@ return [
                 --div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:general,
                     --palette--;;header,
                     --palette--;;content,
+                    --palette--;;ce_target,
                 --div--;LLL:EXT:consent_banner/Resources/Private/Language/locallang_mod.xlf:tab.javascript,
                     --palette--;;javascript,
-                --div--;LLL:EXT:consent_banner/Resources/Private/Language/locallang_mod.xlf:field.placeholder,
+                --div--;LLL:EXT:consent_banner/Resources/Private/Language/locallang_mod.xlf:tab.placeholder,
                     --palette--;;placeholder,
                 --div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:language,
                     --palette--;;language,
@@ -54,8 +55,11 @@ return [
         'content' => [
             'showitem' => '
                 component_description,
-                --linebreak--,
-                module_target
+            ',
+        ],
+        'ce_target' => [
+            'showitem' => '
+                component_ce_target
             ',
         ],
         'placeholder' => [
@@ -135,7 +139,7 @@ return [
 
         'component_title' => [
             'exclude' => true,
-            'label' => 'LLL:EXT:consent_banner/Resources/Private/Language/locallang_mod.xlf:field.name',
+            'label' => 'LLL:EXT:consent_banner/Resources/Private/Language/locallang_mod.xlf:field.component_title',
             'config' => [
                 'type' => 'input',
                 'size' => 50,
@@ -146,7 +150,7 @@ return [
 
         'component_description' => [
             'exclude' => true,
-            'label' => 'LLL:EXT:consent_banner/Resources/Private/Language/locallang_mod.xlf:field.description',
+            'label' => 'LLL:EXT:consent_banner/Resources/Private/Language/locallang_mod.xlf:field.component_description',
             'config' => [
                 'type' => 'text',
                 'eval' => 'trim',
@@ -155,20 +159,32 @@ return [
             ]
         ],
 
-        'module_target' => [
+        'component_id' => [
+            'config' => [
+                'type' => 'passthrough'
+            ],
+        ],
+
+        'component_hash' => [
+            'config' => [
+                'type' => 'passthrough'
+            ],
+        ],
+
+        'component_ce_target' => [
             'exclude' => true,
-            'label' => 'LLL:EXT:consent_banner/Resources/Private/Language/locallang_mod.xlf:field.target',
+            'label' => 'LLL:EXT:consent_banner/Resources/Private/Language/locallang_mod.xlf:field.component_ce_target',
             'config' => [
                 'type' => 'select',
                 'renderType' => 'selectMultipleSideBySide',
                 'items' => [],
-                'itemsProcFunc' => Bb\Consentbanners\Utility\TCASelectItemUtility::class . '->getAllContentElements',
+                'itemsProcFunc' => Bb\ConsentBanner\Utility\TCASelectItemUtility::class . '->getAllContentElements',
             ]
         ],
 
         'placeholder_title' => [
             'exclude' => true,
-            'label' => 'LLL:EXT:consent_banner/Resources/Private/Language/locallang_mod.xlf:field.placeholder_headline',
+            'label' => 'LLL:EXT:consent_banner/Resources/Private/Language/locallang_mod.xlf:field.placeholder_title',
             'config' => [
                 'type' => 'input',
                 'size' => 50,
@@ -178,7 +194,7 @@ return [
 
         'placeholder_description' => [
             'exclude' => true,
-            'label' => 'LLL:EXT:consent_banner/Resources/Private/Language/locallang_mod.xlf:field.placeholder',
+            'label' => 'LLL:EXT:consent_banner/Resources/Private/Language/locallang_mod.xlf:field.placeholder_description',
             'config' => [
                 'type' => 'text',
                 'eval' => 'trim',

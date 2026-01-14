@@ -4,18 +4,18 @@
 	else if(typeof define === 'function' && define.amd)
 		define([], factory);
 	else if(typeof exports === 'object')
-		exports["BbCb"] = factory();
+		exports["CbModule"] = factory();
 	else
-		root["BbCb"] = root["BbCb"] || {}, root["BbCb"]["ConsentBanner"] = factory();
-})(self, function() {
-return /******/ (function() { // webpackBootstrap
+		root["CbModule"] = root["CbModule"] || {}, root["CbModule"]["ConsentBanner"] = factory();
+})(self, () => {
+return /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
-/***/ "./Resources/Public/Assets/Src/JavaScript/Lib/cookie.js":
-/*!**************************************************************!*\
-  !*** ./Resources/Public/Assets/Src/JavaScript/Lib/cookie.js ***!
-  \**************************************************************/
-/***/ (function(module) {
+/***/ "./Resources/Public/Assets/JavaScript/Lib/cookie.js":
+/*!**********************************************************!*\
+  !*** ./Resources/Public/Assets/JavaScript/Lib/cookie.js ***!
+  \**********************************************************/
+/***/ ((module) => {
 
 let _cookie = {};
 _cookie.exdays = 30;
@@ -77,46 +77,46 @@ module.exports = _cookie;
 /******/ 	
 /************************************************************************/
 /******/ 	/* webpack/runtime/define property getters */
-/******/ 	!function() {
+/******/ 	(() => {
 /******/ 		// define getter functions for harmony exports
-/******/ 		__webpack_require__.d = function(exports, definition) {
+/******/ 		__webpack_require__.d = (exports, definition) => {
 /******/ 			for(var key in definition) {
 /******/ 				if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
 /******/ 					Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
 /******/ 				}
 /******/ 			}
 /******/ 		};
-/******/ 	}();
+/******/ 	})();
 /******/ 	
 /******/ 	/* webpack/runtime/hasOwnProperty shorthand */
-/******/ 	!function() {
-/******/ 		__webpack_require__.o = function(obj, prop) { return Object.prototype.hasOwnProperty.call(obj, prop); }
-/******/ 	}();
+/******/ 	(() => {
+/******/ 		__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
+/******/ 	})();
 /******/ 	
 /******/ 	/* webpack/runtime/make namespace object */
-/******/ 	!function() {
+/******/ 	(() => {
 /******/ 		// define __esModule on exports
-/******/ 		__webpack_require__.r = function(exports) {
+/******/ 		__webpack_require__.r = (exports) => {
 /******/ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
 /******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
 /******/ 			}
 /******/ 			Object.defineProperty(exports, '__esModule', { value: true });
 /******/ 		};
-/******/ 	}();
+/******/ 	})();
 /******/ 	
 /************************************************************************/
 var __webpack_exports__ = {};
 // This entry needs to be wrapped in an IIFE because it needs to be in strict mode.
-!function() {
+(() => {
 "use strict";
-/*!************************************************************************!*\
-  !*** ./Resources/Public/Assets/Src/JavaScript/Module/ConsentBanner.js ***!
-  \************************************************************************/
+/*!********************************************************************!*\
+  !*** ./Resources/Public/Assets/JavaScript/Module/ConsentBanner.js ***!
+  \********************************************************************/
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   init: function() { return /* binding */ init; }
+/* harmony export */   init: () => (/* binding */ init)
 /* harmony export */ });
-const cookieUtils = __webpack_require__(/*! ../Lib/cookie */ "./Resources/Public/Assets/Src/JavaScript/Lib/cookie.js");
+const cookieUtils = __webpack_require__(/*! ../Lib/cookie */ "./Resources/Public/Assets/JavaScript/Lib/cookie.js");
 const cbPrefix = 'bb-consentbanner-';
 const categoryPrefix = 'bb-consentbanner-';
 
@@ -186,8 +186,8 @@ if (!('fromEntries' in Object)) Object.fromEntries = function (entries) {
 // bbConsentBanner = bbConsentBanner || null
 let bbConsentBannerCookieName = '';
 function ConsentBanner(node) {
-  console.log('ConsentBanner loaded');
-  const typeofIsAndValueIsNot = (variable, type, value) => typeof variable === type && variable !== value;
+  console.log('ConsentBanner JavaScript loaded');
+
   // Data
   this.jsonData = JSON.parse(document.getElementById('bbBannerData').innerHTML);
   // this.bbConsentBanner = typeofIsAndValueIsNot(bbConsentBanner, 'object', '') ? bbConsentBanner : null;
@@ -209,53 +209,18 @@ function ConsentBanner(node) {
   this.preferences = JSON.parse(cookieUtils.get(this.cookieName));
   this.init = () => {
     console.log('ConsentBanner init');
-    console.log(JSON.parse(document.getElementById('bbBannerData').innerHTML));
-    if (this.bbConsentBanner.isTextLink === false && node.classList.contains("bb-text-widget")) {
-      return false;
-    }
-    if (node.classList.contains("bb-consentbanner")) {
-      this.banner = node;
-    } else if (node.classList.contains("bb-text-widget") && this.bbConsentBanner.isTextLink === true) {
-      this.widget = node;
-      if (Object.keys(this.preferences).length !== 0) {
-        node = createElementWithAttrs("div", {
-          className: ["bb-consentbanner", `${this.bbConsentBanner.layoutType}`].join(" ")
-        });
-        this.banner = node;
-      } else {
-        this.banner = document.querySelector('.bb-consentbanner');
-      }
-    } else if (node.classList.contains("bb-widget")) {
-      this.widget = node;
-      node = createElementWithAttrs("div", {
-        className: ["bb-consentbanner", `${this.bbConsentBanner.layoutType}`].join(" ")
-      });
-      this.banner = node;
-    } else if (this.bbConsentBanner.isTextLink === false) {
-      this.widget = createElementWithAttrs("button", {
-        className: ["bb-widget", cbPrefix + "button"].join(" ")
-      });
-    }
-    if (this.bbConsentBanner === null || this.categories === null || this.modules === null) {
-      let warn = '';
-      if (this.bbConsentBanner === null) warn += 'Consent banner, ';
-      if (this.categories === null) warn += 'Categories ';
-      if (this.modules === null) warn += 'and Modules ';
-      warn += 'data empty, Consent Banner not initialised!';
-      console.warn(warn);
-      return false;
-    }
-    this.widget?.addEventListener('click', () => {
-      if (this.form === null) this.generateBanner();else this.form.parentElement.classList.add('visible');
-      this.moreButton.click();
-      Object.keys(this.preferences).forEach(module => {
-        const moduleToggle = this.form.querySelector(`.${cbPrefix}module input[name="${module}"]`);
-        if (this.preferences[module] !== moduleToggle.checked) moduleToggle.click();
-      });
-    });
-    if (Object.keys(this.preferences).length === 0) this.generateBanner();else if (this.bbConsentBanner.isTextLink === false && this.widget.classList.contains("bb-widget")) {
-      node.insertAdjacentElement('afterend', this.widget);
-    }
+    console.log(this.jsonData);
+    return;
+    // removed by dead control flow
+
+    // removed by dead control flow
+
+    // removed by dead control flow
+
+    // removed by dead control flow
+
+    // removed by dead control flow
+
   };
   this.attachBannerEventListeners = () => {
     this.form?.addEventListener('submit', e => {
@@ -541,7 +506,8 @@ function createToggle(isCategory, label, inputName, description, inputAttributes
   if (appendModules) main.appendChild(appendModules);
   return main;
 }
-}();
+})();
+
 /******/ 	return __webpack_exports__;
 /******/ })()
 ;
