@@ -488,7 +488,7 @@ const CbManager = function ()  {
      */
     this.saveLogUserConsent = async (userConsentLogData) => {
         console.log('saveLogUserConsent');
-        const url = "/consent/save"
+        const url = "/api/consent/save"
 
         const response = await fetch(url, {
             method: 'POST',

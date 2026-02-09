@@ -19,7 +19,7 @@ final class ConsentMiddleware implements MiddlewareInterface
      */
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        if ($request->getUri()->getPath() !== '/consent/save') {
+        if ($request->getUri()->getPath() !== '/api/consent/save') {
             return $handler->handle($request);
         }
         $data = json_decode((string)$request->getBody(), true);
