@@ -8,9 +8,6 @@ services:
     resource: '../Classes/*'
     exclude: '../Classes/Domain/Model/*'
 
-  Bb\ConsentBanner\Controller\AjaxController:
-    public: true
-
   Bb\ConsentBanner\Controller\ManagementController:
     public: true
     tags: ['backend.controller']

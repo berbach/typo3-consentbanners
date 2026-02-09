@@ -98,6 +98,7 @@ class ConsentBannerProcessor implements DataProcessorInterface
                     'title'                 => $banner->getBannerTitle(),
                     'description'           => $banner->getBannerDescription(),
                     'active'                => $banner->getBannerActive(),
+                    'version'               => $banner->getBannerVersion(),
                 ],
                 'footerNavigation'      => $this->addFooterNavigation($banner->getBannerNavigation()),
                 'displayTexts' => [
@@ -148,7 +149,6 @@ class ConsentBannerProcessor implements DataProcessorInterface
                     'banner'            => $banner->getLifetimeBanner(), // 14 || 21 || 28 Days
                     'userConsent'       => $banner->getLifetimeUserConsent() // 365 || 730 || 1095 Days
                 ],
-                'historySaveUrl'        => $this->cObj->createUrl(['parameter' => 'current,1765532288', 'additionalParams' => '&hook=save']),
                 'consentAccepted'       => $consentAccepted,
                 'cName'                 => self::$cName,
             ];
@@ -267,6 +267,13 @@ class ConsentBannerProcessor implements DataProcessorInterface
                     'groupId' => $groupId,
                     'title' => $component->getComponentTitle(),
                     'description' => $component->getComponentDescription(),
+                    'cookieInformation' => [
+                        'name' => $component->getCookieName(),
+                        'description' => $component->getCookieDescription(),
+                        'provider' => $component->getCookieProvider(),
+                        'purpose' => $component->getCookiePurpose(),
+                        'lifetime' => $component->getCookieLifetime()
+                    ]
                 ];
                 $counter->increment();
             }

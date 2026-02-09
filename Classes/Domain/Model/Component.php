@@ -69,6 +69,37 @@ class Component extends AbstractEntity
      */
     protected string $placeholderDescription = '';
     /**
+     * cookie_name
+     *
+     * @var string
+     */
+    protected string $cookieName = '';
+    /**
+     * cookie_description
+     *
+     * @var string
+     */
+    protected string $cookieDescription = '';
+    /**
+     * cookie_provider
+     *
+     * @var string
+     */
+    protected string $cookieProvider = '';
+    /**
+     * cookie_purpose
+     *
+     * @var string
+     */
+    protected string $cookiePurpose = '';
+    /**
+     * cookie_lifetime
+     *
+     * @var string
+     */
+    protected string $cookieLifetime = '';
+
+    /**
      * show uri
      *
      * @var string
@@ -328,5 +359,55 @@ class Component extends AbstractEntity
     public function setComponentHash(string $componentHash): void
     {
         $this->componentHash = $componentHash;
+    }
+
+    public function getCookieName(): string
+    {
+        return $this->cookieName;
+    }
+
+    public function setCookieName(string $cookieName): void
+    {
+        $this->cookieName = $cookieName;
+    }
+
+    public function getCookieDescription(): string
+    {
+        return $this->cookieDescription;
+    }
+
+    public function setCookieDescription(string $cookieDescription): void
+    {
+        $this->cookieDescription = $cookieDescription;
+    }
+
+    public function getCookieProvider(): string
+    {
+        return $this->cookieProvider;
+    }
+
+    public function setCookieProvider(string $cookieProvider): void
+    {
+        $this->cookieProvider = $cookieProvider;
+    }
+
+    public function getCookiePurpose(): string
+    {
+        return $this->cookiePurpose;
+    }
+
+    public function setCookiePurpose(string $cookiePurpose): void
+    {
+        $this->cookiePurpose = $cookiePurpose;
+    }
+
+    public function getCookieLifetime(): string
+    {
+        return $this->cookieLifetime;
+    }
+
+    public function setCookieLifetime(string $cookieLifetime): void
+    {
+        $this->cookieLifetime = $cookieLifetime;
     }
 }

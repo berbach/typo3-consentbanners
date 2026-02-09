@@ -3,6 +3,7 @@
 namespace Bb\ConsentBanner\Domain\Repository;
 
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Exception;
 use phpDocumentor\Reflection\Types\Self_;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\QueryBuilder;
@@ -11,7 +12,7 @@ use TYPO3\CMS\Extbase\Persistence\QueryInterface;
 use TYPO3\CMS\Extbase\Persistence\Repository;
 
 
-class ConsentRepository extends Repository
+class ConsentLogRepository extends Repository
 {
     /**
      * @var string
@@ -36,18 +37,44 @@ class ConsentRepository extends Repository
 //        $querySettings->setLanguageOverlayMode(false);
         $this->setDefaultQuerySettings($querySettings);
     }
+
     /**
-     * @param string $uuid
+     * @param string $identificationKey
      * @param int $version
      * @param array $services
-     * @return void
+     * @return bool
+     * @throws Exception
      */
-    public function save(string $uuid, int $version, array $services): void
+    public function save(string $identificationKey, int $version, array $services): void
     {
         $queryBuilder = $this->getConnectionForTable();
-        $existsLog = $queryBuilder->select(['uid'], self::TABLE_NAME, ['consent_uuid' => $uuid])->fetchOne();
+        $existsLog = $queryBuilder->select(['identification_key'], self::TABLE_NAME, ['identification_key' => $identificationKey])->fetchOne();
 
-        debug($existsLog);
+        $data = [
+            'identification_key' => $identificationKey,
+            'banner_version' => $version,
+            'consent_services' => $services,
+            'tstamp' => time()
+        ];
+
+        if($existsLog){
+            //Update
+            $queryBuilder->update(self::TABLE_NAME, $data, ['identification_key' => $identificationKey]);
+        }else{
+            //Insert
+            $data['crdate'] = time();
+            $queryBuilder->insert(self::TABLE_NAME, $data);
+        }
+    }
+
+    public function findByIdentificationKey(string $identificationKey): ?array
+    {
+        return $this->getConnectionForTable()->select(['*'], self::TABLE_NAME, ['identification_key' => $identificationKey])->fetchAssocative();
+    }
+
+    public function findAll(): array
+    {
+        return $this->getConnectionForTable()->select(['*'], self::TABLE_NAME)->fetchAllAssocative();
     }
     /**
      * @return QueryBuilder

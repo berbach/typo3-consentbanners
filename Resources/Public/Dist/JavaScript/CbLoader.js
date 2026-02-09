@@ -241,6 +241,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   createToggle: () => (/* binding */ createToggle),
 /* harmony export */   generateUserHash: () => (/* binding */ generateUserHash),
 /* harmony export */   generateUserUid: () => (/* binding */ generateUserUid),
+/* harmony export */   hasDaysPassed: () => (/* binding */ hasDaysPassed),
 /* harmony export */   isBotAgent: () => (/* binding */ isBotAgent),
 /* harmony export */   typeofIsAndValueIsNot: () => (/* binding */ typeofIsAndValueIsNot)
 /* harmony export */ });
@@ -318,6 +319,11 @@ const generateUserHash = () => {
   let hash = fingerprint.generateHash();
   let i = 0;
   return '########-#####-#####-#####-#########'.replace(/#/g, () => hash[i++]);
+};
+const hasDaysPassed = (timestamp, days) => {
+  if (!timestamp) return true;
+  const msPerDay = 24 * 60 * 60 * 1000;
+  return Date.now() - timestamp >= days * msPerDay;
 };
 
 /***/ })
@@ -405,8 +411,9 @@ const CbManager = function () {
   this.bannerPreferences = JSON.parse(document.getElementById('bbBannerData').innerHTML);
   this.userIdentificationKey = "";
   this.isBottomLayout = !(0,_Lib_utils__WEBPACK_IMPORTED_MODULE_0__.typeofIsAndValueIsNot)(this.bannerPreferences?.layout, 'string', 'cb-bottom');
-  this.cookiePreferences = JSON.parse(cookieUtils.get(this.bannerPreferences?.cName ?? 'BbConsentPreferences'));
+  this.cookiePreferences = JSON.parse(cookieUtils.get(LAST_PREFERENCES_NAME));
   this.localPreferences = localStorage.getItem(LAST_PREFERENCES_NAME) ? JSON.parse(localStorage.getItem(LAST_PREFERENCES_NAME)) : [];
+  this.lastLocalPreferences = {};
   this.changePreferences = null;
   this.acceptAllButton = null;
   this.saveAndCloseButton = null;
@@ -420,37 +427,33 @@ const CbManager = function () {
   this.bannerFooter = null;
   this.init = () => {
     console.log('CBManager JavaScript loaded');
-    console.log(this.getUserUid());
-    console.log(this.getUserHash());
+    this.lastLocalPreferences = this.getLastPreferences();
     if ((0,_Lib_utils__WEBPACK_IMPORTED_MODULE_0__.isBotAgent)()) {
       console.log('Set Essential Cookies');
     }
-    if (this.isPreferencesCookie() && this.isPreferencesLocalStorage()) {
+    if (this.shouldCreateBanner()) {
       this.openerChangePreferences();
-    } else {
-      this.CreateWrapperBanner();
+      this.createWrapperBanner();
       this.createBanner();
+    } else {
+      this.openerChangePreferences();
     }
   };
   this.attachBannerEventListeners = () => {
-    console.log(this.bannerMain);
     this.bannerMain?.addEventListener('submit', e => {
       e.preventDefault();
     });
-    console.log(this.acceptAllButton);
     this.acceptAllButton?.addEventListener('click', () => {
       console.log('acceptAllButton');
-      console.log(this.collectAndModifyData(true));
-      this.saveConsentLog();
+      this.savePreferences(this.collectAndModifyData(true));
     });
     this.saveAndCloseButton?.addEventListener('click', () => {
       console.log('saveAndCloseButton');
-      console.log(this.collectData());
+      this.savePreferences(this.collectData());
     });
-    console.log(this.confirmSelectionButton);
     this.confirmSelectionButton?.addEventListener('click', () => {
       console.log('confirmSelectionButton');
-      console.log(this.collectData());
+      this.savePreferences(this.collectData());
     });
     this.advancedSettingsButton?.addEventListener('click', () => {
       console.log('advancedSettingsButton');
@@ -490,13 +493,23 @@ const CbManager = function () {
       document.querySelector('body > div').insertAdjacentElement('afterend', this.changePreferences);
     }
     this.changePreferences?.addEventListener('click', () => {
-      console.log('click Change Preferences');
+      this.createWrapperBanner(true);
+      this.createBanner(true);
+      Object.keys(this.getLastPreferences()?.services).forEach(component => {
+        const componentToggle = this.bannerMain.querySelector(`.${CB_PREFIX}component input[name="${component}"]`);
+        if (this.localPreferences?.services[component].consent !== componentToggle.checked) componentToggle.click();
+      });
     });
   };
-  this.CreateWrapperBanner = () => {
+  this.closeAndRemoveBanner = () => {
+    let existBanner = document.querySelector(`div.${CB_NAME}`);
+    if (!!existBanner) existBanner.remove();
+  };
+  this.createWrapperBanner = (isOverlay = false) => {
     console.log('CreateWrapperBanner');
+    this.closeAndRemoveBanner();
     this.banner = (0,_Lib_utils__WEBPACK_IMPORTED_MODULE_0__.createElementWithAttrs)('div', {
-      className: [CB_NAME, `bb-${this.bannerPreferences?.layout ?? 'cb-bottom'}`].join(" "),
+      className: [CB_NAME, isOverlay ? 'bb-cb-overlay' : `bb-${this.bannerPreferences?.layout ?? 'cb-bottom'}`].join(" "),
       tabindex: "-1",
       "data-nosnippet": "true"
     });
@@ -548,7 +561,7 @@ const CbManager = function () {
             ${this.bannerBody.outerHTML}
             <!--googleon: index-->
             `;
-    if (document.querySelector('.' + CB_PREFIX + 'stage') == null && isOverlay === false) {
+    if (document.querySelector('.' + CB_PREFIX + 'stage') == null) {
       document.querySelector('.' + CB_PREFIX + 'body').appendChild(this.bannerStage);
       document.querySelector('.' + CB_NAME).classList.add('visible');
     }
@@ -557,11 +570,6 @@ const CbManager = function () {
     console.log('createBannerOverlay');
     this.banner.classList.remove("bb-cb-bottom", 'visible');
     this.banner.classList.add('bb-cb-overlay', 'visible');
-
-    // if(document.querySelector('.' + CB_PREFIX + 'stage') == null) {
-    //     document.querySelector('.' + CB_PREFIX + 'body').appendChild(this.bannerStage)
-    //     document.querySelector('.' + CB_NAME).classList.add('visible')
-    // }
   };
   this.createPreferences = (isOverlay = false) => {
     console.log('createPreferences');
@@ -588,7 +596,7 @@ const CbManager = function () {
             }));
           }
         }
-        if (groupComponents.children.length > 0 || group.lockedAndActive) {
+        if ((groupComponents.children.length > 0 || group.lockedAndActive) && (groupComponents.children.length > 0 || !group.lockedAndActive)) {
           contentGroups.appendChild((0,_Lib_utils__WEBPACK_IMPORTED_MODULE_0__.createToggle)(true, CB_PREFIX, group?.title, CB_GROUP_PREFIX + group?.id, group?.description, {
             checked: !!group.lockedAndActive,
             disabled: !!group.lockedAndActive
@@ -612,17 +620,17 @@ const CbManager = function () {
      */
     this.saveAndCloseButton = (0,_Lib_utils__WEBPACK_IMPORTED_MODULE_0__.createElementWithAttrs)('button', {
       className: ['bb-button', 'bb-btn--typeS', 'bb-show-overlay'].join(' '),
-      type: 'submit',
+      type: 'button',
       innerText: buttonLabels?.saveAndClose
     }, containerButtons);
     this.acceptAllButton = (0,_Lib_utils__WEBPACK_IMPORTED_MODULE_0__.createElementWithAttrs)('button', {
       className: ['bb-button', 'bb-btn--typeS', 'bb-show-all'].join(' '),
-      type: 'submit',
+      type: 'button',
       innerText: buttonLabels?.acceptAll
     }, containerButtons);
     this.confirmSelectionButton = (0,_Lib_utils__WEBPACK_IMPORTED_MODULE_0__.createElementWithAttrs)('button', {
       className: ['bb-button', 'bb-btn--typeS', 'bb-show-bottom'].join(' '),
-      type: 'submit',
+      type: 'button',
       innerText: buttonLabels?.confirmSelection
     }, containerButtons);
     this.advancedSettingsButton = (0,_Lib_utils__WEBPACK_IMPORTED_MODULE_0__.createElementWithAttrs)('button', {
@@ -670,7 +678,7 @@ const CbManager = function () {
     });
     const identificationContainer = (0,_Lib_utils__WEBPACK_IMPORTED_MODULE_0__.createElementWithAttrs)('div', {
       className: CB_PREFIX + 'uid',
-      innerText: `User-ID: ${this.getUserUid()}`
+      innerText: `User-ID: ${this.getUserHash()}`
     });
     containerFooterCell.appendChild(linkContainer);
     containerFooter.appendChild(containerFooterCell);
@@ -696,22 +704,26 @@ const CbManager = function () {
       });
     });
   };
-  this.savePreferences = () => {
+  this.savePreferences = consentServiceData => {
     console.log('savePreferences');
+    const lastPreferences = this.getLastPreferences();
+    lastPreferences.version = this.bannerPreferences?.banner?.version;
+    lastPreferences.services = consentServiceData;
+    lastPreferences.timestamp = Date.now();
+    this.localPreferences = lastPreferences;
+    this.cookiePreferences = Object.fromEntries(Object.entries(consentServiceData).map(service => {
+      return [service[0], service[1]?.consent];
+    }));
+    this.setUserConsentCookieServices();
+    this.setLocalStorageData();
+    this.saveLogUserConsent();
+    console.log(this.localPreferences);
+    console.log(this.cookiePreferences);
+    this.closeAndRemoveBanner();
   };
   this.getLastPreferences = () => {
     console.log('getLastPreferences');
-    let lastPreferences;
-    lastPreferences = window.localStorage.getItem(LAST_PREFERENCES_NAME);
-    if (lastPreferences) {
-      lastPreferences = JSON.parse(lastPreferences);
-    } else {
-      lastPreferences = {
-        uid: '',
-        hash: ''
-      };
-    }
-    return lastPreferences;
+    return localStorage.getItem(LAST_PREFERENCES_NAME) ? JSON.parse(localStorage.getItem(LAST_PREFERENCES_NAME)) : {};
   };
   this.isPreferencesCookie = () => {
     console.log('isPreferencesCookie');
@@ -722,58 +734,28 @@ const CbManager = function () {
     return Object.keys(this.localPreferences).length !== 0;
   };
   /**
-   * uuid is the generate random hash
-   * @return {string}
-   */
-  this.getUserUid = () => {
-    const lastPreferences = this.getLastPreferences();
-    let uuid = lastPreferences.uuid;
-    /**
-     * @ToDo
-     * Condition Einstellung Log Aktiviert oder Deaktiviert
-     */
-    if (!uuid) {
-      uuid = (0,_Lib_utils__WEBPACK_IMPORTED_MODULE_0__.generateUserUid)();
-      lastPreferences.uuid = uuid;
-      window.localStorage.setItem(LAST_PREFERENCES_NAME, JSON.stringify(lastPreferences));
-    }
-    return uuid;
-  };
-  /**
    * hash is the generate browser fingerprint hash
    * @return {string}
    */
   this.getUserHash = () => {
     const lastPreferences = this.getLastPreferences();
-    let hash = lastPreferences.hash;
+    let hash = lastPreferences?.hash;
     if (!hash) {
       hash = (0,_Lib_utils__WEBPACK_IMPORTED_MODULE_0__.generateUserHash)();
-      console.log(hash === "2e116086-dd85b-9a997-f2469-17937f5ac");
       lastPreferences.hash = hash;
       window.localStorage.setItem(LAST_PREFERENCES_NAME, JSON.stringify(lastPreferences));
     }
     return hash;
   };
-
-  // this.getUserIdentificationKey = async () => {
-  //
-  // }
-
-  this.saveConsentLog = async () => {
+  this.saveLogUserConsent = async () => {
     const url = "/consent/save";
-    const consent = {
-      version: 1,
-      services: {
-        analytics: false,
-        youtube: false
-      }
-    };
+    console.log(this.localPreferences);
     const response = await fetch(url, {
       method: 'POST',
       headers: {
         "Content-Type": "application/json"
       },
-      body: JSON.stringify(consent)
+      body: JSON.stringify(this.localPreferences)
     });
     if (!response.ok) throw new Error(`Network response was not ok. Status: ${response.status}`);
     try {
@@ -790,7 +772,8 @@ const CbManager = function () {
     return Object.fromEntries(Array.from(formPreferencesContainer.querySelectorAll(`.${CB_PREFIX}component input[data-group-id]`)).map(el => {
       return [el.name, {
         'title': el.dataset.componentTitle,
-        'consent': el.checked
+        'consent': el.checked,
+        'groupId': el.dataset.groupId
       }];
     }));
   };
@@ -798,6 +781,18 @@ const CbManager = function () {
     const data = this.collectData();
     for (let key of Object.keys(data)) data[key].consent = value;
     return data;
+  };
+  this.setUserConsentCookieServices = () => {
+    console.log('setCookieServices');
+    cookieUtils.set(LAST_PREFERENCES_NAME, JSON.stringify(this.cookiePreferences) + ';secure;samesite=lax', this.bannerPreferences?.lifetimes?.userConsent);
+  };
+  this.setLocalStorageData = () => {
+    console.log('setLocalStorageData');
+    window.localStorage.setItem(LAST_PREFERENCES_NAME, JSON.stringify(this.localPreferences));
+  };
+  this.shouldCreateBanner = () => {
+    const localStoragePreferences = this.getLastPreferences();
+    return Object.keys(this.cookiePreferences).length === 0 || Object.keys(localStoragePreferences?.services ?? {}).length === 0 || localStoragePreferences?.version !== this.bannerPreferences?.banner?.version || localStoragePreferences?.hash !== this.getUserHash() || (0,_Lib_utils__WEBPACK_IMPORTED_MODULE_0__.hasDaysPassed)(localStoragePreferences?.timestamp, this.bannerPreferences?.lifetimes?.banner);
   };
 };
 new CbManager().init();

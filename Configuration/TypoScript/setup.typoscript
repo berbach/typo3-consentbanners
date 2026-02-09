@@ -73,26 +73,3 @@ tt_content.html {
         200 = EXT:consent_banner/Resources/Private/Templates/
     }
 }
-
-ajax_page = PAGE
-ajax_page {
-    typeNum = 1765532288
-    config {
-        disableAllHeaderCode = 1
-        additionalHeaders = Content-type:application/json
-        xhtml_cleaning = 0
-        admPanel = 0
-        debug = 0
-        no_cache = 1
-    }
-
-    10 = USER
-    10 {
-        userFunc = TYPO3\CMS\Extbase\Core\Bootstrap->run
-        extensionName = ConsentBanner
-        pluginName = Consent
-        vendorName = Bb
-        controller = Ajax
-        action = mainAction
-    }
-}

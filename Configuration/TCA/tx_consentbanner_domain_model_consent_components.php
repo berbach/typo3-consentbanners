@@ -39,6 +39,9 @@ return [
                     --palette--;;javascript,
                 --div--;LLL:EXT:consent_banner/Resources/Private/Language/locallang_mod.xlf:tab.placeholder,
                     --palette--;;placeholder,
+                --div--;LLL:EXT:consent_banner/Resources/Private/Language/locallang_mod.xlf:tab.cookie_information,
+                    --palette--;;cookie,
+                    --palette--;;cookie_data,    
                 --div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:language,
                     --palette--;;language,
                 --div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:access,
@@ -67,6 +70,20 @@ return [
                 placeholder_title,
                 --linebreak--,
                 placeholder_description,
+            ',
+        ],
+        'cookie' => [
+            'showitem' => '
+                cookie_name, cookie_provider,
+                --linebreak--,
+                cookie_description,
+            ',
+        ],
+        'cookie_data' => [
+            'showitem' => '
+                cookie_purpose,
+                --linebreak--,
+                cookie_lifetime,
             ',
         ],
         'language' => [
@@ -207,6 +224,8 @@ return [
             'label' => 'LLL:EXT:consent_banner/Resources/Private/Language/locallang_mod.xlf:field.accepted_script',
             'config' => [
                 'type' => 'text',
+                'renderType' => 'codeEditor',
+                'format' => 'javascript',
                 'eval' => 'trim',
                 'cols' => 80,
                 'rows' => 20
@@ -218,10 +237,65 @@ return [
             'label' => 'LLL:EXT:consent_banner/Resources/Private/Language/locallang_mod.xlf:field.rejected_script',
             'config' => [
                 'type' => 'text',
+                'renderType' => 'codeEditor',
+                'format' => 'javascript',
                 'eval' => 'trim',
                 'cols' => 80,
                 'rows' => 20
             ]
+        ],
+
+        'cookie_name' => [
+            'exclude' => true,
+            'label' => 'LLL:EXT:consent_banner/Resources/Private/Language/locallang_mod.xlf:field.cookie_name',
+            'config' => [
+                'type' => 'input',
+                'size' => 50,
+                'eval' => 'trim',
+                'required' => true
+            ],
+        ],
+
+        'cookie_description' => [
+            'exclude' => true,
+            'label' => 'LLL:EXT:consent_banner/Resources/Private/Language/locallang_mod.xlf:field.cookie_description',
+            'config' => [
+                'type' => 'text',
+                'eval' => 'trim',
+                'cols' => 50,
+                'rows' => 10
+            ]
+        ],
+
+        'cookie_provider' => [
+            'exclude' => true,
+            'label' => 'LLL:EXT:consent_banner/Resources/Private/Language/locallang_mod.xlf:field.cookie_provider',
+            'config' => [
+                'type' => 'input',
+                'size' => 50,
+                'eval' => 'trim',
+            ],
+        ],
+
+        'cookie_purpose' => [
+            'exclude' => true,
+            'label' => 'LLL:EXT:consent_banner/Resources/Private/Language/locallang_mod.xlf:field.cookie_purpose',
+            'config' => [
+                'type' => 'text',
+                'eval' => 'trim',
+                'cols' => 50,
+                'rows' => 10
+            ]
+        ],
+
+        'cookie_lifetime' => [
+            'exclude' => true,
+            'label' => 'LLL:EXT:consent_banner/Resources/Private/Language/locallang_mod.xlf:field.cookie_lifetime',
+            'config' => [
+                'type' => 'input',
+                'size' => 50,
+                'eval' => 'trim',
+            ],
         ],
 
         'group_id' => [

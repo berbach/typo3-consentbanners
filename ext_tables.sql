@@ -17,6 +17,7 @@ CREATE TABLE tx_consentbanner_domain_model_banner
     banner_description              text,
     banner_layout                   varchar(20)       DEFAULT 'cb-bottom' NOT NULL,
     banner_navigation               longtext          DEFAULT NULL,
+    banner_version                  int(11)           DEFAULT '1'         NOT NULL,
 
     user_identification_text        varchar(30)       DEFAULT ''          NOT NULL,
     provider_description_text       varchar(30)       DEFAULT ''          NOT NULL,
@@ -98,20 +99,27 @@ CREATE TABLE tx_consentbanner_domain_model_consent_components
     accepted_script             text,
     rejected_script             text,
 
+    cookie_name                 varchar(64)          DEFAULT '' NOT NULL,
+    cookie_description          text,
+    cookie_provider             varchar(64)          DEFAULT '' NOT NULL,
+    cookie_purpose              text,
+    cookie_lifetime             varchar(64)          DEFAULT '' NOT NULL,
+
     sorting_foreign             int(11)              DEFAULT '0',
-    group_id                    int(11)     unsigned DEFAULT NULL,
-    group_parent                varchar(30)          DEFAULT ''  NOT NULL,
+    group_id                    int(11)  unsigned    DEFAULT NULL,
+    group_parent                varchar(30)          DEFAULT '' NOT NULL,
     hidden                      smallint unsigned DEFAULT '0' NOT NULL,
     deleted                     smallint unsigned DEFAULT '0' NOT NULL
 );
+
 #
 # Table structure for table 'tx_consentbanner_domain_model_consent_log'
 # -- Define table and fields since it has no TCA
 CREATE TABLE tx_consentbanner_domain_model_consent_log
 (
-    identification_key          varchar(64) DEFAULT '' NOT NULL,
-    pid                         int(11) DEFAULT '0' NOT NULL,
-    -- Weitere Felder hier
+    identification_key          char(64) DEFAULT '' NOT NULL,
+    banner_version              int(11) NOT NULL,
+    consent_services            json,
 
     tstamp                      int(11) unsigned DEFAULT '0' NOT NULL,
     crdate                      int(11) DEFAULT '0' NOT NULL,

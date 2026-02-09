@@ -38,7 +38,10 @@ class Banner extends AbstractEntity
      * @var string
      */
     protected string $bannerLayout = 'cb-bottom';
-
+    /**
+     * @var int
+     */
+    protected int $bannerVersion = 1;
     /**
      * @var string
      */
@@ -281,6 +284,25 @@ class Banner extends AbstractEntity
     public function setBannerLayout(string $bannerLayout): void
     {
         $this->bannerLayout = $bannerLayout;
+    }
+    /**
+     * Returns the $bannerVersion
+     *
+     * @return int $bannerVersion
+     */
+    public function getBannerVersion(): int
+    {
+        return $this->bannerVersion;
+    }
+    /**
+     * Sets the $bannerVersion
+     *
+     * @param int $bannerVersion
+     * @return void
+     */
+    public function setBannerVersion(int $bannerVersion): void
+    {
+        $this->bannerVersion = $bannerVersion;
     }
     /**
      * Returns the $userIdentificationText

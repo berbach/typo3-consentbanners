@@ -70,6 +70,9 @@
             <trans-unit id="tab.components">
                 <source>Components</source>
             </trans-unit>
+            <trans-unit id="tab.cookie_information">
+                <source>Cookie information</source>
+            </trans-unit>
             <!--Paletten-->
             <trans-unit id="palette.buttonsLabelText">
                 <source>Buttons label name</source>
@@ -270,6 +273,22 @@
             </trans-unit>
             <trans-unit id="field.target_footer_navigation.description">
                 <source>Example classname .class_example or id #id_example</source>
+            </trans-unit>
+
+            <trans-unit id="field.cookie_name">
+                <source>Cookie name (_ga)</source>
+            </trans-unit>
+            <trans-unit id="field.cookie_description">
+                <source>Cookie description</source>
+            </trans-unit>
+            <trans-unit id="field.cookie_provider">
+                <source>Cookie provider</source>
+            </trans-unit>
+            <trans-unit id="field.cookie_purpose">
+                <source>Cookie purpose</source>
+            </trans-unit>
+            <trans-unit id="field.cookie_lifetime">
+                <source>Cookie lifetime (1 year or 15 day)</source>
             </trans-unit>
 
             <trans-unit id="field.banner_active">

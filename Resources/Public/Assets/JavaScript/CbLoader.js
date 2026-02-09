@@ -1,5 +1,4 @@
-
-import {createToggle, createElementWithAttrs, isBotAgent, typeofIsAndValueIsNot, generateUserUid, generateUserHash} from "./Lib/utils";
+import {createToggle, createElementWithAttrs, isBotAgent, typeofIsAndValueIsNot, generateUserUid, generateUserHash, hasDaysPassed} from "./Lib/utils";
 
 
 import Debug from './Lib/debug';
@@ -28,8 +27,10 @@ const CbManager = function ()  {
 
     this.isBottomLayout = !typeofIsAndValueIsNot(this.bannerPreferences?.layout, 'string', 'cb-bottom');
 
-    this.cookiePreferences = JSON.parse(cookieUtils.get(this.bannerPreferences?.cName ?? 'BbConsentPreferences'));
+    this.cookiePreferences = JSON.parse(cookieUtils.get(LAST_PREFERENCES_NAME));
     this.localPreferences = localStorage.getItem(LAST_PREFERENCES_NAME) ? JSON.parse(localStorage.getItem(LAST_PREFERENCES_NAME)) : [];
+
+    this.lastLocalPreferences = {}
 
     this.changePreferences = null
     this.acceptAllButton = null
@@ -48,47 +49,39 @@ const CbManager = function ()  {
 
     this.init = () => {
         console.log('CBManager JavaScript loaded')
-
-
-        console.log(this.getUserUid())
-        console.log(this.getUserHash())
-
+        this.lastLocalPreferences = this.getLastPreferences();
 
         if (isBotAgent()) {
             console.log('Set Essential Cookies')
         }
 
-        if(this.isPreferencesCookie() && this.isPreferencesLocalStorage()){
+        if(this.shouldCreateBanner()){
             this.openerChangePreferences()
-        }else {
-            this.CreateWrapperBanner()
+            this.createWrapperBanner()
             this.createBanner()
+        }else{
+            this.openerChangePreferences()
         }
+
     }
 
     this.attachBannerEventListeners = () => {
-        console.log(this.bannerMain)
         this.bannerMain?.addEventListener('submit', e => {
             e.preventDefault()
         })
 
-        console.log(this.acceptAllButton)
         this.acceptAllButton?.addEventListener('click', () => {
             console.log('acceptAllButton')
-            console.log(this.collectAndModifyData(true))
-            this.saveConsentLog()
+            this.savePreferences(this.collectAndModifyData(true))
         })
-
         this.saveAndCloseButton?.addEventListener('click', () => {
             console.log('saveAndCloseButton')
-            console.log(this.collectData())
+            this.savePreferences(this.collectData())
         })
-        console.log(this.confirmSelectionButton)
         this.confirmSelectionButton?.addEventListener('click', () => {
             console.log('confirmSelectionButton')
-            console.log(this.collectData())
+            this.savePreferences(this.collectData())
         })
-
         this.advancedSettingsButton?.addEventListener('click', () => {
             console.log('advancedSettingsButton')
             this.createBannerOverlay()
@@ -133,25 +126,35 @@ const CbManager = function ()  {
             document.querySelector('body > div').insertAdjacentElement('afterend', this.changePreferences)
         }
 
-
         this.changePreferences?.addEventListener('click', () => {
-            console.log('click Change Preferences');
+            this.createWrapperBanner(true)
+            this.createBanner(true)
+
+            Object.keys(this.getLastPreferences()?.services).forEach(component => {
+                const componentToggle = this.bannerMain.querySelector(`.${CB_PREFIX}component input[name="${component}"]`)
+                if (this.localPreferences?.services[component].consent !== componentToggle.checked)
+                    componentToggle.click()
+            })
+
         })
     }
 
+    this.closeAndRemoveBanner = () => {
+        let existBanner = document.querySelector(`div.${CB_NAME}`);
+        if(!!existBanner) existBanner.remove();
+    }
 
-    this.CreateWrapperBanner = () => {
+    this.createWrapperBanner = (isOverlay = false) => {
         console.log('CreateWrapperBanner');
+        this.closeAndRemoveBanner();
+
         this.banner = createElementWithAttrs('div', {
-            className: [CB_NAME, `bb-${this.bannerPreferences?.layout ?? 'cb-bottom'}`].join(" "),
+            className: [CB_NAME, isOverlay ? 'bb-cb-overlay' : `bb-${this.bannerPreferences?.layout ?? 'cb-bottom'}`].join(" "),
             tabindex: "-1",
             "data-nosnippet": "true"
         });
-
         document.querySelector('body').insertAdjacentElement('afterbegin', this.banner);
     }
-
-
 
     this.createBanner = (isOverlay = false) => {
         console.log('createBanner');
@@ -201,7 +204,7 @@ const CbManager = function ()  {
             <!--googleon: index-->
             `;
 
-        if(document.querySelector('.' + CB_PREFIX + 'stage') == null && isOverlay === false) {
+        if(document.querySelector('.' + CB_PREFIX + 'stage') == null) {
             document.querySelector('.' + CB_PREFIX + 'body').appendChild(this.bannerStage)
             document.querySelector('.' + CB_NAME).classList.add('visible')
         }
@@ -212,11 +215,6 @@ const CbManager = function ()  {
 
         this.banner.classList.remove("bb-cb-bottom", 'visible')
         this.banner.classList.add('bb-cb-overlay', 'visible')
-
-        // if(document.querySelector('.' + CB_PREFIX + 'stage') == null) {
-        //     document.querySelector('.' + CB_PREFIX + 'body').appendChild(this.bannerStage)
-        //     document.querySelector('.' + CB_NAME).classList.add('visible')
-        // }
 
     }
 
@@ -254,7 +252,7 @@ const CbManager = function ()  {
                     }
                 }
 
-                if(groupComponents.children.length > 0 || group.lockedAndActive) {
+                if((groupComponents.children.length > 0 || group.lockedAndActive) && (groupComponents.children.length > 0 || !group.lockedAndActive)) {
                     contentGroups.appendChild(
                         createToggle(
                             true, CB_PREFIX, group?.title, CB_GROUP_PREFIX + group?.id, group?.description,
@@ -285,17 +283,17 @@ const CbManager = function ()  {
          */
         this.saveAndCloseButton = createElementWithAttrs('button', {
             className: ['bb-button' , 'bb-btn--typeS', 'bb-show-overlay'].join(' '),
-            type: 'submit',
+            type: 'button',
             innerText: buttonLabels?.saveAndClose
         }, containerButtons)
         this.acceptAllButton = createElementWithAttrs('button', {
             className: ['bb-button' , 'bb-btn--typeS', 'bb-show-all'].join(' '),
-            type: 'submit',
+            type: 'button',
             innerText: buttonLabels?.acceptAll
         }, containerButtons)
         this.confirmSelectionButton = createElementWithAttrs('button', {
             className: ['bb-button' , 'bb-btn--typeS', 'bb-show-bottom'].join(' '),
-            type: 'submit',
+            type: 'button',
             innerText: buttonLabels?.confirmSelection
         }, containerButtons)
         this.advancedSettingsButton = createElementWithAttrs('button', {
@@ -303,7 +301,6 @@ const CbManager = function ()  {
             type: 'button',
             innerText: buttonLabels?.advancedSettings
         }, containerButtons)
-
 
         this.attachBannerEventListeners(isOverlay);
         return containerButtons;
@@ -339,7 +336,7 @@ const CbManager = function ()  {
             }, linkContainer)
         })
         createElementWithAttrs('div', {className: CB_PREFIX + 'footer-cell'})
-        const identificationContainer = createElementWithAttrs('div', {className: CB_PREFIX + 'uid', innerText: `User-ID: ${this.getUserUid()}`,})
+        const identificationContainer = createElementWithAttrs('div', {className: CB_PREFIX + 'uid', innerText: `User-ID: ${this.getUserHash()}`,})
 
         containerFooterCell.appendChild(linkContainer)
 
@@ -385,24 +382,40 @@ const CbManager = function ()  {
         })
     }
 
-    this.savePreferences = () => {
+    this.savePreferences = (consentServiceData) => {
         console.log('savePreferences');
+        const lastPreferences = this.getLastPreferences();
+
+        lastPreferences.version = this.bannerPreferences?.banner?.version
+        lastPreferences.services = consentServiceData
+        lastPreferences.timestamp = Date.now()
+
+        this.localPreferences = lastPreferences;
+
+        this.cookiePreferences = Object.fromEntries(
+            Object.entries(consentServiceData).map(
+                service => {
+                    return [service[0], service[1]?.consent]
+                }
+            )
+        )
+
+        this.setUserConsentCookieServices();
+        this.setLocalStorageData();
+        this.saveLogUserConsent();
+
+        console.log(this.localPreferences);
+        console.log(this.cookiePreferences);
+
+        this.closeAndRemoveBanner();
     }
 
     this.getLastPreferences = () => {
         console.log('getLastPreferences');
-        let lastPreferences;
-        lastPreferences = window.localStorage.getItem(LAST_PREFERENCES_NAME)
-        if (lastPreferences){
-            lastPreferences = JSON.parse(lastPreferences);
-        }else {
-            lastPreferences = {
-                uid: '',
-                hash: ''
-            };
-        }
-        return lastPreferences;
+        return localStorage.getItem(LAST_PREFERENCES_NAME) ? JSON.parse(localStorage.getItem(LAST_PREFERENCES_NAME)) : {};
     }
+
+
 
     this.isPreferencesCookie = () => {
         console.log('isPreferencesCookie');
@@ -414,58 +427,30 @@ const CbManager = function ()  {
         return Object.keys(this.localPreferences).length !== 0;
     }
     /**
-     * uuid is the generate random hash
-     * @return {string}
-     */
-    this.getUserUid = () => {
-        const lastPreferences = this.getLastPreferences();
-        let uuid = lastPreferences.uuid;
-        /**
-         * @ToDo
-         * Condition Einstellung Log Aktiviert oder Deaktiviert
-         */
-        if (!uuid) {
-            uuid = generateUserUid();
-            lastPreferences.uuid = uuid;
-            window.localStorage.setItem(LAST_PREFERENCES_NAME, JSON.stringify(lastPreferences))
-        }
-        return uuid
-    }
-    /**
      * hash is the generate browser fingerprint hash
      * @return {string}
      */
     this.getUserHash = () => {
         const lastPreferences = this.getLastPreferences();
-        let hash = lastPreferences.hash;
+        let hash = lastPreferences?.hash;
         if (!hash) {
             hash = generateUserHash();
-            console.log(hash === "2e116086-dd85b-9a997-f2469-17937f5ac");
             lastPreferences.hash = hash;
             window.localStorage.setItem(LAST_PREFERENCES_NAME, JSON.stringify(lastPreferences))
         }
         return hash
     }
 
-    // this.getUserIdentificationKey = async () => {
-    //
-    // }
-
-
-    this.saveConsentLog = async () => {
+    this.saveLogUserConsent = async () => {
         const url = "/consent/save"
 
-        const consent = {
-            version: 1,
-            services: { analytics: false, youtube: false }
-        };
-
+        console.log(this.localPreferences);
         const response = await fetch(url, {
             method: 'POST',
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify(consent)
+            body: JSON.stringify(this.localPreferences)
         });
 
         if (!response.ok) throw new Error(`Network response was not ok. Status: ${response.status}`);
@@ -486,7 +471,7 @@ const CbManager = function ()  {
             Array.from(
                 formPreferencesContainer.querySelectorAll(`.${CB_PREFIX}component input[data-group-id]`)
             ).map(el => {
-                return [el.name, {'title': el.dataset.componentTitle, 'consent' : el.checked}]
+                return [el.name, {'title': el.dataset.componentTitle, 'consent' : el.checked, 'groupId': el.dataset.groupId}]
             })
         )
     }
@@ -496,6 +481,25 @@ const CbManager = function ()  {
         for (let key of Object.keys(data)) data[key].consent = value
 
         return data
+    }
+
+    this.setUserConsentCookieServices = () => {
+        console.log('setCookieServices');
+        cookieUtils.set(LAST_PREFERENCES_NAME, JSON.stringify(this.cookiePreferences) + ';secure;samesite=lax', this.bannerPreferences?.lifetimes?.userConsent)
+    }
+
+    this.setLocalStorageData = () => {
+        console.log('setLocalStorageData');
+        window.localStorage.setItem(LAST_PREFERENCES_NAME, JSON.stringify(this.localPreferences))
+    }
+
+    this.shouldCreateBanner = () => {
+        const localStoragePreferences = this.getLastPreferences();
+        return Object.keys(this.cookiePreferences).length === 0 ||
+            Object.keys(localStoragePreferences?.services ?? {}).length === 0 ||
+            localStoragePreferences?.version !== this.bannerPreferences?.banner?.version ||
+            localStoragePreferences?.hash !== this.getUserHash() ||
+            hasDaysPassed(localStoragePreferences?.timestamp, this.bannerPreferences?.lifetimes?.banner);
     }
 
 }

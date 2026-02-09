@@ -93,3 +93,9 @@ export const generateUserHash = () => {
     let i = 0;
     return '########-#####-#####-#####-#########'.replace(/#/g, () => hash[i++]);
 }
+
+export const hasDaysPassed = (timestamp, days) => {
+    if (!timestamp) return true;
+    const msPerDay = 24 * 60 * 60 * 1000;
+    return (Date.now() - timestamp) >= days * msPerDay;
+}

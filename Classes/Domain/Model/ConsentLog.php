@@ -4,7 +4,7 @@ namespace Bb\ConsentBanner\Domain\Model;
 use \TYPO3\CMS\Extbase\DomainObject\AbstractEntity;
 
 
-class Consent extends AbstractEntity
+class ConsentLog extends AbstractEntity
 {
     /**
      * identification Key
@@ -12,12 +12,13 @@ class Consent extends AbstractEntity
      * @var string
      */
     protected string $identificationKey = '';
-    /**
-     * pid
-     *
-     * @var int|null
-     */
-    protected ?int $pid = 0;
+
+    protected int $bannerVersion = 0;
+
+    protected array $consentServices = [];
+
+
+
 
     /**
      * __construct
@@ -36,14 +37,6 @@ class Consent extends AbstractEntity
         $this->identificationKey = $identificationKey;
     }
 
-    public function getPid(): int
-    {
-        return $this->pid;
-    }
 
-    public function setPid(int $pid): void
-    {
-        $this->pid = $pid;
-    }
 
 }

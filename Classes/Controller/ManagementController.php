@@ -4,8 +4,7 @@ declare(strict_types=1);
 namespace Bb\ConsentBanner\Controller;
 
 use Bb\ConsentBanner\Domain\Model\Banner;
-use Bb\ConsentBanner\Domain\Repository\CategoryRepository;
-use Bb\ConsentBanner\Domain\Repository\ConsentRepository;
+use Bb\ConsentBanner\Domain\Repository\ConsentLogRepository;
 use Bb\ConsentBanner\Domain\Repository\BannerRepository;
 
 use Doctrine\DBAL\Driver\Exception;
@@ -118,7 +117,7 @@ class ManagementController extends ActionController
         protected readonly SiteFinder $siteFinder,
         protected readonly PageRenderer $pageRenderer,
         protected readonly BannerRepository $bannerRepository,
-        protected readonly ConsentRepository   $consentRepository,
+        protected readonly ConsentLogRepository   $consentRepository,
         protected readonly ModuleTemplateFactory $moduleTemplateFactory,
         private readonly IconFactory $iconFactory,
         private readonly LanguageServiceFactory $languageServiceFactory,
