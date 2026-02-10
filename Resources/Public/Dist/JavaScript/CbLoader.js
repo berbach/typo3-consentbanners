@@ -248,6 +248,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _fingerprint_generator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__("./Resources/Public/Assets/JavaScript/Lib/fingerprint-generator.js");
 
 const BOT_AGENT_REGEX = new RegExp(['Mozilla/5.0 \\(Linux; Android 11; moto g power \\(2022\\)\\) AppleWebKit/537\\.36 \\(KHTML, like Gecko\\) Chrome/119\\.0\\.0\\.0 Mobile Safari/537\\.36', 'Mozilla/5.0 \\(Macintosh; Intel Mac OS X 10_15_7\\) AppleWebKit/537\\.36 \\(KHTML, like Gecko\\) Chrome/119\\.0\\.0\\.0 Safari/537\\.36', '(?:Googlebot|Bingbot|Baiduspider|YandexBot|DuckDuckBot|Slackbot|Facebookbot|Twitterbot|LinkedInbot|Pinterest|WhatsApp|TelegramBot|Slurp|Sogou|Exabot|ia_archiver|msnbot|YandexMobileBot|AdsBot-Google-Mobile|Googlebot-Image|Googlebot-News|Googlebot-Video|Mediapartners-Google|AdsBot-Google|FeedFetcher-Google|Google-Read-Aloud|Google-Adwords-Instant|Yahoo! Slurp China|Yahoo! Slurp|Y!J-BRW|Y!J-SRD|Y!J-MBS|Y!J-MR2|Y!J-PSCS|Y!J-BSC|Y!J-GECC|Y!J-DSC|Y!J-DBS|Y!J-SRB|Y!J-RTS|Y!J-BEP|Y!J-BRP|Y!J-BSP|Y!J-SRS|Y!J-SRE|Y!J-SRT|Y!J-BRV|Y!J-BSV|Y!J-SBC|Y!J-BRL|Y!J-TRG|Y!J-BRD|Y!J-BRG|Y!J-SRQ|Y!J-BRW|Y!J-BRW|Google PageSpeed)'].join('|'), 'i');
+/**
+ *
+ * @param tag
+ * @param attrs
+ * @param appendTo
+ * @return {*}
+ */
 const createElementWithAttrs = (tag, attrs, appendTo) => {
   const el = document.createElement(tag);
   for (const key in attrs) {
@@ -259,6 +266,17 @@ const createElementWithAttrs = (tag, attrs, appendTo) => {
   if (appendTo) appendTo.appendChild(el);
   return el;
 };
+/**
+ *
+ * @param isGroup
+ * @param cbPrefix
+ * @param label
+ * @param inputName
+ * @param description
+ * @param inputAttributes
+ * @param appendComponents
+ * @return {*}
+ */
 const createToggle = (isGroup, cbPrefix, label, inputName, description, inputAttributes, appendComponents) => {
   isGroup = isGroup ?? false;
   cbPrefix = cbPrefix ?? 'bb-cb-';
@@ -354,6 +372,9 @@ const hasDaysPassed = (timestamp, days) => {
 /******/ 		return module.exports;
 /******/ 	}
 /******/ 	
+/******/ 	// expose the modules object (__webpack_modules__)
+/******/ 	__webpack_require__.m = __webpack_modules__;
+/******/ 	
 /************************************************************************/
 /******/ 	/* webpack/runtime/define property getters */
 /******/ 	(() => {
@@ -367,9 +388,90 @@ const hasDaysPassed = (timestamp, days) => {
 /******/ 		};
 /******/ 	})();
 /******/ 	
+/******/ 	/* webpack/runtime/ensure chunk */
+/******/ 	(() => {
+/******/ 		__webpack_require__.f = {};
+/******/ 		// This file contains only the entry chunk.
+/******/ 		// The chunk loading function for additional chunks
+/******/ 		__webpack_require__.e = (chunkId) => {
+/******/ 			return Promise.all(Object.keys(__webpack_require__.f).reduce((promises, key) => {
+/******/ 				__webpack_require__.f[key](chunkId, promises);
+/******/ 				return promises;
+/******/ 			}, []));
+/******/ 		};
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/get javascript chunk filename */
+/******/ 	(() => {
+/******/ 		// This function allow to reference async chunks
+/******/ 		__webpack_require__.u = (chunkId) => {
+/******/ 			// return url for filenames not based on template
+/******/ 			if (chunkId === "Resources_Public_Assets_JavaScript_Lib_CookieInformation_js") return "JavaScript/Chunks/Lib.CookieInformation.js";
+/******/ 			// return url for filenames based on template
+/******/ 			return undefined;
+/******/ 		};
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/global */
+/******/ 	(() => {
+/******/ 		__webpack_require__.g = (function() {
+/******/ 			if (typeof globalThis === 'object') return globalThis;
+/******/ 			try {
+/******/ 				return this || new Function('return this')();
+/******/ 			} catch (e) {
+/******/ 				if (typeof window === 'object') return window;
+/******/ 			}
+/******/ 		})();
+/******/ 	})();
+/******/ 	
 /******/ 	/* webpack/runtime/hasOwnProperty shorthand */
 /******/ 	(() => {
 /******/ 		__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/load script */
+/******/ 	(() => {
+/******/ 		var inProgress = {};
+/******/ 		var dataWebpackPrefix = "consent_banner:";
+/******/ 		// loadScript function to load a script via script tag
+/******/ 		__webpack_require__.l = (url, done, key, chunkId) => {
+/******/ 			if(inProgress[url]) { inProgress[url].push(done); return; }
+/******/ 			var script, needAttach;
+/******/ 			if(key !== undefined) {
+/******/ 				var scripts = document.getElementsByTagName("script");
+/******/ 				for(var i = 0; i < scripts.length; i++) {
+/******/ 					var s = scripts[i];
+/******/ 					if(s.getAttribute("src") == url || s.getAttribute("data-webpack") == dataWebpackPrefix + key) { script = s; break; }
+/******/ 				}
+/******/ 			}
+/******/ 			if(!script) {
+/******/ 				needAttach = true;
+/******/ 				script = document.createElement('script');
+/******/ 		
+/******/ 				script.charset = 'utf-8';
+/******/ 				if (__webpack_require__.nc) {
+/******/ 					script.setAttribute("nonce", __webpack_require__.nc);
+/******/ 				}
+/******/ 				script.setAttribute("data-webpack", dataWebpackPrefix + key);
+/******/ 		
+/******/ 				script.src = url;
+/******/ 			}
+/******/ 			inProgress[url] = [done];
+/******/ 			var onScriptComplete = (prev, event) => {
+/******/ 				// avoid mem leaks in IE.
+/******/ 				script.onerror = script.onload = null;
+/******/ 				clearTimeout(timeout);
+/******/ 				var doneFns = inProgress[url];
+/******/ 				delete inProgress[url];
+/******/ 				script.parentNode && script.parentNode.removeChild(script);
+/******/ 				doneFns && doneFns.forEach((fn) => (fn(event)));
+/******/ 				if(prev) return prev(event);
+/******/ 			}
+/******/ 			var timeout = setTimeout(onScriptComplete.bind(null, undefined, { type: 'timeout', target: script }), 120000);
+/******/ 			script.onerror = onScriptComplete.bind(null, script.onerror);
+/******/ 			script.onload = onScriptComplete.bind(null, script.onload);
+/******/ 			needAttach && document.head.appendChild(script);
+/******/ 		};
 /******/ 	})();
 /******/ 	
 /******/ 	/* webpack/runtime/make namespace object */
@@ -381,6 +483,119 @@ const hasDaysPassed = (timestamp, days) => {
 /******/ 			}
 /******/ 			Object.defineProperty(exports, '__esModule', { value: true });
 /******/ 		};
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/publicPath */
+/******/ 	(() => {
+/******/ 		var scriptUrl;
+/******/ 		if (__webpack_require__.g.importScripts) scriptUrl = __webpack_require__.g.location + "";
+/******/ 		var document = __webpack_require__.g.document;
+/******/ 		if (!scriptUrl && document) {
+/******/ 			if (document.currentScript && document.currentScript.tagName.toUpperCase() === 'SCRIPT')
+/******/ 				scriptUrl = document.currentScript.src;
+/******/ 			if (!scriptUrl) {
+/******/ 				var scripts = document.getElementsByTagName("script");
+/******/ 				if(scripts.length) {
+/******/ 					var i = scripts.length - 1;
+/******/ 					while (i > -1 && (!scriptUrl || !/^http(s?):/.test(scriptUrl))) scriptUrl = scripts[i--].src;
+/******/ 				}
+/******/ 			}
+/******/ 		}
+/******/ 		// When supporting browsers where an automatic publicPath is not supported you must specify an output.publicPath manually via configuration
+/******/ 		// or pass an empty string ("") and set the __webpack_public_path__ variable from your code to use your own logic.
+/******/ 		if (!scriptUrl) throw new Error("Automatic publicPath is not supported in this browser");
+/******/ 		scriptUrl = scriptUrl.replace(/^blob:/, "").replace(/#.*$/, "").replace(/\?.*$/, "").replace(/\/[^\/]+$/, "/");
+/******/ 		__webpack_require__.p = scriptUrl + "../";
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/jsonp chunk loading */
+/******/ 	(() => {
+/******/ 		// no baseURI
+/******/ 		
+/******/ 		// object to store loaded and loading chunks
+/******/ 		// undefined = chunk not loaded, null = chunk preloaded/prefetched
+/******/ 		// [resolve, reject, Promise] = chunk loading, 0 = chunk loaded
+/******/ 		var installedChunks = {
+/******/ 			"CbLoader": 0
+/******/ 		};
+/******/ 		
+/******/ 		__webpack_require__.f.j = (chunkId, promises) => {
+/******/ 				// JSONP chunk loading for javascript
+/******/ 				var installedChunkData = __webpack_require__.o(installedChunks, chunkId) ? installedChunks[chunkId] : undefined;
+/******/ 				if(installedChunkData !== 0) { // 0 means "already installed".
+/******/ 		
+/******/ 					// a Promise means "currently loading".
+/******/ 					if(installedChunkData) {
+/******/ 						promises.push(installedChunkData[2]);
+/******/ 					} else {
+/******/ 						if(true) { // all chunks have JS
+/******/ 							// setup Promise in chunk cache
+/******/ 							var promise = new Promise((resolve, reject) => (installedChunkData = installedChunks[chunkId] = [resolve, reject]));
+/******/ 							promises.push(installedChunkData[2] = promise);
+/******/ 		
+/******/ 							// start chunk loading
+/******/ 							var url = __webpack_require__.p + __webpack_require__.u(chunkId);
+/******/ 							// create error before stack unwound to get useful stacktrace later
+/******/ 							var error = new Error();
+/******/ 							var loadingEnded = (event) => {
+/******/ 								if(__webpack_require__.o(installedChunks, chunkId)) {
+/******/ 									installedChunkData = installedChunks[chunkId];
+/******/ 									if(installedChunkData !== 0) installedChunks[chunkId] = undefined;
+/******/ 									if(installedChunkData) {
+/******/ 										var errorType = event && (event.type === 'load' ? 'missing' : event.type);
+/******/ 										var realSrc = event && event.target && event.target.src;
+/******/ 										error.message = 'Loading chunk ' + chunkId + ' failed.\n(' + errorType + ': ' + realSrc + ')';
+/******/ 										error.name = 'ChunkLoadError';
+/******/ 										error.type = errorType;
+/******/ 										error.request = realSrc;
+/******/ 										installedChunkData[1](error);
+/******/ 									}
+/******/ 								}
+/******/ 							};
+/******/ 							__webpack_require__.l(url, loadingEnded, "chunk-" + chunkId, chunkId);
+/******/ 						}
+/******/ 					}
+/******/ 				}
+/******/ 		};
+/******/ 		
+/******/ 		// no prefetching
+/******/ 		
+/******/ 		// no preloaded
+/******/ 		
+/******/ 		// no HMR
+/******/ 		
+/******/ 		// no HMR manifest
+/******/ 		
+/******/ 		// no on chunks loaded
+/******/ 		
+/******/ 		// install a JSONP callback for chunk loading
+/******/ 		var webpackJsonpCallback = (parentChunkLoadingFunction, data) => {
+/******/ 			var [chunkIds, moreModules, runtime] = data;
+/******/ 			// add "moreModules" to the modules object,
+/******/ 			// then flag all "chunkIds" as loaded and fire callback
+/******/ 			var moduleId, chunkId, i = 0;
+/******/ 			if(chunkIds.some((id) => (installedChunks[id] !== 0))) {
+/******/ 				for(moduleId in moreModules) {
+/******/ 					if(__webpack_require__.o(moreModules, moduleId)) {
+/******/ 						__webpack_require__.m[moduleId] = moreModules[moduleId];
+/******/ 					}
+/******/ 				}
+/******/ 				if(runtime) var result = runtime(__webpack_require__);
+/******/ 			}
+/******/ 			if(parentChunkLoadingFunction) parentChunkLoadingFunction(data);
+/******/ 			for(;i < chunkIds.length; i++) {
+/******/ 				chunkId = chunkIds[i];
+/******/ 				if(__webpack_require__.o(installedChunks, chunkId) && installedChunks[chunkId]) {
+/******/ 					installedChunks[chunkId][0]();
+/******/ 				}
+/******/ 				installedChunks[chunkId] = 0;
+/******/ 			}
+/******/ 		
+/******/ 		}
+/******/ 		
+/******/ 		var chunkLoadingGlobal = self["webpackChunkconsent_banner"] = self["webpackChunkconsent_banner"] || [];
+/******/ 		chunkLoadingGlobal.forEach(webpackJsonpCallback.bind(null, 0));
+/******/ 		chunkLoadingGlobal.push = webpackJsonpCallback.bind(null, chunkLoadingGlobal.push.bind(chunkLoadingGlobal));
 /******/ 	})();
 /******/ 	
 /************************************************************************/
@@ -464,6 +679,7 @@ const CbManager = function () {
   /**
    * @property {number} openerVariant
    * @property {Object} openerData
+   * @property {string} targetFooterNavigation
    * @property {string} textLinkText
    * @property {string} textLinkPosition
    * @property {string} buttonWidgetPosition
@@ -472,8 +688,8 @@ const CbManager = function () {
   this.openerChangePreferences = () => {
     const openerType = this.bannerPreferences.openerVariant ?? 10;
     if (openerType === 10) {
-      const targetWrapper = document.querySelector('.bb-nav__service');
-      const cloneFirstElementChild = targetWrapper.firstElementChild.cloneNode();
+      const targetWrapper = document.querySelector(this.bannerPreferences?.openerData?.targetFooterNavigation);
+      const cloneFirstElementChild = targetWrapper.firstElementChild.cloneNode(true);
       cloneFirstElementChild.innerHTML = '';
       this.changePreferences = (0,_Lib_utils__WEBPACK_IMPORTED_MODULE_0__.createElementWithAttrs)('button', {
         className: ['bb-nav__link', 'bb-text-widget', CB_PREFIX + 'link'].join(' '),
@@ -677,8 +893,13 @@ const CbManager = function () {
       innerText: buttonLabels?.showInfo
     }, containerFooterCell);
     containerFooter.appendChild(containerFooterCell);
-    this.showCookieInfoButton?.addEventListener('click', () => {
+    this.showCookieInfoButton?.addEventListener('click', async () => {
       console.log('click show cookie information');
+      const {
+        default: CookieInformation
+      } = await __webpack_require__.e(/* import() */ "Resources_Public_Assets_JavaScript_Lib_CookieInformation_js").then(__webpack_require__.bind(__webpack_require__, "./Resources/Public/Assets/JavaScript/Lib/CookieInformation.js"));
+      const cookieInfo = new CookieInformation(this.bannerPreferences);
+      cookieInfo.show();
     });
     containerFooterCell = (0,_Lib_utils__WEBPACK_IMPORTED_MODULE_0__.createElementWithAttrs)('div', {
       className: CB_PREFIX + 'footer-cell'
@@ -710,7 +931,8 @@ const CbManager = function () {
    */
   this.handlePlaceholderElements = () => {
     console.log('handlePlaceholderElements');
-    const placeholderContentElements = document.querySelectorAll('.placeholder');
+    const placeholderContentElements = document.querySelectorAll('div[data-placeholder]');
+    //data-type=iframe
   };
   /**
    * @return {void}
@@ -811,7 +1033,7 @@ const CbManager = function () {
    */
   this.saveLogUserConsent = async userConsentLogData => {
     console.log('saveLogUserConsent');
-    const url = "/consent/save";
+    const url = "/api/consent/save";
     const response = await fetch(url, {
       method: 'POST',
       headers: {

@@ -85,6 +85,7 @@ const CbManager = function ()  {
     /**
      * @property {number} openerVariant
      * @property {Object} openerData
+     * @property {string} targetFooterNavigation
      * @property {string} textLinkText
      * @property {string} textLinkPosition
      * @property {string} buttonWidgetPosition
@@ -94,8 +95,8 @@ const CbManager = function ()  {
         const openerType = this.bannerPreferences.openerVariant ?? 10
 
         if(openerType === 10){
-            const targetWrapper = document.querySelector('.bb-nav__service');
-            const cloneFirstElementChild = targetWrapper.firstElementChild.cloneNode();
+            const targetWrapper = document.querySelector(this.bannerPreferences?.openerData?.targetFooterNavigation);
+            const cloneFirstElementChild = targetWrapper.firstElementChild.cloneNode(true);
 
             cloneFirstElementChild.innerHTML = '';
 
@@ -330,8 +331,11 @@ const CbManager = function ()  {
 
         containerFooter.appendChild(containerFooterCell)
 
-        this.showCookieInfoButton?.addEventListener('click', () => {
+        this.showCookieInfoButton?.addEventListener('click', async () => {
             console.log('click show cookie information');
+            const { default: CookieInformation } = await import('./Lib/CookieInformation.js');
+            const cookieInfo = new CookieInformation(this.bannerPreferences);
+            cookieInfo.show();
         })
 
         containerFooterCell = createElementWithAttrs('div', {className: CB_PREFIX + 'footer-cell'})
@@ -358,7 +362,8 @@ const CbManager = function ()  {
      */
     this.handlePlaceholderElements = () => {
         console.log('handlePlaceholderElements');
-        const placeholderContentElements = document.querySelectorAll('.placeholder');
+        const placeholderContentElements = document.querySelectorAll('div[data-placeholder]');
+        //data-type=iframe
     }
     /**
      * @return {void}

@@ -1,7 +1,13 @@
 import BrowserFingerprint from "./fingerprint-generator";
 
 const BOT_AGENT_REGEX = new RegExp(['Mozilla/5.0 \\(Linux; Android 11; moto g power \\(2022\\)\\) AppleWebKit/537\\.36 \\(KHTML, like Gecko\\) Chrome/119\\.0\\.0\\.0 Mobile Safari/537\\.36', 'Mozilla/5.0 \\(Macintosh; Intel Mac OS X 10_15_7\\) AppleWebKit/537\\.36 \\(KHTML, like Gecko\\) Chrome/119\\.0\\.0\\.0 Safari/537\\.36', '(?:Googlebot|Bingbot|Baiduspider|YandexBot|DuckDuckBot|Slackbot|Facebookbot|Twitterbot|LinkedInbot|Pinterest|WhatsApp|TelegramBot|Slurp|Sogou|Exabot|ia_archiver|msnbot|YandexMobileBot|AdsBot-Google-Mobile|Googlebot-Image|Googlebot-News|Googlebot-Video|Mediapartners-Google|AdsBot-Google|FeedFetcher-Google|Google-Read-Aloud|Google-Adwords-Instant|Yahoo! Slurp China|Yahoo! Slurp|Y!J-BRW|Y!J-SRD|Y!J-MBS|Y!J-MR2|Y!J-PSCS|Y!J-BSC|Y!J-GECC|Y!J-DSC|Y!J-DBS|Y!J-SRB|Y!J-RTS|Y!J-BEP|Y!J-BRP|Y!J-BSP|Y!J-SRS|Y!J-SRE|Y!J-SRT|Y!J-BRV|Y!J-BSV|Y!J-SBC|Y!J-BRL|Y!J-TRG|Y!J-BRD|Y!J-BRG|Y!J-SRQ|Y!J-BRW|Y!J-BRW|Google PageSpeed)'].join('|'),'i',)
-
+/**
+ *
+ * @param tag
+ * @param attrs
+ * @param appendTo
+ * @return {*}
+ */
 export const createElementWithAttrs = (tag, attrs, appendTo) => {
     const el = document.createElement(tag)
     for (const key in attrs) {
@@ -25,7 +31,17 @@ export const createElementWithAttrs = (tag, attrs, appendTo) => {
         appendTo.appendChild(el)
     return el;
 }
-
+/**
+ *
+ * @param isGroup
+ * @param cbPrefix
+ * @param label
+ * @param inputName
+ * @param description
+ * @param inputAttributes
+ * @param appendComponents
+ * @return {*}
+ */
 export const createToggle = (isGroup, cbPrefix, label, inputName, description, inputAttributes, appendComponents) => {
     isGroup = isGroup ?? false
     cbPrefix = cbPrefix ?? 'bb-cb-'
