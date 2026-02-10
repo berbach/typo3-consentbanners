@@ -9,7 +9,6 @@ class CookieInformation {
     constructor(data) {
         this.data = data;
         this.overlay = null;
-        this.closeButton = null;
     }
 
     /**
@@ -25,7 +24,7 @@ class CookieInformation {
             "data-nosnippet": "true"
         });
 
-        let overlayBody = createElementWithAttrs('div', {className: [CB_PREFIX + 'cookie-info-body'].join(' ')})
+        const overlayBody = createElementWithAttrs('div', {className: [CB_PREFIX + 'cookie-info-body'].join(' ')})
 
         overlayBody.appendChild(this.createOverlayHeader())
         overlayBody.appendChild(this.createOverlayContent())
@@ -46,7 +45,7 @@ class CookieInformation {
      * @return {*}
      */
     createOverlayHeader() {
-        let overlayHeader = createElementWithAttrs('div', {className: [CB_PREFIX + 'cookie-info-header'].join(' ')})
+        const overlayHeader = createElementWithAttrs('div', {className: [CB_PREFIX + 'cookie-info-header'].join(' ')})
         overlayHeader.innerHTML = `<h2>Cookie Information</h2>`
         return overlayHeader;
     }
@@ -56,7 +55,7 @@ class CookieInformation {
      * @return {*}
      */
     createOverlayContent() {
-        let overlayContent = createElementWithAttrs('div', {className: [CB_PREFIX + 'cookie-info-content'].join(' ')})
+        const overlayContent = createElementWithAttrs('div', {className: [CB_PREFIX + 'cookie-info-content'].join(' ')})
         overlayContent.innerHTML = `<p>Hier werden die Cookie-Informationen angezeigt.</p>`;
         return overlayContent;
     }
@@ -66,7 +65,7 @@ class CookieInformation {
      * @return {*}
      */
     createOverlayFooter() {
-        let overlayFooter = createElementWithAttrs('div', {className: [CB_PREFIX + 'cookie-info-footer'].join(' ')}),
+        const overlayFooter = createElementWithAttrs('div', {className: [CB_PREFIX + 'cookie-info-footer'].join(' ')}),
             btn= createElementWithAttrs("button", {
                 className: [CB_NAME + "button", CB_PREFIX + "cookie-info-close"].join(' '),
                 type: 'button',
