@@ -132,14 +132,7 @@ class AllowCookieViewHelper extends AbstractViewHelper
                 if($category->getModules()->count() > 0) {
                     /** @var Module $module */
                     foreach ($category->getModules() as $module) {
-                        if ($moduleName === 'html' && $module->getModuleTarget() === $moduleName) {
-                            $this->moduleInBanner[$module->getModuleTarget()][] = 'html::'.$module->getUid();
-                            $storageKey = 'module::'.$module->getUid();
-                        }else{
-                            $this->moduleInBanner[$module->getModuleTarget()] = $module->getModuleTarget();
-                            $storageKey = 'module::'.$module->getModuleTarget();
-                        }
-                        $this->storageModule[$storageKey] = [
+                        $moduleData = [
                             'isModule' => true,
                             'uid' => $module->getUid(),
                             'name' => $module->getName(),
@@ -147,6 +140,18 @@ class AllowCookieViewHelper extends AbstractViewHelper
                             'placeholder_headline' => $module->getPlaceholderHeadline(),
                             'placeholder' => $module->getPlaceholder(),
                             'module_target' => $module->getModuleTarget()];
+                        if ($moduleName === 'html' && $module->getModuleTarget() === $moduleName) {
+                            $this->moduleInBanner[$module->getModuleTarget()][] = 'html::'.$module->getUid();
+                            $this->storageModule['module::'.$module->getUid()] = $moduleData;
+                        }else{
+                            // module_target is a multi-select (selectMultipleSideBySide),
+                            // so it may hold a comma-separated list of CTypes. Register each
+                            // target individually so single-CType lookups resolve.
+                            foreach (GeneralUtility::trimExplode(',', (string)$module->getModuleTarget(), true) as $target) {
+                                $this->moduleInBanner[$target] = $target;
+                                $this->storageModule['module::'.$target] = $moduleData;
+                            }
+                        }
                     }
                 }
             }
@@ -315,11 +320,11 @@ class AllowCookieViewHelper extends AbstractViewHelper
                 $data['placeholder'] .
                 '</span>';
         }
-        if($showToogle) {
+        if($showToogle && !empty($data['uid'])) {
             $html .=
                 '<div class="bb-consentbanner-module" data-cookiebanner-module="' . $data['uid'] . '">
-                <label class="bb-control-checkbox" aria-label="' . $data['name'] . '">
-                    <span class="bb-control-label bb-label-module">' . $data['name'] . '</span>
+                <label class="bb-control-checkbox" aria-label="' . ($data['name'] ?? '') . '">
+                    <span class="bb-control-label bb-label-module">' . ($data['name'] ?? '') . '</span>
                     <input type="checkbox" name="' . $data['uid'] . '">
                     <span class="bb-toggle"></span>
                 </label>' .
