@@ -42,12 +42,6 @@ const CbManager = function ()  {
      *
      */
     this.init = () => {
-        console.log('CBManager JavaScript initialize')
-
-        if (isBotAgent()) {
-            console.log('Set Essential Cookies')
-        }
-
         if(this.shouldCreateBanner()){
             this.openerChangePreferences()
             this.createWrapperBanner()
@@ -64,19 +58,15 @@ const CbManager = function ()  {
         })
 
         this.acceptAllButton?.addEventListener('click', () => {
-            console.log('acceptAllButton')
             this.savePreferences(this.collectAndModifyData(true))
         })
         this.saveAndCloseButton?.addEventListener('click', () => {
-            console.log('saveAndCloseButton')
             this.savePreferences(this.collectData())
         })
         this.confirmSelectionButton?.addEventListener('click', () => {
-            console.log('confirmSelectionButton')
             this.savePreferences(this.collectData())
         })
         this.advancedSettingsButton?.addEventListener('click', () => {
-            console.log('advancedSettingsButton')
             this.createBannerOverlay()
         })
 
@@ -123,7 +113,6 @@ const CbManager = function ()  {
                 innerHTML: createElementWithAttrs("span", { innerText: buttonText}).outerHTML
             });
             //TODO Widget Position
-            console.log(document.querySelector('body > div'))
             document.querySelector('body > div').insertAdjacentElement('afterend', this.changePreferences)
         }
 
@@ -147,7 +136,6 @@ const CbManager = function ()  {
     }
 
     this.createWrapperBanner = (isOverlay = false) => {
-        console.log('CreateWrapperBanner');
         this.closeAndRemoveBanner();
 
         this.banner = createElementWithAttrs('div', {
@@ -159,7 +147,6 @@ const CbManager = function ()  {
     }
 
     this.createBanner = (isOverlay = false) => {
-        console.log('createBanner');
         this.bannerBody = createElementWithAttrs('div', {className: [CB_PREFIX + 'body'].join(' ')})
         this.bannerStage = createElementWithAttrs('div', {className: [CB_PREFIX + 'stage'].join(' ')})
         this.bannerMain = createElementWithAttrs('form', {className: [CB_PREFIX + 'main'].join(' ')})
@@ -213,7 +200,6 @@ const CbManager = function ()  {
     }
 
     this.createBannerOverlay = () => {
-        console.log('createBannerOverlay');
 
         this.banner.classList.remove("bb-cb-bottom", 'visible')
         this.banner.classList.add('bb-cb-overlay', 'visible')
@@ -221,7 +207,6 @@ const CbManager = function ()  {
     }
 
     this.createPreferences = () => {
-        console.log('createPreferences');
         const containerPreferences = createElementWithAttrs('div', {className: [CB_PREFIX + 'preferences'].join(' ')})
 
         if (typeof this.bannerPreferences?.groups === "object" && Object.keys(this.bannerPreferences?.groups).length > 0) {
@@ -278,7 +263,6 @@ const CbManager = function ()  {
      * @return {*}
      */
     this.createContainerButtons = (isOverlay = false) => {
-        console.log('createButtons');
 
         let buttonLabels = Object.keys(this.bannerPreferences?.displayTexts?.buttons).length > 0 ? this.bannerPreferences?.displayTexts?.buttons : {}
         const containerButtons = createElementWithAttrs('div', {className: [CB_PREFIX + 'buttons'].join(' ')})
@@ -317,7 +301,6 @@ const CbManager = function ()  {
      * @return {*}
      */
     this.createContainerFooter = () => {
-        console.log('createContainerFooter');
         let buttonLabels = Object.keys(this.bannerPreferences?.displayTexts?.buttons).length > 0 ? this.bannerPreferences?.displayTexts?.buttons : {}
         let footerLinks = this.bannerPreferences?.footerNavigation.length > 0 ? this.bannerPreferences?.footerNavigation : []
         const containerFooter = createElementWithAttrs('div', {className: [CB_PREFIX + 'footer-row'].join(' ')})
@@ -332,7 +315,6 @@ const CbManager = function ()  {
         containerFooter.appendChild(containerFooterCell)
 
         this.showCookieInfoButton?.addEventListener('click', async () => {
-            console.log('click show cookie information');
             const { default: CookieInformation } = await import('./Lib/CookieInformation.js');
             const cookieInfo = new CookieInformation(this.bannerPreferences);
             cookieInfo.show();
@@ -361,7 +343,6 @@ const CbManager = function ()  {
      * @return {void}
      */
     this.handlePlaceholderElements = () => {
-        console.log('handlePlaceholderElements');
         const placeholderContentElements = document.querySelectorAll('div[data-placeholder]');
         //data-type=iframe
     }
@@ -369,7 +350,6 @@ const CbManager = function ()  {
      * @return {void}
      */
     this.attachSyncToggles = () => {
-        console.log('attachSyncToggles');
         const formPreferencesContainer = this.bannerMain.querySelector(`.${CB_PREFIX}preferences`)
 
         Array.from(formPreferencesContainer.querySelectorAll(`.${CB_PREFIX}component input:not(:disabled)`)).forEach(input => {
@@ -409,7 +389,6 @@ const CbManager = function ()  {
      * @return {void}
      */
     this.savePreferences = (consentServiceData) => {
-        console.log('savePreferences');
         const lastPreferences = this.getLastPreferences();
         const userConsentLogData = {
             hash : "",
@@ -454,7 +433,6 @@ const CbManager = function ()  {
      * @return {*|{}}
      */
     this.getLastPreferences = () => {
-        console.log('getLastPreferences');
         return localStorage.getItem(LAST_PREFERENCES_NAME) ? JSON.parse(localStorage.getItem(LAST_PREFERENCES_NAME)) : {};
     }
     /**
@@ -462,7 +440,6 @@ const CbManager = function ()  {
      * @return {boolean}
      */
     this.isPreferencesCookie = () => {
-        console.log('isPreferencesCookie');
         return Object.keys(this.cookiePreferences).length !== 0;
     }
     /**
@@ -470,7 +447,6 @@ const CbManager = function ()  {
      * @return {boolean}
      */
     this.isPreferencesLocalStorage = () => {
-        console.log('isPreferencesLocalStorage');
         return Object.keys(this.localPreferences).length !== 0;
     }
     /**
@@ -492,7 +468,6 @@ const CbManager = function ()  {
      * @return {Promise<void>}
      */
     this.saveLogUserConsent = async (userConsentLogData) => {
-        console.log('saveLogUserConsent');
         const url = "/api/consent/save"
 
         const response = await fetch(url, {

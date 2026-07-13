@@ -191,20 +191,18 @@ class ManagementController extends ActionController
      */
     public function consentsAction(): ResponseInterface
     {
-        $consentData = $this->consentRepository->findByStorageIds([$this->rootPageId], (int)$this->current_sys_language, true);
+        $consentData = $this->consentRepository->findAll();
         $moduleTemplate = $this->initializeModuleTemplate($this->request);
 
         $moduleTemplate->assignMultiple([
             'data' => [
-                'consents' => [],
+                'consents' => $consentData,
             ],
             'moduleName' => $this->moduleName,
             'returnUrl' => $this->uriBuilder->reset()->uriFor($this->request->getControllerActionName(), ['site' => $this->rootPageId, 'language' => 0], $this->request->getControllerName()),
             'rootPageId' => $this->rootPageId,
             'currentLanguageId' => $this->current_sys_language,
-            //'defaultLanguageId' => $this->default_sys_language,
         ]);
-
 
         return $moduleTemplate->renderResponse('Management/Consents');
     }

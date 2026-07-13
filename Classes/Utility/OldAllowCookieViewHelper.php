@@ -1,32 +1,26 @@
 <?php
 
-namespace Bb\ConsentBanner\ViewHelpers;
+namespace Bb\ConsentBanner\Utility;
 
-use Bb\ConsentBanner\Domain\Model\Banner;
-use Bb\ConsentBanner\Domain\Model\Group;
-use Bb\ConsentBanner\Domain\Model\Component;
-use Bb\ConsentBanner\Domain\Repository\BannerRepository;
-use Bb\ConsentBanner\Utility\CookieUtility;
+use Bb\ConsentBanner\Domain\Model\Category;
+use Bb\ConsentBanner\Domain\Model\Module;
+use Bb\ConsentBanner\Domain\Repository\SettingsRepository;
 use Closure;
 use Doctrine\DBAL\DBALException;
 use Doctrine\DBAL\Driver\Exception;
 use Psr\Http\Message\ServerRequestInterface;
-use TYPO3\CMS\Backend\Utility\BackendUtility;
-use TYPO3\CMS\Core\Database\Connection;
-use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Site\Entity\Site;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Mvc\Request;
-use TYPO3\CMS\Extbase\Utility\DebuggerUtility;
 use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
-use TYPO3\CMS\Fluid\Core\Rendering\RenderingContext;
 use TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
+use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithRenderStatic;
 
-class AllowCookieViewHelper extends AbstractViewHelper
+class OldAllowCookieViewHelper extends AbstractViewHelper
 {
+    use CompileWithRenderStatic;
 
     /**
      * @var boolean
@@ -53,51 +47,53 @@ class AllowCookieViewHelper extends AbstractViewHelper
     }
 
     /**
+     * @param array $arguments
+     * @param Closure $renderChildrenClosure
+     * @param RenderingContextInterface $renderingContext
      *
+     * @return string
      * @throws Exception
+     * @throws DBALException
      */
     public function render(): string
     {
-
         $this->request = $this->renderingContext->getAttribute(ServerRequestInterface::class);
         /** @var Site $site */
         $this->site = $this->request->getAttribute('site');
 
         $cookie = json_decode(CookieUtility::getCookieValue('BbConsentPreference'));
-        $contentElementName = $this->renderingContext->getVariableProvider()->get('data')['CType'];
-        DebuggerUtility::var_dump($contentElementName);
+        $moduleName = $this->renderingContext->getVariableProvider()->get('data')['CType'];
+
         $data = [
             'isModule' => false,
             'placeholder_headline' => LocalizationUtility::translate('LLL:EXT:consent_banner/Resources/Private/Language/locallang.xlf:placeholderHeadline.removed.html'),
             'placeholder' => LocalizationUtility::translate('LLL:EXT:consent_banner/Resources/Private/Language/locallang.xlf:placeholder.removed.html'),
         ];
 
-
-
-        if (!$contentElementName) {
+        if (!$moduleName) {
             $baseRenderingContext = $this->renderingContext->getViewHelperVariableContainer()->getView()->getRenderingContext();
-            $contentElementName = $baseRenderingContext->getVariableProvider()->get('data')['CType'];
+            $moduleName = $baseRenderingContext->getVariableProvider()->get('data')['CType'];
         }
 
-        if ($contentElementName === 'html' && $this->renderingContext->getVariableProvider()->get('data')['ce_consent_module'] === '0') {
+        if ($moduleName === 'html' && $this->renderingContext->getVariableProvider()->get('data')['ce_consent_module'] === '0') {
             $bodyText = $this->renderingContext->getVariableProvider()->get('data')['bodytext'];
             return $this->replaceExternalIframes($bodyText, $this->getPlaceholderHTML($data, false));
         }
         $removeIfrane = false;
-        if ($this->hasModuleInBanners($contentElementName)){
+        if ($this->hasModuleInBanners($moduleName)){
 
-            if ($contentElementName === 'html') {
+            if ($moduleName === 'html') {
                 $mUid = $this->renderingContext->getVariableProvider()->get('data')['ce_consent_module'];
                 if ($this->hasHtmlModuleWithId($mUid)){
                     $data = $this->getHtmlModuleById($mUid);
                 }
                 $removeIfrane = true;
             }else{
-                $data = $this->getModuleByCType($contentElementName);
+                $data = $this->getModuleByCType($moduleName);
             }
         }
-        return $this->renderChildren();
-        if ($contentElementName === 'html' && $data['isModule'] === false) {
+
+        if ($moduleName === 'html' && $data['isModule'] === false) {
             $bodyText = $this->renderingContext->getVariableProvider()->get('data')['bodytext'];
             return $this->replaceExternalIframes($bodyText, $this->getPlaceholderHTML($data, false));
         }
@@ -113,49 +109,43 @@ class AllowCookieViewHelper extends AbstractViewHelper
             return $this->getPlaceholderHTML($data);
         }
 
-
+        return $this->renderChildren();
 
     }
 
     protected function hasModuleInBanners(string $moduleName): bool
     {
-        $bannerRepository = GeneralUtility::makeInstance(BannerRepository::class);
-        /** @var Banner $banner */
-        $banner = $bannerRepository->findByRootPageId($this->site->getRootPageId(), 0);
 
-        foreach ($banner->getEssentialComponents() as $component){
 
+        $settingsRepository = GeneralUtility::makeInstance(SettingsRepository::class);
+        $banner = $settingsRepository->findByStorageIds([$this->site->getRootPageId()]);
+
+        if($banner && $banner->getCategories()){
+            /** @var Category $category */
+            foreach ($banner->getCategories() as $category){
+
+                if($category->getModules()->count() > 0) {
+                    /** @var Module $module */
+                    foreach ($category->getModules() as $module) {
+                        if ($moduleName === 'html' && $module->getModuleTarget() === $moduleName) {
+                            $this->moduleInBanner[$module->getModuleTarget()][] = 'html::'.$module->getUid();
+                            $storageKey = 'module::'.$module->getUid();
+                        }else{
+                            $this->moduleInBanner[$module->getModuleTarget()] = $module->getModuleTarget();
+                            $storageKey = 'module::'.$module->getModuleTarget();
+                        }
+                        $this->storageModule[$storageKey] = [
+                            'isModule' => true,
+                            'uid' => $module->getUid(),
+                            'name' => $module->getName(),
+                            'description' => $module->getDescription(),
+                            'placeholder_headline' => $module->getPlaceholderHeadline(),
+                            'placeholder' => $module->getPlaceholder(),
+                            'module_target' => $module->getModuleTarget()];
+                    }
+                }
+            }
         }
-        DebuggerUtility::var_dump($banner);
-
-
-
-//        if($banner && $banner->getCategories()){
-//            /** @var Category $category */
-//            foreach ($banner->getCategories() as $category){
-//
-//                if($category->getModules()->count() > 0) {
-//                    /** @var Module $module */
-//                    foreach ($category->getModules() as $module) {
-//                        if ($moduleName === 'html' && $module->getModuleTarget() === $moduleName) {
-//                            $this->moduleInBanner[$module->getModuleTarget()][] = 'html::'.$module->getUid();
-//                            $storageKey = 'module::'.$module->getUid();
-//                        }else{
-//                            $this->moduleInBanner[$module->getModuleTarget()] = $module->getModuleTarget();
-//                            $storageKey = 'module::'.$module->getModuleTarget();
-//                        }
-//                        $this->storageModule[$storageKey] = [
-//                            'isModule' => true,
-//                            'uid' => $module->getUid(),
-//                            'name' => $module->getName(),
-//                            'description' => $module->getDescription(),
-//                            'placeholder_headline' => $module->getPlaceholderHeadline(),
-//                            'placeholder' => $module->getPlaceholder(),
-//                            'module_target' => $module->getModuleTarget()];
-//                    }
-//                }
-//            }
-//        }
 
         if (array_key_exists($moduleName, $this->moduleInBanner)) {
             return true;

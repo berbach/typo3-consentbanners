@@ -5,7 +5,7 @@ declare(strict_types=1);
 
 use Bb\ConsentBanner\Domain\Model\Banner;
 use Bb\ConsentBanner\Domain\Model\Component;
-use Bb\ConsentBanner\Domain\Model\Consent;
+use Bb\ConsentBanner\Domain\Model\ConsentLog;
 use Bb\ConsentBanner\Domain\Model\Group;
 
 return [
@@ -18,7 +18,7 @@ return [
     Component::class => [
         'tableName' => 'tx_consentbanner_domain_model_consent_components',
     ],
-    Consent::class => [
-        'tableName' => 'tx_consentbanner_domain_model_consent_data',
+    ConsentLog::class => [
+        'tableName' => 'tx_consentbanner_domain_model_consent_log',
     ],
 ];

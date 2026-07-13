@@ -31,6 +31,9 @@ class DataHandlerHook
      */
     public function processDatamap_preProcessFieldArray(array &$fieldArray, string $table, int|string $id, DataHandler $parentObject): void
     {
+        if (!in_array($table, ['tx_consentbanner_domain_model_banner', 'tx_consentbanner_domain_model_consent_groups', 'tx_consentbanner_domain_model_consent_components'], true)) {
+            return;
+        }
         $fielKeyArray = match ($table) {
             'tx_consentbanner_domain_model_banner' => ['essential_group_id', 'essential_group_hash', 'essential_title'],
             'tx_consentbanner_domain_model_consent_groups' => ['group_id', 'group_hash', 'group_title'],

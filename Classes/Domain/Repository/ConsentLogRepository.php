@@ -47,23 +47,21 @@ class ConsentLogRepository extends Repository
      */
     public function save(string $identificationKey, int $version, array $services): void
     {
-        $queryBuilder = $this->getConnectionForTable();
-        $existsLog = $queryBuilder->select(['identification_key'], self::TABLE_NAME, ['identification_key' => $identificationKey])->fetchOne();
+        $connection = $this->getConnectionForTable();
+        $existsLog = $connection->select(['identification_key'], self::TABLE_NAME, ['identification_key' => $identificationKey])->fetchOne();
 
         $data = [
             'identification_key' => $identificationKey,
             'banner_version' => $version,
-            'consent_services' => $services,
+            'consent_services' => json_encode($services),
             'tstamp' => time()
         ];
 
-        if($existsLog){
-            //Update
-            $queryBuilder->update(self::TABLE_NAME, $data, ['identification_key' => $identificationKey]);
-        }else{
-            //Insert
+        if ($existsLog) {
+            $connection->update(self::TABLE_NAME, $data, ['identification_key' => $identificationKey]);
+        } else {
             $data['crdate'] = time();
-            $queryBuilder->insert(self::TABLE_NAME, $data);
+            $connection->insert(self::TABLE_NAME, $data);
         }
     }
 
@@ -74,7 +72,17 @@ class ConsentLogRepository extends Repository
 
     public function findAll(): array
     {
-        return $this->getConnectionForTable()->select(['*'], self::TABLE_NAME)->fetchAllAssocative();
+        $rows = $this->getQueryBuilderForTable()
+            ->select('*')
+            ->from(self::TABLE_NAME)
+            ->orderBy('crdate', 'DESC')
+            ->executeQuery()
+            ->fetchAllAssociative();
+
+        return array_map(static function (array $row): array {
+            $row['consent_services'] = json_decode($row['consent_services'] ?? '{}', true) ?? [];
+            return $row;
+        }, $rows);
     }
     /**
      * @return QueryBuilder
