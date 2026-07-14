@@ -162,7 +162,7 @@ return [
                 'type' => 'select',
                 'renderType' => 'selectMultipleSideBySide',
                 'items' => [],
-                'itemsProcFunc' => Bb\Consentbanners\Utility\TCASelectItemUtility::class . '->getAllContentElements',
+                'itemsProcFunc' => Bb\ConsentBanner\Utility\TCASelectItemUtility::class . '->getAllContentElements',
             ]
         ],
 

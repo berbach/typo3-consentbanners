@@ -27,6 +27,18 @@ class Component extends AbstractEntity
      */
     protected string $componentHash = '';
     /**
+     * integration type (iframe | google_consent_mode | matomo | script)
+     *
+     * @var string
+     */
+    protected string $integrationType = 'iframe';
+    /**
+     * comma-separated google consent mode signals
+     *
+     * @var string
+     */
+    protected string $consentModeSignals = '';
+    /**
      * name
      *
      * @var string
@@ -359,6 +371,29 @@ class Component extends AbstractEntity
     public function setComponentHash(string $componentHash): void
     {
         $this->componentHash = $componentHash;
+    }
+
+    public function getIntegrationType(): string
+    {
+        return $this->integrationType;
+    }
+
+    public function setIntegrationType(string $integrationType): void
+    {
+        $this->integrationType = $integrationType;
+    }
+
+    /**
+     * @return string[] parsed google consent mode signals
+     */
+    public function getConsentModeSignals(): array
+    {
+        return array_values(array_filter(array_map('trim', explode(',', $this->consentModeSignals))));
+    }
+
+    public function setConsentModeSignals(string $consentModeSignals): void
+    {
+        $this->consentModeSignals = $consentModeSignals;
     }
 
     public function getCookieName(): string

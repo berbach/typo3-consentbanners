@@ -5,6 +5,7 @@ namespace Bb\ConsentBanner\Hook;
 use Bb\ConsentBanner\Utility\StringUtility;
 use Exception;
 use Random\RandomException;
+use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\DataHandling\DataHandler;
 use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
@@ -17,7 +18,90 @@ use TYPO3\CMS\Extbase\Utility\DebuggerUtility;
 
 class DataHandlerHook
 {
+    private const CONSENT_TABLES = [
+        'tx_consentbanner_domain_model_banner',
+        'tx_consentbanner_domain_model_consent_groups',
+        'tx_consentbanner_domain_model_consent_components',
+    ];
+    private const BANNER_TABLE = 'tx_consentbanner_domain_model_banner';
 
+    /**
+     * pids whose banner_version was already bumped in the current DataHandler run
+     * @var int[]
+     */
+    protected array $bumpedPids = [];
+
+    /**
+     * Bumps banner_version whenever the banner or one of its groups/components is
+     * created or changed, so the frontend re-opens the banner for a new version.
+     * Runs once per pid per save (a banner + its inline children share one pid).
+     */
+    public function processDatamap_afterDatabaseOperations(string $status, string $table, string|int $id, array $fieldArray, DataHandler $dataHandler): void
+    {
+        if (!in_array($table, self::CONSENT_TABLES, true)) {
+            return;
+        }
+
+        $uid = $id;
+        if (str_contains((string)$id, 'NEW')) {
+            $uid = $dataHandler->substNEWwithIDs[$id] ?? null;
+        }
+        if (!MathUtility::canBeInterpretedAsInteger($uid)) {
+            return;
+        }
+
+        // Only bump on an actual change: a new record, or one DataHandler detected
+        // real field changes for (historyRecords is filled only then). A save
+        // without any change must not bump the version.
+        $changed = $status === 'new'
+            || isset($dataHandler->getHistoryRecords()[$table . ':' . $uid]);
+        if (!$changed) {
+            return;
+        }
+
+        $this->bumpBannerVersion($this->resolvePid($table, (int)$uid, $fieldArray));
+    }
+
+    /**
+     * Also bump when a banner / group / component is deleted (deletion runs
+     * through the command map, not the data map).
+     */
+    public function processCmdmap_deleteAction(string $table, string|int $id, array $recordToDelete, bool &$recordWasDeleted, DataHandler $dataHandler): void
+    {
+        if (!in_array($table, self::CONSENT_TABLES, true)) {
+            return;
+        }
+        $this->bumpBannerVersion((int)($recordToDelete['pid'] ?? 0));
+    }
+
+    /**
+     * Increments banner_version for all banners on the given pid, once per pid
+     * per DataHandler run.
+     */
+    private function bumpBannerVersion(int $pid): void
+    {
+        if ($pid <= 0 || in_array($pid, $this->bumpedPids, true)) {
+            return;
+        }
+        $this->bumpedPids[] = $pid;
+
+        GeneralUtility::makeInstance(ConnectionPool::class)
+            ->getConnectionForTable(self::BANNER_TABLE)
+            ->executeStatement(
+                'UPDATE ' . self::BANNER_TABLE . ' SET banner_version = banner_version + 1 WHERE pid = ? AND deleted = 0',
+                [$pid]
+            );
+    }
+
+    private function resolvePid(string $table, int $uid, array $fieldArray): int
+    {
+        if (isset($fieldArray['pid']) && MathUtility::canBeInterpretedAsInteger($fieldArray['pid'])) {
+            return (int)$fieldArray['pid'];
+        }
+        $record = BackendUtility::getRecord($table, $uid, 'pid');
+
+        return (int)($record['pid'] ?? 0);
+    }
 
     /**
      * Prevent saving of a news record if the editor doesn't have access to all categories of the news record

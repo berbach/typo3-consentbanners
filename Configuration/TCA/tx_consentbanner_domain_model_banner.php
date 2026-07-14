@@ -52,6 +52,8 @@ return [
                     --palette--;;bannerButtonWidgetVariant,
                     --palette--;;cookieLifeTime,
                     --palette--;;language,
+                --div--;Tracking / Consent Mode,
+                    --palette--;;tracking,
                 '
         ]
     ],
@@ -61,6 +63,16 @@ return [
                 banner_title,
                     --linebreak--,
                 banner_description,
+            ',
+        ],
+
+        'tracking' => [
+            'showitem' => '
+                gtm_container_id,
+                --linebreak--,
+                matomo_url, matomo_site_id,
+                --linebreak--,
+                matomo_mtm_url
             ',
         ],
 
@@ -176,6 +188,50 @@ return [
             'label' => 'LLL:EXT:core/Resources/Private/Language/locallang_general.xlf:LGL.language',
             'config' => [
                 'type' => 'language',
+            ],
+        ],
+        'gtm_container_id' => [
+            'exclude' => true,
+            'label' => 'Google Tag Manager Container-ID',
+            'description' => 'z. B. GTM-XXXXXX. Leer lassen, wenn kein GTM verwendet wird.',
+            'config' => [
+                'type' => 'input',
+                'size' => 30,
+                'eval' => 'trim',
+                'placeholder' => 'GTM-XXXXXX',
+            ],
+        ],
+        'matomo_url' => [
+            'exclude' => true,
+            'label' => 'Matomo URL',
+            'description' => 'Basis-URL der Matomo-Installation inkl. abschließendem /, z. B. https://matomo.example.com/',
+            'config' => [
+                'type' => 'input',
+                'size' => 40,
+                'eval' => 'trim',
+                'placeholder' => 'https://matomo.example.com/',
+            ],
+        ],
+        'matomo_site_id' => [
+            'exclude' => true,
+            'label' => 'Matomo Site-ID',
+            'description' => 'Die idSite der Matomo-Property, z. B. 1',
+            'config' => [
+                'type' => 'input',
+                'size' => 10,
+                'eval' => 'trim',
+                'placeholder' => '1',
+            ],
+        ],
+        'matomo_mtm_url' => [
+            'exclude' => true,
+            'label' => 'Matomo Tag Manager Container-URL (optional)',
+            'description' => 'Voll-URL der MTM-container.js. Wenn gesetzt, wird der MTM-Container statt des Standard-Trackers geladen.',
+            'config' => [
+                'type' => 'input',
+                'size' => 40,
+                'eval' => 'trim',
+                'placeholder' => 'https://matomo.example.com/js/container_XXXX.js',
             ],
         ],
         'l10n_parent' => [

@@ -15,7 +15,7 @@ defined('TYPO3') || die();
                     'items' => [
                         ['label' => 'Select a module', 'value' => '']
                     ],
-                    'itemsProcFunc' => Bb\Consentbanners\Utility\TCASelectModuleUtility::class . '->getHtmlModules',
+                    'itemsProcFunc' => Bb\ConsentBanner\Utility\TCASelectModuleUtility::class . '->getHtmlModules',
                 ],
             ],
         ]

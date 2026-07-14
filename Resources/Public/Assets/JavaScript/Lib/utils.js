@@ -112,6 +112,7 @@ export const generateUserHash = () => {
 
 export const hasDaysPassed = (timestamp, days) => {
     if (!timestamp) return true;
-    const msPerDay = 24 * 60 * 60 * 1000;
-    return (Math.floor(Date.now() / 1000) - timestamp) >= days * msPerDay;
+    // timestamp and Date.now()/1000 are in SECONDS, so compare against seconds/day.
+    const secondsPerDay = 24 * 60 * 60;
+    return (Math.floor(Date.now() / 1000) - timestamp) >= days * secondsPerDay;
 }

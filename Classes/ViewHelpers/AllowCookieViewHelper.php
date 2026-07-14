@@ -2,36 +2,41 @@
 
 namespace Bb\ConsentBanner\ViewHelpers;
 
-use Bb\ConsentBanner\Domain\Model\Banner;
-use Bb\ConsentBanner\Domain\Model\Group;
-use Bb\ConsentBanner\Domain\Model\Component;
-use Bb\ConsentBanner\Domain\Repository\BannerRepository;
+use Bb\ConsentBanner\DataProcessing\ConsentBannerProcessor;
 use Bb\ConsentBanner\Utility\CookieUtility;
-use Closure;
-use Doctrine\DBAL\DBALException;
 use Doctrine\DBAL\Driver\Exception;
 use Psr\Http\Message\ServerRequestInterface;
-use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Site\Entity\Site;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Mvc\Request;
-use TYPO3\CMS\Extbase\Utility\DebuggerUtility;
 use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
-use TYPO3\CMS\Fluid\Core\Rendering\RenderingContext;
 use TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
-use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 
+/**
+ * Gates the output of a content element behind the visitor's consent.
+ *
+ * Two cases are handled:
+ *  1. A consent component covers the element's CType (field component_ce_target,
+ *     e.g. the "YouTube" component targets "cevideoplayer"). The visitor can
+ *     accept it inline via a toggle; on consent the real content is rendered,
+ *     otherwise a component placeholder (with toggle) is shown.
+ *  2. A plain TYPO3 "html" element that embeds an external iframe but is not
+ *     covered by any component. The iframe is replaced by a generic placeholder
+ *     (no toggle), since no consent option was configured for it.
+ */
 class AllowCookieViewHelper extends AbstractViewHelper
 {
+    private const COMPONENT_TABLE = 'tx_consentbanner_domain_model_consent_components';
+    private const LL = 'LLL:EXT:consent_banner/Resources/Private/Language/locallang.xlf:';
 
     /**
      * @var boolean
      */
     protected $escapeChildren = false;
+
     /**
      * @var boolean
      */
@@ -39,11 +44,7 @@ class AllowCookieViewHelper extends AbstractViewHelper
 
     protected ServerRequestInterface $request;
 
-    protected Site $site;
-
-    protected array $storageModule = [];
-
-    protected array $moduleInBanner = [];
+    protected ?Site $site = null;
 
     public function initializeArguments(): void
     {
@@ -53,141 +54,115 @@ class AllowCookieViewHelper extends AbstractViewHelper
     }
 
     /**
-     *
      * @throws Exception
      */
     public function render(): string
     {
-
         $this->request = $this->renderingContext->getAttribute(ServerRequestInterface::class);
-        /** @var Site $site */
         $this->site = $this->request->getAttribute('site');
 
-        $cookie = json_decode(CookieUtility::getCookieValue('BbConsentPreference'));
-        $contentElementName = $this->renderingContext->getVariableProvider()->get('data')['CType'];
-        DebuggerUtility::var_dump($contentElementName);
-        $data = [
-            'isModule' => false,
-            'placeholder_headline' => LocalizationUtility::translate('LLL:EXT:consent_banner/Resources/Private/Language/locallang.xlf:placeholderHeadline.removed.html'),
-            'placeholder' => LocalizationUtility::translate('LLL:EXT:consent_banner/Resources/Private/Language/locallang.xlf:placeholder.removed.html'),
-        ];
-
-
-
-        if (!$contentElementName) {
-            $baseRenderingContext = $this->renderingContext->getViewHelperVariableContainer()->getView()->getRenderingContext();
-            $contentElementName = $baseRenderingContext->getVariableProvider()->get('data')['CType'];
-        }
-
-        if ($contentElementName === 'html' && $this->renderingContext->getVariableProvider()->get('data')['ce_consent_module'] === '0') {
-            $bodyText = $this->renderingContext->getVariableProvider()->get('data')['bodytext'];
-            return $this->replaceExternalIframes($bodyText, $this->getPlaceholderHTML($data, false));
-        }
-        $removeIfrane = false;
-        if ($this->hasModuleInBanners($contentElementName)){
-
-            if ($contentElementName === 'html') {
-                $mUid = $this->renderingContext->getVariableProvider()->get('data')['ce_consent_module'];
-                if ($this->hasHtmlModuleWithId($mUid)){
-                    $data = $this->getHtmlModuleById($mUid);
-                }
-                $removeIfrane = true;
-            }else{
-                $data = $this->getModuleByCType($contentElementName);
-            }
-        }
-        return $this->renderChildren();
-        if ($contentElementName === 'html' && $data['isModule'] === false) {
-            $bodyText = $this->renderingContext->getVariableProvider()->get('data')['bodytext'];
-            return $this->replaceExternalIframes($bodyText, $this->getPlaceholderHTML($data, false));
-        }
-
-        if (!is_null($cookie) && isset($data['uid'], $cookie->{$data['uid']}) && $cookie->{$data['uid']} === true) {
+        $data = $this->getContentElementData();
+        $cType = (string)($data['CType'] ?? '');
+        if ($cType === '') {
             return $this->renderChildren();
         }
 
-        if ($removeIfrane){
-            $bodyText = $this->renderingContext->getVariableProvider()->get('data')['bodytext'];
-            return $this->replaceExternalIframes($bodyText, $this->getPlaceholderHTML($data));
-        }else{
-            return $this->getPlaceholderHTML($data);
+        $component = $this->findComponentByCType($cType);
+
+        // Case 1: a component covers this content element type.
+        if ($component !== []) {
+            if ($this->hasConsent((string)$component['component_id'])) {
+                return $this->renderChildren();
+            }
+
+            $headline = (string)($component['placeholder_title'] ?? '');
+            if ($headline === '') {
+                $headline = (string)($component['component_title'] ?? '');
+            }
+
+            // Keep the real content available client-side (inert <template>) so
+            // it can be swapped in on consent without a page reload.
+            return $this->buildPlaceholder(
+                $headline,
+                (string)($component['placeholder_description'] ?? ''),
+                (string)($component['component_id'] ?? ''),
+                $this->renderChildren()
+            );
         }
 
+        // Case 2: plain "html" element with an external iframe, no component.
+        if ($cType === 'html') {
+            $placeholder = $this->buildPlaceholder(
+                (string)LocalizationUtility::translate(self::LL . 'placeholderHeadline.removed.html'),
+                (string)LocalizationUtility::translate(self::LL . 'placeholder.removed.html')
+            );
 
-
-    }
-
-    protected function hasModuleInBanners(string $moduleName): bool
-    {
-        $bannerRepository = GeneralUtility::makeInstance(BannerRepository::class);
-        /** @var Banner $banner */
-        $banner = $bannerRepository->findByRootPageId($this->site->getRootPageId(), 0);
-
-        foreach ($banner->getEssentialComponents() as $component){
-
-        }
-        DebuggerUtility::var_dump($banner);
-
-
-
-//        if($banner && $banner->getCategories()){
-//            /** @var Category $category */
-//            foreach ($banner->getCategories() as $category){
-//
-//                if($category->getModules()->count() > 0) {
-//                    /** @var Module $module */
-//                    foreach ($category->getModules() as $module) {
-//                        if ($moduleName === 'html' && $module->getModuleTarget() === $moduleName) {
-//                            $this->moduleInBanner[$module->getModuleTarget()][] = 'html::'.$module->getUid();
-//                            $storageKey = 'module::'.$module->getUid();
-//                        }else{
-//                            $this->moduleInBanner[$module->getModuleTarget()] = $module->getModuleTarget();
-//                            $storageKey = 'module::'.$module->getModuleTarget();
-//                        }
-//                        $this->storageModule[$storageKey] = [
-//                            'isModule' => true,
-//                            'uid' => $module->getUid(),
-//                            'name' => $module->getName(),
-//                            'description' => $module->getDescription(),
-//                            'placeholder_headline' => $module->getPlaceholderHeadline(),
-//                            'placeholder' => $module->getPlaceholder(),
-//                            'module_target' => $module->getModuleTarget()];
-//                    }
-//                }
-//            }
-//        }
-
-        if (array_key_exists($moduleName, $this->moduleInBanner)) {
-            return true;
+            return $this->replaceExternalIframes((string)($data['bodytext'] ?? ''), $placeholder);
         }
 
-        return false;
-    }
-
-    protected function hasHtmlModuleWithId($id):bool
-    {
-        if (isset($this->moduleInBanner['html'])){
-            return in_array('html::'.$id, $this->moduleInBanner['html']);
-        }
-        return false;
-    }
-
-    protected function getHtmlModuleById(int $id):array
-    {
-        return isset($this->storageModule['module::'.$id]) ? $this->storageModule['module::'.$id] : [];
-    }
-
-    protected function getModuleByCType(string $cType):array
-    {
-        return isset($this->storageModule['module::'.$cType]) ? $this->storageModule['module::'.$cType] : [];
+        return $this->renderChildren();
     }
 
     /**
-     * @param string $argumentsName
-     * @param string $closureName
-     * @param string $initializationPhpCode
-     * @param ViewHelperNode $node
-     * @param TemplateCompiler $compiler
+     * Reads the tt_content row of the element currently being rendered.
+     */
+    protected function getContentElementData(): array
+    {
+        $data = $this->renderingContext->getVariableProvider()->get('data');
+        if (!is_array($data) || !isset($data['CType'])) {
+            $baseRenderingContext = $this->renderingContext->getViewHelperVariableContainer()->getView()->getRenderingContext();
+            $data = $baseRenderingContext->getVariableProvider()->get('data');
+        }
+
+        return is_array($data) ? $data : [];
+    }
+
+    /**
+     * Finds the consent component that covers the given content element type.
+     *
+     * @throws Exception
+     */
+    protected function findComponentByCType(string $cType): array
+    {
+        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable(self::COMPONENT_TABLE);
+
+        $queryBuilder
+            ->select('component_id', 'component_title', 'placeholder_title', 'placeholder_description')
+            ->from(self::COMPONENT_TABLE)
+            ->where(
+                $queryBuilder->expr()->inSet('component_ce_target', $queryBuilder->createNamedParameter($cType))
+            )
+            ->setMaxResults(1);
+
+        $rootPageId = $this->site instanceof Site ? $this->site->getRootPageId() : 0;
+        if ($rootPageId > 0) {
+            $queryBuilder->andWhere(
+                $queryBuilder->expr()->eq('pid', $queryBuilder->createNamedParameter($rootPageId, Connection::PARAM_INT))
+            );
+        }
+
+        $row = $queryBuilder->executeQuery()->fetchAssociative();
+
+        return is_array($row) ? $row : [];
+    }
+
+    /**
+     * Checks the consent cookie for the given component id.
+     */
+    protected function hasConsent(string $componentId): bool
+    {
+        $raw = CookieUtility::getCookieValue(ConsentBannerProcessor::$cName);
+        if ($raw === '') {
+            return false;
+        }
+
+        $preferences = json_decode($raw, true);
+
+        return is_array($preferences) && ($preferences[$componentId] ?? false) === true;
+    }
+
+    /**
+     * @param string[] $argumentsName
      */
     public function compile(
         $argumentsName,
@@ -195,88 +170,118 @@ class AllowCookieViewHelper extends AbstractViewHelper
         &$initializationPhpCode,
         ViewHelperNode $node,
         TemplateCompiler $compiler
-    )
-    {
+    ) {
         $compiler->disable();
     }
 
-    public function replaceExternalIframes(string $htmlContent, string $replacementHtml): string
+    /**
+     * Builds the placeholder markup.
+     *
+     * With a component id an inline accept toggle is rendered; without one
+     * (generic case) only headline and text are shown.
+     */
+    protected function buildPlaceholder(string $headline, string $text, string $componentId = '', string $deferred = ''): string
     {
-        // Erstelle ein DOMDocument-Objekt, um den HTML-Inhalt zu parsen
-        $dom = new \DOMDocument();
-        // Unterdrücke Warnungen bei fehlerhaftem HTML
-        // Wichtig: Beim Speichern des modifizierten HTML kann es zu Zeichenkodierungsproblemen kommen,
-        // wenn das Original-HTML nicht UTF-8 ist.
-        @$dom->loadHTML('<?xml encoding="utf-8" ?>' . $htmlContent);
-        $dom->encoding = 'utf-8'; // Setze die Kodierung explizit auf UTF-8
+        $headlineEsc = htmlspecialchars($headline);
+        $componentIdEsc = htmlspecialchars($componentId);
 
-        // Hole alle <iframe>-Elemente
-        $iframes = $dom->getElementsByTagName('iframe');
+        $normalisedClassArgument = '';
+        if ($this->hasArgument('class') && $this->arguments['class'] !== '') {
+            $normalisedClassArgument = ' ' . $this->arguments['class'];
+        }
 
-        // Wir müssen die Liste der IFrames in umgekehrter Reihenfolge durchlaufen,
-        // wenn wir Knoten entfernen/ersetzen, da sich sonst die NodeList-Indizes verschieben.
-        // Eine robustere Methode ist es, eine Liste der zu ersetzenden Knoten zu sammeln
-        // und die Ersetzung danach durchzuführen.
-        $nodesToReplace = [];
-
-        foreach ($iframes as $iframe) {
-            // Überprüfe, ob das <iframe> ein 'src'-Attribut hat
-            if ($iframe->hasAttribute('src')) {
-                $src = $iframe->getAttribute('src');
-
-                // Parse die URL des src-Attributs
-                $srcParts = parse_url($src);
-
-                // Wenn die URL ein Host-Teil hat
-                if (isset($srcParts['host'])) {
-                    $iframeDomain = $srcParts['host'];
-
-                    // Entferne "www." von beiden Domains für einen besseren Vergleich
-                    $iframeDomainClean = str_replace('www.', '', $iframeDomain);
-                    $ownDomainClean = str_replace('www.', '', $this->site->getBase()->getHost());
-
-                    // Vergleiche die Domain des IFrames mit der eigenen Domain
-                    if ($iframeDomainClean !== $ownDomainClean) {
-                        // Füge den IFrame-Knoten und die Ersetzungs-Information zur Liste hinzu
-                        $nodesToReplace[] = [
-                            'node' => $iframe,
-                            'replacement_html' => $replacementHtml
-                        ];
-                    }
-                }
-                // Relative URLs (ohne Host) werden hier nicht als extern betrachtet und bleiben unverändert.
-                // Wenn du relative URLs auch ersetzen möchtest, müsstest du hier eine andere Logik einfügen.
+        $normalisedAdditionalAttributes = '';
+        if ($this->hasArgument('additionalAttributes')) {
+            foreach ($this->arguments['additionalAttributes'] as $attribute => $value) {
+                $normalisedAdditionalAttributes .= ' ' . htmlspecialchars((string)$attribute) . '="' . htmlspecialchars((string)$value) . '"';
             }
         }
 
-        // Führe die Ersetzungen durch
-        foreach ($nodesToReplace as $item) {
-            $node = $item['node'];
-            $htmlToInsert = $item['replacement_html'];
+        $componentAttribute = $componentId !== '' ? ' data-cookiebanner-component="' . $componentIdEsc . '"' : '';
 
-            // Erstelle ein temporäres DOMDocument, um den HTML-String zu parsen
-            // Dies ist nötig, um den HTML-String als DOM-Knoten einzufügen
+        $html = '<div class="bb-consentbanner-placeholder' . htmlspecialchars($normalisedClassArgument) . '"' . $componentAttribute . $normalisedAdditionalAttributes . '>';
+        $html .= '<div class="bb-consentbanner-placeholder-wrapper">';
+        if ($headline !== '') {
+            $html .= '<h3 class="bb-consentbanner-placeholder-headline">' . $headlineEsc . '</h3>';
+        }
+
+        if ($componentId !== '') {
+            // Component placeholder with inline accept toggle.
+            $html .= '<div class="bb-consentbanner-component" data-cookiebanner-component="' . $componentIdEsc . '">'
+                . '<label class="bb-control-checkbox" aria-label="' . $headlineEsc . '">'
+                . '<span class="bb-control-label bb-label-module">' . $headlineEsc . '</span>'
+                . '<input type="checkbox" name="' . $componentIdEsc . '">'
+                . '<span class="bb-toggle"></span>'
+                . '</label>';
+            if ($text !== '') {
+                $html .= '<span class="bb-consentbanner-placeholder-text">' . $text . '</span>';
+            }
+            $html .= '</div>';
+        } elseif ($text !== '') {
+            // Generic placeholder (no toggle).
+            $html .= '<span class="bb-consentbanner-placeholder-text">' . $text . '</span>';
+        }
+
+        $html .= '</div>';
+
+        // Deferred real content: inert until JS clones it into the DOM on consent.
+        if ($deferred !== '') {
+            $html .= '<template class="bb-consentbanner-deferred">' . $deferred . '</template>';
+        }
+
+        $html .= '</div>';
+
+        return $html;
+    }
+
+    /**
+     * Replaces every iframe that points to an external host with the given
+     * placeholder markup, keeping the surrounding body text intact.
+     */
+    public function replaceExternalIframes(string $htmlContent, string $replacementHtml): string
+    {
+        if (trim($htmlContent) === '' || !str_contains($htmlContent, '<iframe')) {
+            return $htmlContent;
+        }
+
+        $dom = new \DOMDocument();
+        @$dom->loadHTML('<?xml encoding="utf-8" ?>' . $htmlContent);
+        $dom->encoding = 'utf-8';
+
+        $ownDomainClean = $this->site instanceof Site
+            ? str_replace('www.', '', $this->site->getBase()->getHost())
+            : '';
+
+        // Collect first, replace afterwards (NodeList indices shift on removal).
+        $nodesToReplace = [];
+        foreach ($dom->getElementsByTagName('iframe') as $iframe) {
+            if (!$iframe->hasAttribute('src')) {
+                continue;
+            }
+            $srcParts = parse_url($iframe->getAttribute('src'));
+            if (!isset($srcParts['host'])) {
+                // Relative URLs are not considered external.
+                continue;
+            }
+            if (str_replace('www.', '', $srcParts['host']) !== $ownDomainClean) {
+                $nodesToReplace[] = $iframe;
+            }
+        }
+
+        foreach ($nodesToReplace as $node) {
             $tempDom = new \DOMDocument();
-            // Hier ist es wichtig, den HTML-Inhalt in ein temporäres Element zu packen,
-            // damit DOMDocument ihn korrekt als Fragment parsen kann.
-            @$tempDom->loadHTML('<div>' . $htmlToInsert . '</div>');
+            @$tempDom->loadHTML('<div>' . $replacementHtml . '</div>');
             $fragment = $tempDom->getElementsByTagName('div')->item(0);
-
-            // Füge die Kinder des Fragments an der Stelle des IFrame-Knotens ein
             if ($fragment) {
                 $parent = $node->parentNode;
                 while ($fragment->hasChildNodes()) {
                     $child = $fragment->removeChild($fragment->firstChild);
                     $parent->insertBefore($dom->importNode($child, true), $node);
                 }
-                // Entferne den ursprünglichen IFrame-Knoten
                 $parent->removeChild($node);
             }
         }
 
-        // Speichere den modifizierten HTML-Inhalt
-        // Beachte, dass loadHTML einen DOCTYPE und body/html-Tags hinzufügen kann.
-        // Wir extrahieren nur den inneren Inhalt des body-Tags, um nur das modifizierte HTML zu erhalten.
         $body = $dom->getElementsByTagName('body')->item(0);
         $modifiedHtml = '';
         if ($body) {
@@ -287,53 +292,4 @@ class AllowCookieViewHelper extends AbstractViewHelper
 
         return $modifiedHtml;
     }
-
-    protected function getPlaceholderHTML(array $data,  bool $showToogle = true): string
-    {
-        $normalisedClassArgument = '';
-        if ($this->hasArgument('class') && $this->arguments['class'] !== '') {
-            $normalisedClassArgument = ' ' . $this->arguments['class'];
-        }
-
-        $normalisedAdditionalAttributes = '';
-        if ($this->hasArgument('additionalAttributes')) {
-            foreach ($this->arguments['additionalAttributes'] as $attribute => $value) {
-                $normalisedAdditionalAttributes .= ' ' . $attribute . '="' . $value . '"';
-            }
-        }
-        $html = '<div class="bb-consentbanner-placeholder' . $normalisedClassArgument . '"' . $normalisedAdditionalAttributes . '>';
-        $html .= '<div class="bb-consentbanner-placeholder-wrapper">';
-        if (!empty($data['placeholder_headline'])) {
-            $html .=
-                '<h3 class="bb-consentbanner-placeholder-headline">' .
-                $data['placeholder_headline'] .
-                '</h3>';
-        }elseif (!empty($data['name'])){
-            $html .=
-                '<h3 class="bb-consentbanner-placeholder-headline">' .
-                $data['name'] .
-                '</h3>';
-        }
-        if (!empty($data['placeholder'])) {
-            $html .=
-                '<span class="bb-consentbanner-placeholder-text">' .
-                $data['placeholder'] .
-                '</span>';
-        }
-        if($showToogle) {
-            $html .=
-                '<div class="bb-consentbanner-module" data-cookiebanner-module="' . $data['uid'] . '">
-                <label class="bb-control-checkbox" aria-label="' . $data['name'] . '">
-                    <span class="bb-control-label bb-label-module">' . $data['name'] . '</span>
-                    <input type="checkbox" name="' . $data['uid'] . '">
-                    <span class="bb-toggle"></span>
-                </label>' .
-//            '<p class="bb-consentbanner-description">' . $res['description'] . '</p>' .
-                '</div>';
-        }
-        $html .= '</div>';
-        $html .= '</div>';
-        return $html;
-    }
-
 }

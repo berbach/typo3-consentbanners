@@ -7,10 +7,9 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use TYPO3\CMS\Core\Http\JsonResponse;
+use TYPO3\CMS\Core\Site\Entity\Site;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use Symfony\Component\Uid\Uuid;
 use Bb\ConsentBanner\Domain\Repository\ConsentLogRepository;
-use TYPO3\CMS\Extbase\Utility\DebuggerUtility;
 
 final class ConsentMiddleware implements MiddlewareInterface
 {
@@ -24,12 +23,17 @@ final class ConsentMiddleware implements MiddlewareInterface
         }
         $data = json_decode((string)$request->getBody(), true);
 
-        if(!isset($data['services']) || !is_array($data['services'])){
+        if (!isset($data['services']) || !is_array($data['services']) || empty($data['hash'])) {
             return new JsonResponse(['error' => 'Invalid payload'], 400);
         }
 
+        // The consent log is site-scoped: store which root page it belongs to.
+        $site = $request->getAttribute('site');
+        $rootPageId = $site instanceof Site ? $site->getRootPageId() : 0;
+
         $consentLogRepository = GeneralUtility::makeInstance(ConsentLogRepository::class);
-        $consentLogRepository->save($data['hash'], $data['version'], $data['services']);
+        $consentLogRepository->save((string)$data['hash'], (int)($data['version'] ?? 0), $data['services'], $rootPageId);
+
         return new JsonResponse(['success' => true]);
 
     }

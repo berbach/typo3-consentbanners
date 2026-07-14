@@ -267,6 +267,10 @@ class ConsentBannerProcessor implements DataProcessorInterface
                     'groupId' => $groupId,
                     'title' => $component->getComponentTitle(),
                     'description' => $component->getComponentDescription(),
+                    'integrationType' => $component->getIntegrationType(),
+                    'signals' => $component->getConsentModeSignals(),
+                    'acceptedScript' => $component->getAcceptedScript(),
+                    'rejectedScript' => $component->getRejectedScript(),
                     'cookieInformation' => [
                         'name' => $component->getCookieName(),
                         'description' => $component->getCookieDescription(),

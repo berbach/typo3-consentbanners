@@ -1,10 +1,10 @@
-#
-# Table structure for table 'tt_content'
-#
-CREATE TABLE tt_content
-(
-    ce_consent_component varchar(255) DEFAULT '' NOT NULL,
-);
+-- #
+-- # Table structure for table 'tt_content'
+-- #
+-- CREATE TABLE tt_content
+-- (
+--     ce_consent_module varchar(255) DEFAULT '' NOT NULL
+-- );
 #
 # Table structure for table 'tx_consentbanner_domain_model_banner'
 #
@@ -18,6 +18,11 @@ CREATE TABLE tx_consentbanner_domain_model_banner
     banner_layout                   varchar(20)       DEFAULT 'cb-bottom' NOT NULL,
     banner_navigation               longtext          DEFAULT NULL,
     banner_version                  int(11)           DEFAULT '1'         NOT NULL,
+
+    gtm_container_id                varchar(30)       DEFAULT ''          NOT NULL,
+    matomo_url                      varchar(255)      DEFAULT ''          NOT NULL,
+    matomo_site_id                  varchar(10)       DEFAULT ''          NOT NULL,
+    matomo_mtm_url                  varchar(255)      DEFAULT ''          NOT NULL,
 
     user_identification_text        varchar(30)       DEFAULT ''          NOT NULL,
     provider_description_text       varchar(30)       DEFAULT ''          NOT NULL,
@@ -57,7 +62,7 @@ CREATE TABLE tx_consentbanner_domain_model_banner
     lifetime_user_consent           int(11) unsigned  DEFAULT '1095'      NOT NULL,
 
     deleted                         smallint unsigned DEFAULT '0'         NOT NULL,
-    hidden                          smallint unsigned DEFAULT '0'         NOT NULL,
+    hidden                          smallint unsigned DEFAULT '0'         NOT NULL
 
 );
 
@@ -77,7 +82,7 @@ CREATE TABLE tx_consentbanner_domain_model_consent_groups
     banner_id             int(11) unsigned     DEFAULT NULL,
 
     deleted               smallint unsigned    DEFAULT '0' NOT NULL,
-    hidden                smallint unsigned    DEFAULT '0' NOT NULL,
+    hidden                smallint unsigned    DEFAULT '0' NOT NULL
 
 );
 #
@@ -92,6 +97,9 @@ CREATE TABLE tx_consentbanner_domain_model_consent_components
     component_description       text,
 
     component_ce_target         varchar(255)         DEFAULT ''  NOT NULL,
+
+    integration_type            varchar(30)          DEFAULT 'iframe' NOT NULL,
+    consent_mode_signals        varchar(255)         DEFAULT ''  NOT NULL,
 
     placeholder_title           varchar(255),
     placeholder_description     text,
@@ -118,12 +126,13 @@ CREATE TABLE tx_consentbanner_domain_model_consent_components
 CREATE TABLE tx_consentbanner_domain_model_consent_log
 (
     identification_key          char(64) DEFAULT '' NOT NULL,
+    root_page_id                int(11) unsigned DEFAULT '0' NOT NULL,
     banner_version              int(11) NOT NULL,
     consent_services            json,
 
     tstamp                      int(11) unsigned DEFAULT '0' NOT NULL,
     crdate                      int(11) DEFAULT '0' NOT NULL,
-    PRIMARY KEY (identification_key)
+    PRIMARY KEY (identification_key, root_page_id)
 );
 -- #
 -- # Table structure for table 'tx_consentbanner_module_categories_mm'

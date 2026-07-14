@@ -35,6 +35,8 @@ return [
                     --palette--;;header,
                     --palette--;;content,
                     --palette--;;ce_target,
+                --div--;Integration,
+                    --palette--;;integration,
                 --div--;LLL:EXT:consent_banner/Resources/Private/Language/locallang_mod.xlf:tab.javascript,
                     --palette--;;javascript,
                 --div--;LLL:EXT:consent_banner/Resources/Private/Language/locallang_mod.xlf:tab.placeholder,
@@ -63,6 +65,13 @@ return [
         'ce_target' => [
             'showitem' => '
                 component_ce_target
+            ',
+        ],
+        'integration' => [
+            'showitem' => '
+                integration_type,
+                --linebreak--,
+                consent_mode_signals
             ',
         ],
         'placeholder' => [
@@ -197,6 +206,43 @@ return [
                 'items' => [],
                 'itemsProcFunc' => Bb\ConsentBanner\Utility\TCASelectItemUtility::class . '->getAllContentElements',
             ]
+        ],
+
+        'integration_type' => [
+            'exclude' => true,
+            'label' => 'Integrations-Typ',
+            'description' => 'Wie diese Component im Frontend eingebunden wird.',
+            'config' => [
+                'type' => 'select',
+                'renderType' => 'selectSingle',
+                'default' => 'iframe',
+                'items' => [
+                    ['label' => 'Inhaltselement / Iframe (Placeholder)', 'value' => 'iframe'],
+                    ['label' => 'Google Consent Mode (gtag)', 'value' => 'google_consent_mode'],
+                    ['label' => 'Matomo', 'value' => 'matomo'],
+                    ['label' => 'Script laden', 'value' => 'script'],
+                ],
+            ],
+        ],
+
+        'consent_mode_signals' => [
+            'exclude' => true,
+            'label' => 'Google Consent Mode Signale',
+            'description' => 'Welche gtag-Consent-Signale diese Component bei Einwilligung auf "granted" setzt.',
+            'displayCond' => 'FIELD:integration_type:=:google_consent_mode',
+            'config' => [
+                'type' => 'select',
+                'renderType' => 'selectCheckBox',
+                'items' => [
+                    ['label' => 'analytics_storage', 'value' => 'analytics_storage'],
+                    ['label' => 'ad_storage', 'value' => 'ad_storage'],
+                    ['label' => 'ad_user_data', 'value' => 'ad_user_data'],
+                    ['label' => 'ad_personalization', 'value' => 'ad_personalization'],
+                    ['label' => 'functionality_storage', 'value' => 'functionality_storage'],
+                    ['label' => 'personalization_storage', 'value' => 'personalization_storage'],
+                    ['label' => 'security_storage', 'value' => 'security_storage'],
+                ],
+            ],
         ],
 
         'placeholder_title' => [

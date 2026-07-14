@@ -25,6 +25,7 @@ const CbManager = function ()  {
 
     this.cookiePreferences = JSON.parse(cookieUtils.get(LAST_PREFERENCES_NAME));
     this.localPreferences = {}
+    this.nonce = document.getElementById('bbBannerData')?.nonce || ''
 
     this.changePreferences = null
     this.acceptAllButton = null
@@ -50,6 +51,9 @@ const CbManager = function ()  {
             this.openerChangePreferences()
         }
 
+        this.attachPlaceholderToggles()
+        // Apply tracking integrations for returning visitors (from the cookie).
+        this.applyIntegrations()
     }
 
     this.attachBannerEventListeners = () => {
@@ -340,11 +344,149 @@ const CbManager = function ()  {
         return containerFooter;
     }
     /**
+     * Swaps every placeholder whose component has been accepted with its real
+     * (deferred) content, so blocked iframes appear without a page reload.
      * @return {void}
      */
     this.handlePlaceholderElements = () => {
-        const placeholderContentElements = document.querySelectorAll('div[data-placeholder]');
-        //data-type=iframe
+        document.querySelectorAll(`.${CB_PREFIX}placeholder[data-cookiebanner-component]`).forEach(placeholder => {
+            const componentId = placeholder.dataset.cookiebannerComponent
+            if (this.cookiePreferences?.[componentId] === true) {
+                this.activatePlaceholder(placeholder)
+            } else {
+                this.deactivatePlaceholder(placeholder)
+            }
+        })
+    }
+    /**
+     * Reveals the real (deferred) content next to the placeholder and hides the
+     * placeholder itself. The placeholder stays in the DOM (with its inert
+     * <template>) so consent can be withdrawn again without a page reload.
+     * @param {HTMLElement} placeholder
+     * @return {void}
+     */
+    this.activatePlaceholder = (placeholder) => {
+        if (placeholder.dataset.cbActive === '1') return
+
+        const template = placeholder.querySelector(`template.${CB_PREFIX}deferred`)
+        if (!template) return
+
+        const content = template.content.cloneNode(true)
+        const moduleElements = Array.from(content.querySelectorAll('[data-module]'))
+
+        // Insert the cloned nodes after the (now hidden) placeholder; this makes
+        // their iframes live without a reload.
+        const holder = createElementWithAttrs('div', { className: CB_PREFIX + 'revealed' })
+        holder.appendChild(content)
+        placeholder.insertAdjacentElement('afterend', holder)
+        placeholder._cbHolder = holder
+        placeholder.style.display = 'none'
+        placeholder.dataset.cbActive = '1'
+
+        // The template's data-module loader only runs on page load, so it never
+        // sees nodes injected afterwards. Initialise them here (same convention)
+        // e.g. so the Videoplayer module wires up its poster / player.
+        moduleElements.forEach(element => this.initContentModules(element))
+    }
+    /**
+     * Removes previously revealed content (stopping any iframe/video) and shows
+     * the placeholder again — used when consent for the component is withdrawn.
+     * @param {HTMLElement} placeholder
+     * @return {void}
+     */
+    this.deactivatePlaceholder = (placeholder) => {
+        if (placeholder.dataset.cbActive !== '1') return
+
+        if (placeholder._cbHolder) {
+            placeholder._cbHolder.remove()
+            placeholder._cbHolder = null
+        }
+        placeholder.style.display = ''
+        delete placeholder.dataset.cbActive
+
+        const input = placeholder.querySelector(`.${CB_PREFIX}component input[name="${placeholder.dataset.cookiebannerComponent}"]`)
+        if (input) input.checked = false
+    }
+    /**
+     * Initialises the data-module scripts of a freshly injected element,
+     * mirroring the template's module loader, then notifies external listeners.
+     * @param {HTMLElement} element
+     * @return {void}
+     */
+    this.initContentModules = (element) => {
+        const basePath = window.__BASE_PUBLIC_PATH__ || './'
+        const moduleNames = (element.dataset.module || '').split(' ').map(name => name.trim()).filter(Boolean)
+        const options = element.dataset.options || ''
+
+        moduleNames.forEach(async name => {
+            try {
+                const module = await import(/* webpackIgnore: true */ `${basePath}JavaScript/Module/${name}.js`)
+                module.default ? new module.default(element, options) : module.init?.(element, options)
+            } catch (error) {
+                Debug.log('Content module init failed', { name, error })
+            }
+        })
+
+        document.dispatchEvent(new CustomEvent('bb:content-injected', { detail: { element } }))
+    }
+    /**
+     * Wires the accept toggle rendered inside a placeholder: checking it grants
+     * consent for that single component and reveals its content.
+     * @return {void}
+     */
+    this.attachPlaceholderToggles = () => {
+        document.querySelectorAll(`.${CB_PREFIX}placeholder[data-cookiebanner-component]`).forEach(placeholder => {
+            const componentId = placeholder.dataset.cookiebannerComponent
+            const input = placeholder.querySelector(`.${CB_PREFIX}component input[name="${componentId}"]`)
+            input?.addEventListener('change', () => {
+                if (input.checked) this.acceptComponent(componentId)
+            })
+        })
+    }
+    /**
+     * Grants consent for a single component (merged with the existing
+     * preferences) and persists it, which also swaps the related placeholders.
+     * @param {string} componentId
+     * @return {void}
+     */
+    this.acceptComponent = (componentId) => {
+        const meta = this.findComponentMeta(componentId)
+        const currentServices = this.getLastPreferences()?.services ?? {}
+
+        const services = {}
+        Object.entries(currentServices).forEach(([id, value]) => {
+            services[id] = {
+                title: value?.title ?? '',
+                consent: value?.consent === true,
+                groupId: value?.groupId ?? '',
+                groupName: value?.groupName ?? ''
+            }
+        })
+        services[componentId] = { title: meta.title, consent: true, groupId: meta.groupId, groupName: meta.groupName }
+
+        this.savePreferences(services)
+    }
+    /**
+     * Looks up a component's meta data (title, group) in the banner data.
+     * @param {string} componentId
+     * @return {{title: string, groupId: string, groupName: string}}
+     */
+    this.findComponentMeta = (componentId) => {
+        const groups = this.bannerPreferences?.groups ?? {}
+        for (const groupKey in groups) {
+            const group = groups[groupKey]
+            const components = group?.components ?? {}
+            for (const componentKey in components) {
+                if (components[componentKey]?.id === componentId) {
+                    return {
+                        title: components[componentKey]?.title ?? '',
+                        groupId: String(components[componentKey]?.groupId ?? ''),
+                        groupName: group?.title ?? ''
+                    }
+                }
+            }
+        }
+        return { title: '', groupId: '', groupName: '' }
     }
     /**
      * @return {void}
@@ -427,6 +569,128 @@ const CbManager = function ()  {
 
         this.closeAndRemoveBanner();
         this.handlePlaceholderElements();
+        this.applyIntegrations();
+    }
+    /**
+     * Applies all non-iframe integrations for the current consent state.
+     * @return {void}
+     */
+    this.applyIntegrations = () => {
+        this.applyConsentSignals()
+        this.applyMatomoConsent()
+        this.applyScriptComponents()
+    }
+    /**
+     * Returns all components of a given integration_type from the banner data.
+     * @param {string} type
+     * @return {Object[]}
+     */
+    this.componentsByType = (type) => {
+        const groups = this.bannerPreferences?.groups ?? {}
+        const result = []
+        for (const groupKey in groups) {
+            const components = groups[groupKey]?.components ?? {}
+            for (const componentKey in components) {
+                if (components[componentKey]?.integrationType === type) result.push(components[componentKey])
+            }
+        }
+        return result
+    }
+    /**
+     * Matomo: consent is global (one tracker) — granted if any matomo component
+     * is consented, otherwise withdrawn.
+     * @return {void}
+     */
+    this.applyMatomoConsent = () => {
+        const components = this.componentsByType('matomo')
+        if (components.length === 0) return
+
+        const consented = components.some(component => this.cookiePreferences?.[component.id] === true)
+        window._paq = window._paq || []
+        if (consented) {
+            window._paq.push(['setConsentGiven'])
+            window._paq.push(['setCookieConsentGiven'])
+        } else {
+            window._paq.push(['forgetConsentGiven'])
+            window._paq.push(['forgetCookieConsentGiven'])
+        }
+    }
+    /**
+     * "Script" components: inject the accepted script on consent; on withdrawal
+     * remove it again and run the optional rejected (cleanup) script.
+     * @return {void}
+     */
+    this.applyScriptComponents = () => {
+        this.componentsByType('script').forEach(component => {
+            if (this.cookiePreferences?.[component.id] === true) {
+                this.injectComponentScript(component.id, component.acceptedScript)
+            } else {
+                this.removeComponentScript(component.id, component.rejectedScript)
+            }
+        })
+    }
+    /**
+     * @param {string} id
+     * @param {string} code
+     * @return {void}
+     */
+    this.injectComponentScript = (id, code) => {
+        if (!code) return
+        if (document.querySelector(`script[data-cb-script="${id}"]`)) return // already injected
+
+        const script = document.createElement('script')
+        if (this.nonce) script.nonce = this.nonce
+        script.setAttribute('data-cb-script', id)
+        script.textContent = code
+        document.body.appendChild(script)
+    }
+    /**
+     * @param {string} id
+     * @param {string} rejectedCode
+     * @return {void}
+     */
+    this.removeComponentScript = (id, rejectedCode) => {
+        const existing = document.querySelector(`script[data-cb-script="${id}"]`)
+        if (!existing) return // nothing was injected -> nothing to undo
+
+        existing.remove()
+        if (rejectedCode) {
+            const script = document.createElement('script')
+            if (this.nonce) script.nonce = this.nonce
+            script.textContent = rejectedCode
+            document.body.appendChild(script)
+        }
+    }
+    /**
+     * Pushes a Google Consent Mode `update` for all google_consent_mode
+     * components: each signal is granted if the visitor consented to a component
+     * that controls it, otherwise explicitly denied (so revoking works too).
+     * @return {void}
+     */
+    this.applyConsentSignals = () => {
+        const groups = this.bannerPreferences?.groups ?? {}
+        const signalState = {}
+
+        for (const groupKey in groups) {
+            const components = groups[groupKey]?.components ?? {}
+            for (const componentKey in components) {
+                const component = components[componentKey]
+                if (component?.integrationType !== 'google_consent_mode') continue
+
+                const granted = this.cookiePreferences?.[component.id] === true
+                ;(Array.isArray(component.signals) ? component.signals : []).forEach(signal => {
+                    // Once any consented component grants a signal it stays granted.
+                    if (signalState[signal] !== 'granted') {
+                        signalState[signal] = granted ? 'granted' : 'denied'
+                    }
+                })
+            }
+        }
+
+        if (Object.keys(signalState).length === 0) return
+
+        const gtag = window.gtag || function () { (window.dataLayer = window.dataLayer || []).push(arguments) }
+        gtag('consent', 'update', signalState)
     }
     /**
      *

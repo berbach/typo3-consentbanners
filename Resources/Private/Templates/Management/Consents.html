@@ -9,6 +9,17 @@
 <f:section name="Content">
     <f:flashMessages/>
     <h1><f:translate key="LLL:EXT:consent_banner/Resources/Private/Language/locallang_mod.xlf:consents.headline"/></h1>
+
+    <f:form action="consents" method="post" arguments="{site: rootPageId}">
+        <div class="input-group" style="max-width: 460px; margin-bottom: 20px;">
+            <f:form.textfield name="search" value="{search}" class="form-control" placeholder="Vollständige User-ID eingeben…" />
+            <button type="submit" class="btn btn-primary">Suchen</button>
+            <f:if condition="{search}">
+                <f:link.action action="consents" arguments="{site: rootPageId}" class="btn btn-default">Zurücksetzen</f:link.action>
+            </f:if>
+        </div>
+    </f:form>
+
     <f:if condition="{data.consents}">
         <f:then>
             <div class="layout-one-columns">
@@ -31,27 +42,35 @@
                                 <f:for each="{data.consents}" as="consent">
                                     <tr>
                                         <td>
-                                            <code title="{consent.identification_key}">
-                                                <f:format.crop value="{consent.identification_key}" maxCharacters="12" append="..." />
-                                            </code>
+                                            <code>{consent.identification_key}</code>
                                         </td>
                                         <td>{consent.banner_version}</td>
                                         <td>
-                                            <ul style="margin:0; padding:0; list-style:none;">
-                                                <f:for each="{consent.consent_services}" as="service">
-                                                    <li>
-                                                        <f:if condition="{service.consent}">
-                                                            <f:then>
-                                                                <core:icon identifier="actions-check" size="small" />
-                                                            </f:then>
-                                                            <f:else>
-                                                                <core:icon identifier="actions-close" size="small" />
-                                                            </f:else>
+                                            <f:groupedFor each="{consent.consent_services}" as="groupServices" groupBy="groupName" groupKey="groupTitle">
+                                                <div style="margin-bottom: 10px;">
+                                                    <div style="font-weight: 600; margin-bottom: 2px;">
+                                                        <f:if condition="{groupTitle}">
+                                                            <f:then>{groupTitle}</f:then>
+                                                            <f:else><em>Ohne Gruppe</em></f:else>
                                                         </f:if>
-                                                        {service.title}
-                                                    </li>
-                                                </f:for>
-                                            </ul>
+                                                    </div>
+                                                    <ul style="margin: 0; padding-left: 18px; list-style: none;">
+                                                        <f:for each="{groupServices}" as="service">
+                                                            <li>
+                                                                <f:if condition="{service.consent}">
+                                                                    <f:then>
+                                                                        <core:icon identifier="actions-check" size="small" />
+                                                                    </f:then>
+                                                                    <f:else>
+                                                                        <core:icon identifier="actions-close" size="small" />
+                                                                    </f:else>
+                                                                </f:if>
+                                                                {service.title}
+                                                            </li>
+                                                        </f:for>
+                                                    </ul>
+                                                </div>
+                                            </f:groupedFor>
                                         </td>
                                         <td><f:format.date format="d.m.Y H:i">{consent.crdate}</f:format.date></td>
                                         <td><f:format.date format="d.m.Y H:i">{consent.tstamp}</f:format.date></td>
@@ -65,8 +84,16 @@
         </f:then>
         <f:else>
             <div class="callout callout-info">
-                <h4>Keine Consent-Daten vorhanden</h4>
-                <p>Es wurden noch keine Zustimmungen gespeichert.</p>
+                <f:if condition="{search}">
+                    <f:then>
+                        <h4>Keine Treffer</h4>
+                        <p>Keine Zustimmung gefunden für die User-ID „{search}".</p>
+                    </f:then>
+                    <f:else>
+                        <h4>Keine Consent-Daten vorhanden</h4>
+                        <p>Es wurden noch keine Zustimmungen gespeichert.</p>
+                    </f:else>
+                </f:if>
             </div>
         </f:else>
     </f:if>

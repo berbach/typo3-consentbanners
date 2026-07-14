@@ -45,6 +45,22 @@ class Banner extends AbstractEntity
     /**
      * @var string
      */
+    protected string $gtmContainerId = '';
+    /**
+     * @var string
+     */
+    protected string $matomoUrl = '';
+    /**
+     * @var string
+     */
+    protected string $matomoSiteId = '';
+    /**
+     * @var string
+     */
+    protected string $matomoMtmUrl = '';
+    /**
+     * @var string
+     */
     protected string $userIdentificationText = '';
 
     /**
@@ -293,6 +309,26 @@ class Banner extends AbstractEntity
     public function getBannerVersion(): int
     {
         return $this->bannerVersion;
+    }
+
+    public function getGtmContainerId(): string
+    {
+        return $this->gtmContainerId;
+    }
+
+    public function getMatomoUrl(): string
+    {
+        return $this->matomoUrl;
+    }
+
+    public function getMatomoSiteId(): string
+    {
+        return $this->matomoSiteId;
+    }
+
+    public function getMatomoMtmUrl(): string
+    {
+        return $this->matomoMtmUrl;
     }
     /**
      * Sets the $bannerVersion

@@ -189,15 +189,23 @@ class ManagementController extends ActionController
     /**
      * @throws RouteNotFoundException
      */
-    public function consentsAction(): ResponseInterface
+    public function consentsAction(string $search = ''): ResponseInterface
     {
-        $consentData = $this->consentRepository->findAll();
+        $search = trim($search);
+
+        // Retention: drop this site's consent logs older than lifetime_user_consent days.
+        if ($this->banner instanceof Banner) {
+            $this->consentRepository->deleteExpired((int)$this->banner->getLifetimeUserConsent(), $this->rootPageId);
+        }
+
+        $consentData = $this->consentRepository->findAll($search, $this->rootPageId);
         $moduleTemplate = $this->initializeModuleTemplate($this->request);
 
         $moduleTemplate->assignMultiple([
             'data' => [
                 'consents' => $consentData,
             ],
+            'search' => $search,
             'moduleName' => $this->moduleName,
             'returnUrl' => $this->uriBuilder->reset()->uriFor($this->request->getControllerActionName(), ['site' => $this->rootPageId, 'language' => 0], $this->request->getControllerName()),
             'rootPageId' => $this->rootPageId,
@@ -303,6 +311,13 @@ class ManagementController extends ActionController
     {
         if (is_null($this->banner)) {
             $this->addCreateConsentBannerButton($buttonBar);
+        }
+        if ($this->request->getControllerActionName() === 'consents') {
+            $reloadButton = $buttonBar->makeLinkButton()
+                ->setHref((string)$this->uriBuilder->reset()->uriFor('consents', ['site' => $this->rootPageId], 'Management'))
+                ->setTitle($this->getLanguageService()->sL('LLL:EXT:core/Resources/Private/Language/locallang_core.xlf:labels.reload'))
+                ->setIcon($this->iconFactory->getIcon('actions-refresh', IconSize::SMALL));
+            $buttonBar->addButton($reloadButton, ButtonBar::BUTTON_POSITION_RIGHT);
         }
     }
 

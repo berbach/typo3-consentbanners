@@ -53,6 +53,13 @@ lib.consentbanners {
 
 page {
 
+    # Google Consent Mode bootstrap (gtag default/update + GTM loader), rendered
+    # uncached and early in <head> before the Google tags fire.
+    headerData.1633505734 = USER_INT
+    headerData.1633505734 {
+        userFunc = Bb\ConsentBanner\Frontend\ConsentModeRenderer->render
+    }
+
     1633505733 < lib.consentbanners
 
     includeCSS {

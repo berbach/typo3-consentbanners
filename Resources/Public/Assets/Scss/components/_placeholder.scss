@@ -37,7 +37,7 @@
     text-align: center;
   }
 
-  .#{variables.$prefix}consentbanner-module {
+  .#{variables.$prefix}consentbanner-component {
     padding: 0 calc((100% - 14em) / 2);
 
     .#{variables.$prefix}control-checkbox {
