@@ -52,14 +52,14 @@ In der Root-`composer.json` des TYPO3-Projekts das Repository eintragen:
 ]
 ```
 
-Anschließend den benötigten Branch installieren:
+Anschließend installieren:
 
 ```bash
-composer require bb/consent_banner:dev-refactoring-architecture --prefer-dist
+composer require bb/consent_banner:^1.0 --prefer-dist
 ```
 
-- `dev-refactoring-architecture` ist der aktuelle Entwicklungs-Branch. Ohne diese
-  Angabe zieht Composer sonst den älteren (v12-)Stand.
+- `^1.0` installiert das aktuelle stabile Release (getaggt, `v1.0.0`). Composer
+  bevorzugt Tags vor Dev-Branches; der Default-Branch des Repos ist `prod`.
 - `--prefer-dist` lädt ein schlankes Dist-Archiv statt eines vollständigen Git-Clones;
   Build-Toolchain und Entwicklungsdateien sind per `.gitattributes` (`export-ignore`)
   ausgeschlossen, sodass nur die für den Betrieb nötigen Dateien installiert werden.
