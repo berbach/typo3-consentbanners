@@ -42,7 +42,8 @@ One @import per line
 */
 //Import Component files
 @include meta.load-css("components/form");
-@include meta.load-css("components/cookiebanner");
+@include meta.load-css("components/consentBanner");
+@include meta.load-css("components/cookieInformation");
 @include meta.load-css("components/placeholder");
 
 /*

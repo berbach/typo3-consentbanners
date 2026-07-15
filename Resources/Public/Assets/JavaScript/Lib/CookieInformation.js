@@ -1,34 +1,42 @@
-import {createToggle, createElementWithAttrs} from "./utils";
+import {createElementWithAttrs} from "./utils";
 
 const CB_PREFIX = 'bb-';
 const CB_PREFIX_NAME = CB_PREFIX + 'consentbanner';
 const CB_NAME = CB_PREFIX_NAME + '-';
+const TITLE_ID = CB_PREFIX + 'cookie-info-title';
 
+/**
+ * Accessible, responsive cookie information overlay.
+ *
+ * The overlay is an ARIA dialog (focus is trapped while open, Escape closes it,
+ * focus returns to the trigger on close). The cookie data is rendered with divs
+ * carrying ARIA table roles so it reads as a table for assistive technology and
+ * can reflow to a stacked, per-field layout on small screens (each cell keeps
+ * its column label via data-label).
+ */
 class CookieInformation {
 
     constructor(data) {
         this.data = data;
         this.overlay = null;
+        this.previouslyFocused = null;
+        this.onKeydown = this.handleKeydown.bind(this);
     }
 
-    /**
-     * @property {string} closeInfo
-     * @return {void}
-     */
     createOverlay() {
-        // Logik zum Erstellen des HTML für das Overlay
-        console.log("Creating overlay with data:", this.data);
         this.overlay = createElementWithAttrs('div', {
             className: [CB_PREFIX_NAME, CB_PREFIX + 'cookie-info', 'bb-cb-overlay'].join(' '),
             tabindex: "-1",
+            role: "dialog",
+            "aria-modal": "true",
+            "aria-labelledby": TITLE_ID,
             "data-nosnippet": "true"
         });
 
-        const overlayBody = createElementWithAttrs('div', {className: [CB_PREFIX + 'cookie-info-body'].join(' ')})
-
-        overlayBody.appendChild(this.createOverlayHeader())
-        overlayBody.appendChild(this.createOverlayContent())
-        overlayBody.appendChild(this.createOverlayFooter())
+        const overlayBody = createElementWithAttrs('div', {className: [CB_PREFIX + 'cookie-info-body'].join(' ')});
+        overlayBody.appendChild(this.createOverlayHeader());
+        overlayBody.appendChild(this.createOverlayContent());
+        overlayBody.appendChild(this.createOverlayFooter());
 
         this.overlay.innerHTML = `
             <!--googleoff: index-->
@@ -40,58 +48,165 @@ class CookieInformation {
         this.attachEventListeners();
     }
 
-    /**
-     *
-     * @return {*}
-     */
     createOverlayHeader() {
-        const overlayHeader = createElementWithAttrs('div', {className: [CB_PREFIX + 'cookie-info-header'].join(' ')})
-        overlayHeader.innerHTML = `<h2>Cookie Information</h2>`
+        const overlayHeader = createElementWithAttrs('div', {className: [CB_PREFIX + 'cookie-info-header'].join(' ')});
+        const title = this.data?.displayTexts?.buttons?.showInfo || 'Cookie Information';
+        const closeLabel = this.data?.displayTexts?.buttons?.closeInfo || 'Close';
+        overlayHeader.innerHTML = `
+            <h2 id="${TITLE_ID}" class="${CB_PREFIX}cookie-info-title">${this.escape(title)}</h2>
+            <button type="button" class="${CB_PREFIX}cookie-info-close-x" aria-label="${this.escape(closeLabel)}">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        `;
         return overlayHeader;
     }
 
-    /**
-     *
-     * @return {*}
-     */
     createOverlayContent() {
-        const overlayContent = createElementWithAttrs('div', {className: [CB_PREFIX + 'cookie-info-content'].join(' ')})
-        overlayContent.innerHTML = `<p>Hier werden die Cookie-Informationen angezeigt.</p>`;
+        const overlayContent = createElementWithAttrs('div', {className: [CB_PREFIX + 'cookie-info-content'].join(' ')});
+        overlayContent.innerHTML = this.buildCookieContent();
         return overlayContent;
     }
 
-    /**
-     *
-     * @return {*}
-     */
     createOverlayFooter() {
         const overlayFooter = createElementWithAttrs('div', {className: [CB_PREFIX + 'cookie-info-footer'].join(' ')}),
-            btn= createElementWithAttrs("button", {
+            btn = createElementWithAttrs("button", {
                 className: [CB_NAME + "button", CB_PREFIX + "cookie-info-close"].join(' '),
                 type: 'button',
-                innerText: this.data?.displayTexts?.buttons?.closeInfo
+                innerText: this.data?.displayTexts?.buttons?.closeInfo || 'Close'
             });
         overlayFooter.appendChild(btn);
         return overlayFooter;
     }
 
+    /**
+     * @param {string} s
+     * @return {string}
+     */
+    escape(s) {
+        return String(s ?? '').replace(/[&<>"]/g, (c) => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'}[c]));
+    }
+
+    /**
+     * Builds the cookie information markup grouped by consent group and service
+     * (component). Uses divs with ARIA table roles; column headers come from the
+     * configurable banner labels and are repeated per cell via data-label for the
+     * stacked mobile layout.
+     *
+     * @return {string}
+     */
+    buildCookieContent() {
+        const esc = (s) => this.escape(s);
+        const labels = this.data?.displayTexts?.cookie || {};
+        const groups = this.data?.groups || {};
+        const cols = [
+            ['name', labels.name || 'Cookie'],
+            ['provider', labels.provider || 'Provider'],
+            ['purpose', labels.purpose || 'Purpose'],
+            ['lifetime', labels.lifetime || 'Lifetime'],
+            ['description', labels.description || 'Description'],
+        ];
+
+        let html = '';
+        Object.values(groups).forEach((group) => {
+            const services = Object.values(group?.components || {})
+                .filter((c) => Array.isArray(c?.cookies) && c.cookies.length > 0);
+            if (services.length === 0) {
+                return;
+            }
+            html += `<section class="${CB_PREFIX}cookie-info-group">`;
+            html += `<h3 class="${CB_PREFIX}cookie-info-group-title">${esc(group?.title)}</h3>`;
+            services.forEach((service) => {
+                const serviceTitle = esc(service?.title);
+                html += `<div class="${CB_PREFIX}cookie-info-service">`;
+                html += `<h4 class="${CB_PREFIX}cookie-info-service-title">${serviceTitle}</h4>`;
+                html += `<div class="${CB_PREFIX}cookie-info-table" role="table" aria-label="${serviceTitle}">`;
+                html += `<div class="${CB_PREFIX}cookie-info-row ${CB_PREFIX}cookie-info-row--head" role="row">`;
+                cols.forEach(([, label]) => {
+                    html += `<span class="${CB_PREFIX}cookie-info-cell ${CB_PREFIX}cookie-info-cell--head" role="columnheader">${esc(label)}</span>`;
+                });
+                html += `</div>`;
+                service.cookies.forEach((cookie) => {
+                    html += `<div class="${CB_PREFIX}cookie-info-row" role="row">`;
+                    cols.forEach(([key, label]) => {
+                        html += `<span class="${CB_PREFIX}cookie-info-cell ${CB_PREFIX}cookie-info-cell--${key}" role="cell" data-label="${esc(label)}">${esc(cookie?.[key])}</span>`;
+                    });
+                    html += `</div>`;
+                });
+                html += `</div></div>`;
+            });
+            html += `</section>`;
+        });
+
+        return html || `<p class="${CB_PREFIX}cookie-info-empty">${esc(this.data?.displayTexts?.cookie?.description || 'No cookie details available.')}</p>`;
+    }
+
     attachEventListeners() {
-        this.overlay?.querySelector(`.${CB_PREFIX}cookie-info-close`).addEventListener('click', () => this.hide());
+        this.overlay?.querySelectorAll(`.${CB_PREFIX}cookie-info-close, .${CB_PREFIX}cookie-info-close-x`)
+            .forEach((btn) => btn.addEventListener('click', () => this.hide()));
+        this.overlay?.addEventListener('keydown', this.onKeydown);
+    }
+
+    /**
+     * @return {HTMLElement[]}
+     */
+    getFocusable() {
+        if (!this.overlay) {
+            return [];
+        }
+        return Array.from(this.overlay.querySelectorAll(
+            'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+        )).filter((el) => !el.hasAttribute('disabled') && el.offsetParent !== null);
+    }
+
+    handleKeydown(e) {
+        if (e.key === 'Escape') {
+            e.preventDefault();
+            this.hide();
+            return;
+        }
+        if (e.key !== 'Tab') {
+            return;
+        }
+        // Fokus-Falle: Tab-Navigation innerhalb des Dialogs halten.
+        const focusable = this.getFocusable();
+        if (focusable.length === 0) {
+            e.preventDefault();
+            this.overlay.focus();
+            return;
+        }
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+        if (e.shiftKey && document.activeElement === first) {
+            e.preventDefault();
+            last.focus();
+        } else if (!e.shiftKey && document.activeElement === last) {
+            e.preventDefault();
+            first.focus();
+        }
     }
 
     show() {
         if (!this.overlay) {
             this.createOverlay();
         }
+        this.previouslyFocused = document.activeElement;
         this.overlay.style.zIndex = '100';
-        this.overlay.classList.add('visible')
+        this.overlay.classList.add('visible');
+        // Fokus auf den Dialog-Container (aria-labelledby → Titel wird angesagt).
+        this.overlay.focus();
     }
 
     hide() {
-        if (this.overlay) {
-            this.overlay.classList.remove('visible')
-            this.overlay.remove();
-            //this.overlay.style.display = 'none';
+        if (!this.overlay) {
+            return;
+        }
+        this.overlay.removeEventListener('keydown', this.onKeydown);
+        this.overlay.classList.remove('visible');
+        this.overlay.remove();
+        this.overlay = null;
+        // Fokus zum auslösenden Element zurückgeben.
+        if (this.previouslyFocused && typeof this.previouslyFocused.focus === 'function') {
+            this.previouslyFocused.focus();
         }
     }
 }

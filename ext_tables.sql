@@ -96,7 +96,7 @@ CREATE TABLE tx_consentbanner_domain_model_consent_components
     component_title             varchar(255)         DEFAULT ''  NOT NULL,
     component_description       text,
 
-    °         varchar(255)         DEFAULT ''  NOT NULL,
+    component_ce_target         varchar(255)         DEFAULT ''  NOT NULL,
 
     integration_type            varchar(30)          DEFAULT 'iframe' NOT NULL,
     consent_mode_signals        varchar(255)         DEFAULT ''  NOT NULL,
@@ -107,17 +107,29 @@ CREATE TABLE tx_consentbanner_domain_model_consent_components
     accepted_script             text,
     rejected_script             text,
 
-    cookie_name                 varchar(64)          DEFAULT '' NOT NULL,
-    cookie_description          text,
-    cookie_provider             varchar(64)          DEFAULT '' NOT NULL,
-    cookie_purpose              text,
-    cookie_lifetime             varchar(64)          DEFAULT '' NOT NULL,
-
     sorting_foreign             int(11)              DEFAULT '0',
     group_id                    int(11)  unsigned    DEFAULT NULL,
     group_parent                varchar(30)          DEFAULT '' NOT NULL,
     hidden                      smallint unsigned DEFAULT '0' NOT NULL,
     deleted                     smallint unsigned DEFAULT '0' NOT NULL
+);
+
+#
+# Table structure for table 'tx_consentbanner_domain_model_cookie'
+# -- Cookies belonging to a consent component (inline / IRRE child records)
+#
+CREATE TABLE tx_consentbanner_domain_model_cookie
+(
+    cookie_name                 varchar(255)         DEFAULT '' NOT NULL,
+    cookie_provider             varchar(255)         DEFAULT '' NOT NULL,
+    cookie_description          text,
+    cookie_purpose              text,
+    cookie_lifetime             varchar(255)         DEFAULT '' NOT NULL,
+
+    component                   int(11) unsigned     DEFAULT '0' NOT NULL,
+    sorting_foreign             int(11)              DEFAULT '0' NOT NULL,
+    hidden                      smallint unsigned    DEFAULT '0' NOT NULL,
+    deleted                     smallint unsigned    DEFAULT '0' NOT NULL
 );
 
 #

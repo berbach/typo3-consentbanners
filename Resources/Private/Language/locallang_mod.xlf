@@ -275,6 +275,9 @@
                 <source>Example classname .class_example or id #id_example</source>
             </trans-unit>
 
+            <trans-unit id="field.cookies">
+                <source>Cookies</source>
+            </trans-unit>
             <trans-unit id="field.cookie_name">
                 <source>Cookie name (_ga)</source>
             </trans-unit>

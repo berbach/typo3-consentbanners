@@ -39,6 +39,7 @@ const CbManager = function ()  {
     this.bannerStage = null
     this.bannerMain = null
     this.bannerFooter = null
+    this.bannerOpener = null
     /**
      *
      */
@@ -136,17 +137,71 @@ const CbManager = function ()  {
 
     this.closeAndRemoveBanner = () => {
         let existBanner = document.querySelector(`div.${CB_NAME}`);
-        if(!!existBanner) existBanner.remove();
+        if(!!existBanner) {
+            existBanner.removeEventListener('keydown', this.bannerKeydownHandler)
+            existBanner.remove();
+            // Return focus to the opener (e.g. the "Cookie settings" link) after close.
+            const focusTarget = this.changePreferences || this.bannerOpener
+            if (focusTarget && typeof focusTarget.focus === 'function' && document.contains(focusTarget)) {
+                focusTarget.focus()
+            }
+        }
+    }
+
+    /**
+     * Focusable elements currently inside the banner dialog.
+     * @return {HTMLElement[]}
+     */
+    this.getBannerFocusable = () => {
+        if (!this.banner) return []
+        return Array.from(this.banner.querySelectorAll(
+            'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+        )).filter(el => !el.disabled && el.offsetParent !== null)
+    }
+
+    /**
+     * Keeps Tab focus inside the dialog while it is modal (overlay layout).
+     */
+    this.bannerKeydownHandler = (e) => {
+        if (e.key !== 'Tab' || this.banner?.getAttribute('aria-modal') !== 'true') return
+        const focusable = this.getBannerFocusable()
+        if (focusable.length === 0) return
+        const first = focusable[0]
+        const last = focusable[focusable.length - 1]
+        if (e.shiftKey && document.activeElement === first) {
+            e.preventDefault(); last.focus()
+        } else if (!e.shiftKey && document.activeElement === last) {
+            e.preventDefault(); first.focus()
+        }
+    }
+
+    /**
+     * Moves focus into the dialog (announces the title via aria-labelledby) and
+     * installs the focus trap. The trap only engages while the banner is modal.
+     */
+    this.focusBanner = () => {
+        if (!this.banner) return
+        this.banner.removeEventListener('keydown', this.bannerKeydownHandler)
+        this.banner.addEventListener('keydown', this.bannerKeydownHandler)
+        this.banner.focus()
     }
 
     this.createWrapperBanner = (isOverlay = false) => {
         this.closeAndRemoveBanner();
+        // Remember who opened the banner so focus can return there on close.
+        this.bannerOpener = document.activeElement;
 
         this.banner = createElementWithAttrs('div', {
             className: [CB_NAME, isOverlay ? 'bb-cb-overlay' : `bb-${this.bannerPreferences?.layout ?? 'cb-bottom'}`].join(" "),
             tabindex: "-1",
+            role: "dialog",
+            "aria-label": this.bannerPreferences?.banner?.title || 'Cookie consent',
             "data-nosnippet": "true"
         });
+        // Overlay layout blocks the page → expose it as a modal dialog.
+        if (isOverlay || !this.isBottomLayout) {
+            this.banner.setAttribute('aria-modal', 'true');
+        }
         document.querySelector('body').insertAdjacentElement('afterbegin', this.banner);
     }
 
@@ -165,19 +220,42 @@ const CbManager = function ()  {
 
         const bannerHeader = createElementWithAttrs('div', {className: CB_PREFIX + 'header'})
 
-        if (this.bannerPreferences?.banner?.title !== '') {
+        const hasTitle = this.bannerPreferences?.banner?.title !== ''
+        const hasDescription = this.bannerPreferences?.banner?.description !== ''
+
+        if (hasTitle) {
             createElementWithAttrs('p', {
                 className: CB_PREFIX + '-title',
+                id: CB_PREFIX + 'title-label',
+                role: 'heading',
+                'aria-level': '2',
                 innerHTML: createElementWithAttrs("strong", { innerText: this.bannerPreferences?.banner?.title}).outerHTML
             }, bannerHeader)
         }
 
-        if (this.bannerPreferences?.banner?.description !== '') {
+        if (hasDescription) {
             createElementWithAttrs('p', {
                 className: CB_PREFIX + '-description',
+                id: CB_PREFIX + 'desc-label',
                 innerHTML: this.bannerPreferences?.banner?.description // innerHTML to decode html entities
             }, bannerHeader)
         }
+
+        // Associate the dialog with its visible title / description for screen readers.
+        if (hasTitle) {
+            this.banner.setAttribute('aria-labelledby', CB_PREFIX + 'title-label')
+        }
+        if (hasDescription) {
+            this.banner.setAttribute('aria-describedby', CB_PREFIX + 'desc-label')
+        }
+
+        // Header X close button (styled + shown only in the overlay layout via CSS).
+        this.closeButton = createElementWithAttrs('button', {
+            className: CB_PREFIX + 'close',
+            type: 'button',
+            'aria-label': this.bannerPreferences?.displayTexts?.buttons?.close || 'Close'
+        }, bannerHeader)
+        this.closeButton.addEventListener('click', () => this.closeAndRemoveBanner())
 
         bannerContent.appendChild(bannerHeader)
         bannerContent.appendChild(this.createPreferences(isOverlay))
@@ -201,12 +279,17 @@ const CbManager = function ()  {
             document.querySelector('.' + CB_PREFIX + 'body').appendChild(this.bannerStage)
             document.querySelector('.' + CB_NAME).classList.add('visible')
         }
+
+        this.focusBanner()
     }
 
     this.createBannerOverlay = () => {
 
         this.banner.classList.remove("bb-cb-bottom", 'visible')
         this.banner.classList.add('bb-cb-overlay', 'visible')
+        // Switched to the blocking overlay → now behaves as a modal dialog.
+        this.banner.setAttribute('aria-modal', 'true')
+        this.focusBanner()
 
     }
 
@@ -244,16 +327,21 @@ const CbManager = function ()  {
                 }
 
                 if((groupComponents.children.length > 0 || group.lockedAndActive) && (groupComponents.children.length > 0 || !group.lockedAndActive)) {
-                    contentGroups.appendChild(
-                        createToggle(
-                            true, CB_PREFIX, group?.title, CB_GROUP_PREFIX + group?.id, group?.description,
-                            {
-                                checked: !!group.lockedAndActive,
-                                disabled: !!group.lockedAndActive
-                            },
-                            groupComponents.children.length > 0 ? groupComponents : null
-                        )
+                    const groupEl = createToggle(
+                        true, CB_PREFIX, group?.title, CB_GROUP_PREFIX + group?.id, group?.description,
+                        {
+                            checked: !!group.lockedAndActive,
+                            disabled: !!group.lockedAndActive
+                        },
+                        groupComponents.children.length > 0 ? groupComponents : null
                     )
+                    // Expose each group as a labelled group so the component
+                    // toggles are announced within their category.
+                    groupEl.setAttribute('role', 'group')
+                    if (group?.title) {
+                        groupEl.setAttribute('aria-label', group.title)
+                    }
+                    contentGroups.appendChild(groupEl)
                 }
             }
 
@@ -324,7 +412,7 @@ const CbManager = function ()  {
             cookieInfo.show();
         })
 
-        containerFooterCell = createElementWithAttrs('div', {className: CB_PREFIX + 'footer-cell'})
+        containerFooterCell = createElementWithAttrs('div', {className: [CB_PREFIX + 'footer-cell', CB_PREFIX + 'footer-cell--links'].join(' ')})
 
         const linkContainer = createElementWithAttrs('div', {className: CB_PREFIX + 'links'})
         footerLinks.forEach(link => {

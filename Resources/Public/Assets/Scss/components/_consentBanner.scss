@@ -70,13 +70,11 @@ $max-width: $container-max-width !default;
                 justify-content: flex-start;
                 align-items: center;
                 flex-wrap: wrap;
-                height: unit.bb-calc-rem(45);
+                gap: unit.bb-calc-rem(10) unit.bb-calc-rem(28);
             }
         }
     }
 
-    &-links,
-    &-buttons,
     .#{variables.$prefix}link--cookie-info {
         height: unit.bb-calc-rem(40);
     }
@@ -226,7 +224,7 @@ $max-width: $container-max-width !default;
 
         &-cell{
 
-            @media screen and (min-width: unit.bb-calc-rem(map.get(variables.$breakpoints, "large"))) {
+            @media screen and (min-width: unit.bb-calc-rem(map.get(variables.$breakpoints, "medium"))) {
                 flex: 0 0 50%;
                 width: 50%;
             }
@@ -246,6 +244,11 @@ $max-width: $container-max-width !default;
             display: flex;
             justify-content: flex-end;
 
+            // No fixed height on smartphones; only from tablet portrait up.
+            @media screen and (min-width: unit.bb-calc-rem(map.get(variables.$breakpoints, "medium"))) {
+                height: unit.bb-calc-rem(40);
+            }
+
             #{$self}--link {
                 flex: 1 0 auto;
 
@@ -254,7 +257,9 @@ $max-width: $container-max-width !default;
                 padding: unit.bb-calc-rem(10.5 10 10.5 10);
                 position: relative;
 
-                @media screen and (min-width: unit.bb-calc-rem(map.get(variables.$breakpoints, "large"))) {
+                // From tablet portrait up the links keep their natural width and
+                // sit flush right (no growing/spreading across the cell).
+                @media screen and (min-width: unit.bb-calc-rem(map.get(variables.$breakpoints, "medium"))) {
                     flex: 0 0 auto;
                 }
 
@@ -357,7 +362,15 @@ $max-width: $container-max-width !default;
             background: $white;
 
             margin: 0 auto;
+            // Keep the overlay box within the viewport and scroll its content
+            // (Advanced settings / Cookie settings can be taller than the screen).
+            max-height: calc(100vh - #{unit.bb-calc-rem(40)});
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            overscroll-behavior: contain;
+
             @media screen and (max-width: unit.bb-calc-rem(map.get(variables.$breakpoints, "medium"))) {
+                max-height: 100vh;
                 padding-top: unit.bb-calc-rem(45);
             }
         }
@@ -593,7 +606,7 @@ $max-width: $container-max-width !default;
         #{$self}-close {
             position: absolute;
             right: 0;
-            top: 0;
+            top: unit.bb-calc-rem(10);
 
             margin: 0;
             padding: 0;
@@ -801,5 +814,36 @@ $max-width: $container-max-width !default;
 @mixin unify-parent($child) {
     @at-root #{selector.unify(&, $child)} {
         @content;
+    }
+}
+
+
+// -----------------------------------------------------------------------------
+// Overlay (Advanced / Cookie settings) refinements
+//  - sticky header (with the X close button) pinned to the top
+//  - the body scrolls (see &-body rule above); preferences + footer scroll under
+//  - footer navigation links are hidden while the settings dialog is open
+// -----------------------------------------------------------------------------
+.#{variables.$prefix}cb-overlay {
+    // let the sticky header sit flush at the top of the scroll box
+    .#{variables.$prefix}consentbanner-body {
+        padding-top: 0;
+
+        @media screen and (max-width: unit.bb-calc-rem(map.get(variables.$breakpoints, "medium"))) {
+            padding-top: 0;
+        }
+    }
+
+    .#{variables.$prefix}consentbanner-header {
+        position: sticky;
+        top: 0;
+        z-index: 3;
+        background: $white;
+        padding: unit.bb-calc-rem(16) unit.bb-calc-rem(40) unit.bb-calc-rem(10) 0;
+        border-bottom: unit.bb-calc-rem(1) solid $gray95;
+    }
+
+    .#{variables.$prefix}consentbanner-footer-cell--links {
+        display: none;
     }
 }

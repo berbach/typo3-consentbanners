@@ -81,35 +81,11 @@ class Component extends AbstractEntity
      */
     protected string $placeholderDescription = '';
     /**
-     * cookie_name
+     * cookies belonging to this component (inline children)
      *
-     * @var string
+     * @var ObjectStorage<Cookie>
      */
-    protected string $cookieName = '';
-    /**
-     * cookie_description
-     *
-     * @var string
-     */
-    protected string $cookieDescription = '';
-    /**
-     * cookie_provider
-     *
-     * @var string
-     */
-    protected string $cookieProvider = '';
-    /**
-     * cookie_purpose
-     *
-     * @var string
-     */
-    protected string $cookiePurpose = '';
-    /**
-     * cookie_lifetime
-     *
-     * @var string
-     */
-    protected string $cookieLifetime = '';
+    protected ObjectStorage $cookies;
 
     /**
      * show uri
@@ -134,7 +110,7 @@ class Component extends AbstractEntity
      */
     public function __construct() {
         //Do not remove the next line: It would break the functionality
-
+        $this->cookies = new ObjectStorage();
     }
 
     /**
@@ -396,53 +372,29 @@ class Component extends AbstractEntity
         $this->consentModeSignals = $consentModeSignals;
     }
 
-    public function getCookieName(): string
+    /**
+     * @return ObjectStorage<Cookie>
+     */
+    public function getCookies(): ObjectStorage
     {
-        return $this->cookieName;
+        return $this->cookies;
     }
 
-    public function setCookieName(string $cookieName): void
+    /**
+     * @param ObjectStorage<Cookie> $cookies
+     */
+    public function setCookies(ObjectStorage $cookies): void
     {
-        $this->cookieName = $cookieName;
+        $this->cookies = $cookies;
     }
 
-    public function getCookieDescription(): string
+    public function addCookie(Cookie $cookie): void
     {
-        return $this->cookieDescription;
+        $this->cookies->attach($cookie);
     }
 
-    public function setCookieDescription(string $cookieDescription): void
+    public function removeCookie(Cookie $cookie): void
     {
-        $this->cookieDescription = $cookieDescription;
-    }
-
-    public function getCookieProvider(): string
-    {
-        return $this->cookieProvider;
-    }
-
-    public function setCookieProvider(string $cookieProvider): void
-    {
-        $this->cookieProvider = $cookieProvider;
-    }
-
-    public function getCookiePurpose(): string
-    {
-        return $this->cookiePurpose;
-    }
-
-    public function setCookiePurpose(string $cookiePurpose): void
-    {
-        $this->cookiePurpose = $cookiePurpose;
-    }
-
-    public function getCookieLifetime(): string
-    {
-        return $this->cookieLifetime;
-    }
-
-    public function setCookieLifetime(string $cookieLifetime): void
-    {
-        $this->cookieLifetime = $cookieLifetime;
+        $this->cookies->detach($cookie);
     }
 }
