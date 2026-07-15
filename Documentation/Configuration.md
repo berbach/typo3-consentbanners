@@ -74,6 +74,30 @@ steuert, wie die Component im Frontend eingebunden wird:
   Component-Titel verwendet.
 - Wird im jeweiligen Fluid-Template über `<cb:allowCookie>` genutzt.
 
+Ein getargeteter CType wird über einen `COA_INT`-Block (in `sys_template.config`,
+automatisch vom `TypoScriptModifier` beim Speichern der Component geschrieben)
+**uncached** gerendert. Nur so kann der `<cb:allowCookie>`-ViewHelper pro Request
+entscheiden, ob der echte Inhalt oder ein Placeholder **mit Einwilligungs-Toggle**
+erscheint.
+
+#### HTML-Inhaltselemente (CType `html`)
+
+Das `html`-Element wird gesondert behandelt (`AllowCookieViewHelper::renderHtmlElement()`):
+
+- **Externe Iframes werden IMMER entfernt** – ohne jede Konfiguration. Enthält der
+  Bodytext ein Iframe zu einer fremden Domain, wird es durch einen generischen
+  Placeholder (*„Third-party HTML has been removed."*, **ohne** Toggle) ersetzt;
+  der umgebende Text bleibt erhalten. Das ist eine statische, einwilligungs­
+  unabhängige Ersetzung und funktioniert daher auch bei gecachten Seiten – es
+  muss **keine** Component den CType `html` targeten. Interne bzw. relative Iframes
+  und HTML ohne Iframe bleiben unverändert.
+- **Einwilligungs-Toggle für ein HTML-Element** (Besucher kann zustimmen → Iframe
+  wird live) ist optional und erfordert zwei Dinge: (1) eine Component muss den
+  CType `html` targeten (`component_ce_target`, erzeugt den `COA_INT`-Block →
+  uncached), und (2) das Element muss dieser Component über das Feld
+  **Drittanbieter/Component** (`ce_consent_component`) zugeordnet sein. Fehlt das
+  Uncaching-Setup, fällt das Element sicher auf das statische Entfernen zurück.
+
 ### 4.2 Google Consent Mode
 
 - **Google Consent Mode Signale** (`consent_mode_signals`): Mehrfachauswahl,
