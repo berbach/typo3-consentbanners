@@ -83,31 +83,29 @@ class AllowCookieViewHelper extends AbstractViewHelper
     /**
      * Renders a plain "html" content element.
      *
-     * Gating for "html" is opt-in: it only applies when a consent component
-     * targets the "html" CType (component_ce_target). That target is what makes
-     * the TypoScriptModifier wrap tt_content.html in a COA_INT block, so the
-     * element renders uncached and per-request decisions are safe. Without such a
-     * component the element is served from the page cache and must not produce
-     * consent-dependent output, so it is rendered unchanged.
-     *
-     * When gating is active:
-     *  1. If a component is assigned to this specific element (ce_consent_component),
-     *     that component gates the element: on consent the real content is rendered,
-     *     otherwise a placeholder with an inline accept toggle is shown.
-     *  2. Without an assignment external iframes in the body text are replaced by a
-     *     generic placeholder (no toggle), while the surrounding text stays intact.
+     * Two levels of gating apply:
+     *  1. Interactive gate WITH accept toggle — only when this element is assigned
+     *     to a component (ce_consent_component) AND a component targets the "html"
+     *     CType. The target is what makes the TypoScriptModifier wrap
+     *     tt_content.html in a COA_INT block, so the element renders uncached and
+     *     the per-request consent decision (placeholder vs. real content) is safe.
+     *     Without that uncaching a per-visitor toggle cannot be cached correctly,
+     *     so we fall through to the static strip below.
+     *  2. Static strip (default, always on) — external iframes in the body text are
+     *     replaced by a generic placeholder (no toggle), the surrounding text stays
+     *     intact. This output is consent-independent and therefore safe even when
+     *     the element is served from the page cache, so it needs no component or
+     *     COA_INT setup. Body text without an external iframe is left unchanged.
      *
      * @throws Exception
      */
     protected function renderHtmlElement(array $data): string
     {
-        // Not gated unless a component targets the "html" CType (→ COA_INT).
-        if ($this->findComponentByCType('html') === []) {
-            return $this->renderChildren();
-        }
-
+        // Interactive toggle requires uncached rendering (COA_INT), which only
+        // exists when a component targets the "html" CType. Only then can we gate
+        // per request; otherwise fall through to the static strip.
         $assignedId = trim((string)($data['ce_consent_component'] ?? ''));
-        if ($assignedId !== '' && $assignedId !== '0') {
+        if ($assignedId !== '' && $assignedId !== '0' && $this->findComponentByCType('html') !== []) {
             $component = $this->findComponentById($assignedId);
             if ($component !== []) {
                 return $this->renderComponentGate($component);
