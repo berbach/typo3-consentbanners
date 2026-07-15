@@ -43,10 +43,8 @@ class BannerRepository extends Repository
         $query->setLimit(1);
         $query->matching($query->equals($GLOBALS['TCA'][self::TABLE_NAME]['ctrl']['languageField'], $languageId));
 
-        if ($query->execute()->count()){
-            return $query->execute()->getFirst();
-        }
-        return null;
+        $result = $query->execute();
+        return $result->count() ? $result->getFirst() : null;
     }
 
     /**

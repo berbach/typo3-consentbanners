@@ -8,7 +8,6 @@ use TYPO3\CMS\Core\Page\JavaScriptModuleInstruction;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\MathUtility;
 use TYPO3\CMS\Core\Utility\StringUtility;
-use TYPO3\CMS\Extbase\Utility\DebuggerUtility;
 
 class InputCurrentLanguagePlaceholder extends AbstractFormElement
 {
@@ -91,9 +90,6 @@ class InputCurrentLanguagePlaceholder extends AbstractFormElement
         }
 
         $languageService = $this->getLanguageService();
-        DebuggerUtility::var_dump($resultArray);
-        //$language= $this->request->getAttribute('language');
-DebuggerUtility::var_dump($GLOBALS);
         // @todo: The whole eval handling is a mess and needs refactoring
         $evalList = GeneralUtility::trimExplode(',', $config['eval'] ?? '', true);
         foreach ($evalList as $func) {

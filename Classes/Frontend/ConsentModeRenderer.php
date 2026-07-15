@@ -40,9 +40,9 @@ class ConsentModeRenderer
         'security_storage' => 'granted',
     ];
 
-    public function render(string $content, array $conf): string
+    public function render(string $content, array $conf, ?\Psr\Http\Message\ServerRequestInterface $request = null): string
     {
-        $site = $this->getRequest()?->getAttribute('site');
+        $site = $request?->getAttribute('site');
         if (!$site instanceof Site) {
             return '';
         }
@@ -231,8 +231,4 @@ class ConsentModeRenderer
         }
     }
 
-    private function getRequest(): ?\Psr\Http\Message\ServerRequestInterface
-    {
-        return $GLOBALS['TYPO3_REQUEST'] ?? null;
-    }
 }

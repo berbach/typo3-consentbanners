@@ -21,7 +21,6 @@ use TYPO3\CMS\Core\Page\PageRenderer;
 use TYPO3\CMS\Core\Resource\ResourceCompressor;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\MathUtility;
-use TYPO3\CMS\Extbase\Utility\DebuggerUtility;
 use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
 use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
 use TYPO3\CMS\Frontend\ContentObject\DataProcessorInterface;
@@ -416,7 +415,7 @@ class ConsentBannerProcessor implements DataProcessorInterface
 
     protected function getTypo3Request(): ServerRequestInterface
     {
-        return $GLOBALS['TYPO3_REQUEST'];
+        return $this->cObj->getRequest();
     }
 
     protected function resolveNonceValue(): string
