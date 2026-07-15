@@ -52,11 +52,17 @@ In der Root-`composer.json` des TYPO3-Projekts das Repository eintragen:
 ]
 ```
 
-Anschließend installieren:
+Anschließend den benötigten Branch installieren:
 
 ```bash
-composer require bb/consent_banner
+composer require bb/consent_banner:dev-refactoring-architecture --prefer-dist
 ```
+
+- `dev-refactoring-architecture` ist der aktuelle Entwicklungs-Branch. Ohne diese
+  Angabe zieht Composer sonst den älteren (v12-)Stand.
+- `--prefer-dist` lädt ein schlankes Dist-Archiv statt eines vollständigen Git-Clones;
+  Build-Toolchain und Entwicklungsdateien sind per `.gitattributes` (`export-ignore`)
+  ausgeschlossen, sodass nur die für den Betrieb nötigen Dateien installiert werden.
 
 Danach im TYPO3-Backend das Site-Set **„Berbach Consent Banner"** (`bb/consent-banner`)
 zur Site hinzufügen (Site-Konfiguration → *Sets*), damit Banner-Ausgabe und
