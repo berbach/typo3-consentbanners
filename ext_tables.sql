@@ -1,10 +1,10 @@
--- #
--- # Table structure for table 'tt_content'
--- #
--- CREATE TABLE tt_content
--- (
---     ce_consent_module varchar(255) DEFAULT '' NOT NULL
--- );
+#
+# Table structure for table 'tt_content'
+#
+CREATE TABLE tt_content
+(
+    ce_consent_component varchar(255) DEFAULT '' NOT NULL
+);
 #
 # Table structure for table 'tx_consentbanner_domain_model_banner'
 #
@@ -96,7 +96,7 @@ CREATE TABLE tx_consentbanner_domain_model_consent_components
     component_title             varchar(255)         DEFAULT ''  NOT NULL,
     component_description       text,
 
-    component_ce_target         varchar(255)         DEFAULT ''  NOT NULL,
+    °         varchar(255)         DEFAULT ''  NOT NULL,
 
     integration_type            varchar(30)          DEFAULT 'iframe' NOT NULL,
     consent_mode_signals        varchar(255)         DEFAULT ''  NOT NULL,

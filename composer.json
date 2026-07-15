@@ -1,6 +1,6 @@
 {
     "name": "bb/consent_banner",
-    "description": "Consent Banner Extension with Javascript.",
+    "description": "Consent Banner Extension with Consent Mode, Consent history, Javascript.",
     "homepage": "https://berbach.com/",
     "license": "GPL-2.0-or-later",
     "type": "typo3-cms-extension",
@@ -12,22 +12,24 @@
         "Extension"
     ],
     "require": {
-        "typo3/cms-backend": "^13.4 || dev-main",
-        "typo3/cms-core": "^13.4 || dev-main",
-        "typo3/cms-extbase": "^13.4 || dev-main",
-        "typo3/cms-fluid": "^13.4 || dev-main",
-        "typo3/cms-frontend": "^13.4 || dev-main",
-		"ext-bcmath": "*"
+		"php": ">= 8.3 < 8.5",
+        "typo3/cms-backend": ">= 13.4 < 14.3",
+        "typo3/cms-core": ">= 13.4 < 14.3",
+        "typo3/cms-extbase": ">= 13.4 < 14.3",
+        "typo3/cms-fluid": ">= 13.4 < 14.3",
+        "typo3/cms-frontend": ">= 13.4 < 14.3"
     },
 	"require-dev": {
 		"ergebnis/composer-normalize": "^2.42",
-		"friendsofphp/php-cs-fixer": "^3.52",
+		"friendsofphp/php-cs-fixer": "^3.95",
 		"phpstan/extension-installer": "^1.4",
 		"phpstan/phpstan": "^2.1",
-		"phpunit/phpunit": "^12.2",
+		"phpunit/phpunit": "^10.5",
 		"saschaegerer/phpstan-typo3": "^2.1",
-		"typo3/cms-install": "^13.4 || dev-main",
-		"typo3/testing-framework": "dev-main",
+		"ssch/typo3-debug-dump-pass": "^v0.0.2",
+		"symfony/debug-bundle": "^6.4",
+		"typo3/cms-install": ">= 13.4 < 14.3",
+		"typo3/testing-framework": "^8.3",
 		"typo3/coding-standards": "^0.8.0"
 	},
     "autoload": {

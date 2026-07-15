@@ -6,14 +6,14 @@ defined('TYPO3') || die();
     $GLOBALS['TCA']['tt_content'],
     [
         'columns' => [
-            'ce_consent_module' => [
+            'ce_consent_component' => [
                 'exclude' => true,
-                'label' => 'LLL:EXT:consent_banner/Resources/Private/Language/locallang_db.xlf:field.consentbanner.module',
+                'label' => 'LLL:EXT:consent_banner/Resources/Private/Language/locallang_db.xlf:field.consentbanner.component',
                 'config' => [
                     'type' => 'select',
                     'renderType' => 'selectSingle',
                     'items' => [
-                        ['label' => 'Select a module', 'value' => '']
+                        ['label' => 'Keine Zuordnung', 'value' => '']
                     ],
                     'itemsProcFunc' => Bb\ConsentBanner\Utility\TCASelectModuleUtility::class . '->getHtmlModules',
                 ],
@@ -35,5 +35,5 @@ defined('TYPO3') || die();
 \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addFieldsToPalette(
     'tt_content',
     'ceConsentSettings',
-    'ce_consent_module'
+    'ce_consent_component'
 );

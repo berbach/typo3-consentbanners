@@ -19,8 +19,8 @@
             <trans-unit id="tab.consentbanner">
                 <source>Consent Banner</source>
             </trans-unit>
-            <trans-unit id="field.consentbanner.module">
-                <source>Module</source>
+            <trans-unit id="field.consentbanner.component">
+                <source>Consent Component</source>
             </trans-unit>
 		</body>
 	</file>

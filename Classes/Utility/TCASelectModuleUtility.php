@@ -10,7 +10,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
  * Provides the selectable consent components for the tt_content field
- * "ce_consent_module". The stored value is the component_id, which is exactly
+ * "ce_consent_component". The stored value is the component_id, which is exactly
  * the key used in the consent cookie, so the AllowCookieViewHelper can look up
  * the consent state without an additional database round-trip.
  */

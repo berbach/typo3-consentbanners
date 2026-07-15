@@ -67,40 +67,88 @@ class AllowCookieViewHelper extends AbstractViewHelper
             return $this->renderChildren();
         }
 
-        $component = $this->findComponentByCType($cType);
-
-        // Case 1: a component covers this content element type.
-        if ($component !== []) {
-            if ($this->hasConsent((string)$component['component_id'])) {
-                return $this->renderChildren();
-            }
-
-            $headline = (string)($component['placeholder_title'] ?? '');
-            if ($headline === '') {
-                $headline = (string)($component['component_title'] ?? '');
-            }
-
-            // Keep the real content available client-side (inert <template>) so
-            // it can be swapped in on consent without a page reload.
-            return $this->buildPlaceholder(
-                $headline,
-                (string)($component['placeholder_description'] ?? ''),
-                (string)($component['component_id'] ?? ''),
-                $this->renderChildren()
-            );
+        // The "html" content element is gated per element via ce_consent_component
+        // and handled separately from the CType auto-match below.
+        if ($cType === 'html') {
+            return $this->renderHtmlElement($data);
         }
 
-        // Case 2: plain "html" element with an external iframe, no component.
-        if ($cType === 'html') {
-            $placeholder = $this->buildPlaceholder(
-                (string)LocalizationUtility::translate(self::LL . 'placeholderHeadline.removed.html'),
-                (string)LocalizationUtility::translate(self::LL . 'placeholder.removed.html')
-            );
-
-            return $this->replaceExternalIframes((string)($data['bodytext'] ?? ''), $placeholder);
+        // A component covers this content element type (e.g. cevideoplayer).
+        $component = $this->findComponentByCType($cType);
+        if ($component !== []) {
+            return $this->renderComponentGate($component);
         }
 
         return $this->renderChildren();
+    }
+
+    /**
+     * Renders a plain "html" content element.
+     *
+     * Gating for "html" is opt-in: it only applies when a consent component
+     * targets the "html" CType (component_ce_target). That target is what makes
+     * the TypoScriptModifier wrap tt_content.html in a COA_INT block, so the
+     * element renders uncached and per-request decisions are safe. Without such a
+     * component the element is served from the page cache and must not produce
+     * consent-dependent output, so it is rendered unchanged.
+     *
+     * When gating is active:
+     *  1. If a component is assigned to this specific element (ce_consent_component),
+     *     that component gates the element: on consent the real content is rendered,
+     *     otherwise a placeholder with an inline accept toggle is shown.
+     *  2. Without an assignment external iframes in the body text are replaced by a
+     *     generic placeholder (no toggle), while the surrounding text stays intact.
+     *
+     * @throws Exception
+     */
+    protected function renderHtmlElement(array $data): string
+    {
+        // Not gated unless a component targets the "html" CType (→ COA_INT).
+        if ($this->findComponentByCType('html') === []) {
+            return $this->renderChildren();
+        }
+
+        $assignedId = trim((string)($data['ce_consent_component'] ?? ''));
+        if ($assignedId !== '' && $assignedId !== '0') {
+            $component = $this->findComponentById($assignedId);
+            if ($component !== []) {
+                return $this->renderComponentGate($component);
+            }
+        }
+
+        $placeholder = $this->buildPlaceholder(
+            (string)LocalizationUtility::translate(self::LL . 'placeholderHeadline.removed.html'),
+            (string)LocalizationUtility::translate(self::LL . 'placeholder.removed.html')
+        );
+
+        return $this->replaceExternalIframes((string)($data['bodytext'] ?? ''), $placeholder);
+    }
+
+    /**
+     * Gates the child content behind the consent state of the given component.
+     *
+     * On consent the real content is rendered; otherwise a placeholder with an
+     * inline accept toggle is returned. The real content is additionally kept in
+     * an inert <template> inside the placeholder so it can be swapped in on
+     * consent without a page reload.
+     */
+    protected function renderComponentGate(array $component): string
+    {
+        if ($this->hasConsent((string)$component['component_id'])) {
+            return $this->renderChildren();
+        }
+
+        $headline = (string)($component['placeholder_title'] ?? '');
+        if ($headline === '') {
+            $headline = (string)($component['component_title'] ?? '');
+        }
+
+        return $this->buildPlaceholder(
+            $headline,
+            (string)($component['placeholder_description'] ?? ''),
+            (string)($component['component_id'] ?? ''),
+            $this->renderChildren()
+        );
     }
 
     /**
@@ -131,6 +179,36 @@ class AllowCookieViewHelper extends AbstractViewHelper
             ->from(self::COMPONENT_TABLE)
             ->where(
                 $queryBuilder->expr()->inSet('component_ce_target', $queryBuilder->createNamedParameter($cType))
+            )
+            ->setMaxResults(1);
+
+        $rootPageId = $this->site instanceof Site ? $this->site->getRootPageId() : 0;
+        if ($rootPageId > 0) {
+            $queryBuilder->andWhere(
+                $queryBuilder->expr()->eq('pid', $queryBuilder->createNamedParameter($rootPageId, Connection::PARAM_INT))
+            );
+        }
+
+        $row = $queryBuilder->executeQuery()->fetchAssociative();
+
+        return is_array($row) ? $row : [];
+    }
+
+    /**
+     * Finds a consent component by its component_id (the value stored in the
+     * ce_consent_component field and used as the consent cookie key).
+     *
+     * @throws Exception
+     */
+    protected function findComponentById(string $componentId): array
+    {
+        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable(self::COMPONENT_TABLE);
+
+        $queryBuilder
+            ->select('component_id', 'component_title', 'placeholder_title', 'placeholder_description')
+            ->from(self::COMPONENT_TABLE)
+            ->where(
+                $queryBuilder->expr()->eq('component_id', $queryBuilder->createNamedParameter($componentId))
             )
             ->setMaxResults(1);
 
