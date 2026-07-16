@@ -317,30 +317,6 @@ class ConsentBannerProcessor implements DataProcessorInterface
         return LocalizationUtility::translate('LLL:EXT:consent_banner/Resources/Private/Language/locallang.xlf:'. trim($key));
     }
 
-    protected function generateAlphaId(string $input, int $length = 11): string
-    {
-        $chars2 = $this->clearString($input).'0123456789';
-        // URL-sichere Zeichen: A-Z, a-z, 0-9, - und _
-        // YouTube verwendet typischerweise A-Z, a-z und 0-9
-        $chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-        $id = '';
-        $charLength = strlen($chars);
-
-        for ($i = 0; $i < $length; $i++) {
-            // Generiert ein zufälliges Zeichen aus der $chars-Zeichenkette
-            $id .= $chars[random_int(0, $charLength - 1)];
-        }
-
-        return $id;
-    }
-
-    protected function clearString($input):string
-    {
-        $input = str_replace(['ä', 'ö', 'ü', 'ß'], ['ae', 'oe', 'ue', 'ss'], $input);
-        $input = preg_replace('/\s+/', '', $input);
-        return preg_replace('/[^a-zA-Z]/', '', $input);
-    }
-
     protected function getContext(): Context
     {
         return GeneralUtility::makeInstance(Context::class);
