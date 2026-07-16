@@ -37,8 +37,6 @@ class ConsentBannerProcessor implements DataProcessorInterface
     protected ContentObjectRenderer $cObj;
 
     /**
-
-    /**
      * @param ContentObjectRenderer $cObj
      * @param array $contentObjectConfiguration
      * @param array $processorConfiguration
@@ -69,25 +67,6 @@ class ConsentBannerProcessor implements DataProcessorInterface
         $tempBanner = [];
         if(!empty($banner)){
             $privacyPage = [];
-
-//            if (MathUtility::canBeInterpretedAsInteger($banner->getPrivacyPage())) {
-//                $privacyPage['uri'] = $cObj->createUrl(['parameter' => $banner->getPrivacyPage()]);
-//                $privacyPage['module_target'] = $settings['module_target'] ?? "";
-//
-//                if (!empty($banner->getPrivacyPageLabel())) {
-//                    $privacyPage['label'] = $banner->getPrivacyPageLabel();
-//                } else {
-//                    $pageRecord = $this->getRecord('pages', $banner->getPrivacyPage(), 'uid, pid, ' . $GLOBALS['TCA']['pages']['ctrl']['languageField'] . ', nav_title, title');
-//                    if(!empty($pageRecord['nav_title'])){
-//                        $privacyPage['label'] = $pageRecord['nav_title'];
-//                    }elseif (!empty($pageRecord['title'])){
-//                        $privacyPage['label'] = $pageRecord['title'];
-//                    }else{
-//                        $privacyPage['label'] = "";
-//                    }
-//                }
-//            }
-
 
             $tempBanner = [
 
@@ -151,53 +130,6 @@ class ConsentBannerProcessor implements DataProcessorInterface
                 'consentAccepted'       => $consentAccepted,
                 'cName'                 => self::$cName,
             ];
-
-
-
-//            $tempGroups = [];
-//            $tempModules = [];
-//            $tempRejectedScript = '';
-//
-//
-//
-//
-//            $tempGroups[] = ['uid' => $banner->getUid(), 'name' => $banner->getEssentialTitle(), 'description' => $banner->getEssentialDescription(), 'lockedAndActive' => true];
-//
-//            foreach ($banner->getConsentOtherGroups() as $otherGroup){
-//                //$lockedAndActive = $category->getLockedAndActive();
-//                $tempGroups[] = ['uid' => $otherGroup->getUid(), 'name' => $otherGroup->getGroupTitle(), 'description' => $otherGroup->getGroupDescription(), 'lockedAndActive' => false];
-//
-//                if($otherGroup->getGroupComponents()->count() > 0) {
-//                    foreach ($otherGroup->getGroupComponents() as $module){
-//                        $tempModules[] = ['uid' => $module->getUid(), 'name' => $module->getName(), 'description' => $module->getDescription(), 'group' => ['uid' => $otherGroup->getUid()]];
-//
-//                        if (!$consentPreferences && $module->getRejectedScript() !== '') {
-//                            $tempRejectedScript .= $this->clearJavaScript($module->getRejectedScript());
-//                        }
-//
-//                        if(!empty($consentPreferences) && is_array($consentPreferences) && array_key_exists($module->getUid(), $consentPreferences)) {
-//                            if(!is_bool($consentPreferences[$module->getUid()])){continue;}
-//
-//                            if ($consentPreferences[$module->getUid()] && $module->getAcceptedScript() !== '') {
-//                                $tempRejectedScript .= $this->clearJavaScript($module->getAcceptedScript());
-//                            } else if (!$consentPreferences[$module->getUid()] && $module->getRejectedScript() !== '') {
-//                                $tempRejectedScript .= $this->clearJavaScript($module->getRejectedScript());
-//                            }
-//                        }
-//                    }
-//                }
-//            }
-//
-//            $tempBanner['groups'] =  $tempGroups;
-//            $tempBanner['modules'] =  $tempModules;
-//
-//            GeneralUtility::makeInstance(AssetCollector::class)
-//                ->addInlineJavaScript(
-//                    'consent_data',
-//                    'var bbConsentBanner=' . json_encode($tempBanner) . ';'.$tempRejectedScript,
-//                    ['nonce' => $this->resolveNonceValue()],
-//                    ['priority' => true]
-//                );
         }
 
         GeneralUtility::makeInstance(AssetCollector::class)
@@ -383,19 +315,6 @@ class ConsentBannerProcessor implements DataProcessorInterface
     protected function getTranslate(string $key): string
     {
         return LocalizationUtility::translate('LLL:EXT:consent_banner/Resources/Private/Language/locallang.xlf:'. trim($key));
-    }
-
-    /**
-     * @param string $value
-     * @return string $value
-     */
-    protected function clearJavaScript(string $value):string
-    {
-        $value = preg_replace('#/\*.*?\*/#s', '', $value);
-        $value = preg_replace('/.*<script.*>(.*?)<\/script>.*$/is', '$1', $value);
-        $value = str_replace(["\t\r\n", "\n", "\r", "var "], ['', '', '', 'var__'], $value);
-        $value = preg_replace('/\s+/', '',$value);
-        return str_replace("var__", 'var ', $value);
     }
 
     protected function generateAlphaId(string $input, int $length = 11): string
