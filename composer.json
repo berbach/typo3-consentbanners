@@ -12,11 +12,11 @@
     ],
     "require": {
 		"php": ">= 8.3 < 8.5",
-        "typo3/cms-backend": ">= 13.4 < 14.3",
-        "typo3/cms-core": ">= 13.4 < 14.3",
-        "typo3/cms-extbase": ">= 13.4 < 14.3",
-        "typo3/cms-fluid": ">= 13.4 < 14.3",
-        "typo3/cms-frontend": ">= 13.4 < 14.3"
+        "typo3/cms-backend": ">= 13.4 <= 14.3",
+        "typo3/cms-core": ">= 13.4 <= 14.3",
+        "typo3/cms-extbase": ">= 13.4 <= 14.3",
+        "typo3/cms-fluid": ">= 13.4 <= 14.3",
+        "typo3/cms-frontend": ">= 13.4 <= 14.3"
     },
 	"require-dev": {
 		"ergebnis/composer-normalize": "^2.42",
@@ -27,7 +27,7 @@
 		"saschaegerer/phpstan-typo3": "^2.1",
 		"ssch/typo3-debug-dump-pass": "^v0.0.2",
 		"symfony/debug-bundle": "^6.4",
-		"typo3/cms-install": ">= 13.4 < 14.3",
+		"typo3/cms-install": ">= 13.4 <= 14.3",
 		"typo3/testing-framework": "^8.3",
 		"typo3/coding-standards": "^0.8.0"
 	},
