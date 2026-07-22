@@ -1,9 +1,10 @@
+# Vom Dist-Archiv (composer --prefer-dist / GitHub-Zipball) ausschliessen:
+# Entwicklungs-, Build- und CI-Dateien, die zur Laufzeit nicht gebraucht werden.
 /.github/ export-ignore
 /Build/ export-ignore
 /Tests/ export-ignore
 /.editorconfig export-ignore
 /.gitattributes export-ignore
-/.github/ export-ignore
 /.gitignore export-ignore
 /.scrutinizer export-ignore
 /.styleci.yml export-ignore
@@ -11,12 +12,12 @@
 /composer.json.orig export-ignore
 /composer.json.testing export-ignore
 /Makefile export-ignore
-.babelrc export-ignore
-.browserlistrc export-ignore
-.gitattributes export-ignore
-.gitignore export-ignore
-package-lock.json export-ignore
-package.json export-ignore
-postcss.config.js export-ignore
-script.webpack.js export-ignore
-style.webpack.js export-ignore
+/.babelrc export-ignore
+/.browserslistrc export-ignore
+/.phpstorm.meta.php export-ignore
+/fileHelper.js export-ignore
+/package-lock.json export-ignore
+/package.json export-ignore
+/postcss.config.js export-ignore
+/script.webpack.js export-ignore
+/style.webpack.js export-ignore
