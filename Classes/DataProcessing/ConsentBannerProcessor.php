@@ -6,24 +6,21 @@ use Bb\ConsentBanner\Domain\Model\Banner;
 use Bb\ConsentBanner\Utility\CookieUtility;
 use Bb\ConsentBanner\Domain\Repository\BannerRepository;
 use Bb\ConsentBanner\Utility\Counter;
-use Doctrine\DBAL\Driver\Exception;
+use Doctrine\DBAL\Exception;
 use Psr\Http\Message\ServerRequestInterface;
-use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Context\Context;
 use TYPO3\CMS\Core\Context\Exception\AspectNotFoundException;
-use TYPO3\CMS\Core\Core\Environment;
 use TYPO3\CMS\Core\Core\RequestId;
 use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Domain\Repository\PageRepository;
-use \TYPO3\CMS\Core\Page\AssetCollector;
-use TYPO3\CMS\Core\Page\PageRenderer;
-use TYPO3\CMS\Core\Resource\ResourceCompressor;
+use TYPO3\CMS\Core\Page\AssetCollector;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\MathUtility;
 use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
 use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
 use TYPO3\CMS\Frontend\ContentObject\DataProcessorInterface;
+use TYPO3\CMS\Frontend\ContentObject\Exception\ContentRenderingException;
 
 class ConsentBannerProcessor implements DataProcessorInterface
 {
@@ -43,31 +40,26 @@ class ConsentBannerProcessor implements DataProcessorInterface
      * @param array $processedData
      * @return array
      * @throws AspectNotFoundException
-     * @throws \Doctrine\DBAL\Exception
+     * @throws Exception
+     * @throws ContentRenderingException
      */
     public function process(ContentObjectRenderer $cObj, array $contentObjectConfiguration, array $processorConfiguration, array $processedData): array
     {
         $this->cObj = $cObj;
-        $settings = $contentObjectConfiguration['settings.'] ?? [];
         $requestSite = $this->getTypo3Request()->getAttribute('site');
         $consentPreferences = CookieUtility::getCookieValue(self::$cName);
         $bannerRepository = GeneralUtility::makeInstance(BannerRepository::class);
-        $pageRenderer = GeneralUtility::makeInstance(PageRenderer::class);
-        $resourceCompressor = GeneralUtility::makeInstance(ResourceCompressor::class);
         /* @var Banner $banner */
         $banner = $bannerRepository->findByRootPageId($requestSite->getRootPageId(), $this->getCurrentLanguage());
 
         if (!$consentPreferences) {
             $consentAccepted = false;
         }else{
-            $consentPreferences = json_decode($consentPreferences, true);
             $consentAccepted = true;
         }
 
         $tempBanner = [];
         if(!empty($banner)){
-            $privacyPage = [];
-
             $tempBanner = [
 
                 'banner' => [
@@ -135,7 +127,7 @@ class ConsentBannerProcessor implements DataProcessorInterface
         GeneralUtility::makeInstance(AssetCollector::class)
             ->addInlineJavaScript(
                 'banner_data',
-                $resourceCompressor->compressJavaScriptSource(json_encode($tempBanner)),
+                json_encode($tempBanner),
                 ['nonce' => $this->resolveNonceValue(), 'id' => 'bbBannerData', 'type' => 'application/json', 'crossorigin' => 'anonymous'],
                 ['priority' => true]
             );
@@ -146,7 +138,7 @@ class ConsentBannerProcessor implements DataProcessorInterface
 
     /**
      * @throws AspectNotFoundException
-     * @throws \Doctrine\DBAL\Exception
+     * @throws Exception
      */
     protected function addFooterNavigation(?string $navigationIds): array
     {
@@ -184,6 +176,7 @@ class ConsentBannerProcessor implements DataProcessorInterface
 
     /**
      * @param object $components
+     * @param int|string $groupId
      * @return array
      */
     protected function addComponents(object $components, int|string $groupId): array
@@ -264,7 +257,7 @@ class ConsentBannerProcessor implements DataProcessorInterface
 
     /**
      * Get the record including possible translations
-     * @throws \Doctrine\DBAL\Exception
+     * @throws Exception
      * @throws AspectNotFoundException
      */
     protected function getRecord(string $table, int $uid, string $fields = '*'): array
@@ -289,7 +282,7 @@ class ConsentBannerProcessor implements DataProcessorInterface
                 if (is_array($row) && !empty($row)) {
                     return $row;
                 }
-            } catch (Exception $e) {
+            } catch (Exception) {
                 // do nothing
             }
         }
@@ -306,7 +299,7 @@ class ConsentBannerProcessor implements DataProcessorInterface
         $languageId = 0;
         try {
             $languageId = $this->getContext()->getPropertyFromAspect('language', 'contentId');
-        } catch (AspectNotFoundException $e) {
+        } catch (AspectNotFoundException) {
             // do nothing
         }
         return (int)$languageId;
@@ -322,6 +315,9 @@ class ConsentBannerProcessor implements DataProcessorInterface
         return GeneralUtility::makeInstance(Context::class);
     }
 
+    /**
+     * @throws ContentRenderingException
+     */
     protected function getTypo3Request(): ServerRequestInterface
     {
         return $this->cObj->getRequest();
@@ -329,6 +325,9 @@ class ConsentBannerProcessor implements DataProcessorInterface
 
     protected function resolveNonceValue(): string
     {
+        // Nonce muss aus dem RequestId-Service kommen: das Request-Attribut 'nonce'
+        // wird erst von der csp-headers-Middleware (after prepare-tsfe-rendering)
+        // gesetzt und ist im DataProcessor-Kontext daher noch nicht verfügbar.
         return GeneralUtility::makeInstance(RequestId::class)->nonce->consume();
     }
 
