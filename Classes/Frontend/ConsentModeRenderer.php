@@ -6,6 +6,9 @@ namespace Bb\ConsentBanner\Frontend;
 
 use Bb\ConsentBanner\DataProcessing\ConsentBannerProcessor;
 use Bb\ConsentBanner\Utility\CookieUtility;
+use Doctrine\DBAL\Exception;
+use Psr\Http\Message\ServerRequestInterface;
+use Throwable;
 use TYPO3\CMS\Core\Core\RequestId;
 use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
@@ -24,13 +27,13 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  */
 class ConsentModeRenderer
 {
-    private const COMPONENT_TABLE = 'tx_consentbanner_domain_model_consent_components';
-    private const BANNER_TABLE = 'tx_consentbanner_domain_model_banner';
+    private const string COMPONENT_TABLE = 'tx_consentbanner_domain_model_consent_components';
+    private const string BANNER_TABLE = 'tx_consentbanner_domain_model_banner';
 
     /**
      * @var array<string, string>
      */
-    private const DEFAULT_SIGNALS = [
+    private const array DEFAULT_SIGNALS = [
         'ad_storage' => 'denied',
         'ad_user_data' => 'denied',
         'ad_personalization' => 'denied',
@@ -40,7 +43,7 @@ class ConsentModeRenderer
         'security_storage' => 'granted',
     ];
 
-    public function render(string $content, array $conf, ?\Psr\Http\Message\ServerRequestInterface $request = null): string
+    public function render(string $content, array $conf, ?ServerRequestInterface $request = null): string
     {
         $site = $request?->getAttribute('site');
         if (!$site instanceof Site) {
@@ -165,16 +168,20 @@ class ConsentModeRenderer
     {
         $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable(self::COMPONENT_TABLE);
 
-        $rows = $queryBuilder
-            ->select('component_id', 'consent_mode_signals')
-            ->from(self::COMPONENT_TABLE)
-            ->where(
-                $queryBuilder->expr()->eq('pid', $queryBuilder->createNamedParameter($rootPageId, Connection::PARAM_INT)),
-                $queryBuilder->expr()->eq('integration_type', $queryBuilder->createNamedParameter($type)),
-                $queryBuilder->expr()->neq('component_id', $queryBuilder->createNamedParameter(''))
-            )
-            ->executeQuery()
-            ->fetchAllAssociative();
+        try {
+            $rows = $queryBuilder
+                ->select('component_id', 'consent_mode_signals')
+                ->from(self::COMPONENT_TABLE)
+                ->where(
+                    $queryBuilder->expr()->eq('pid', $queryBuilder->createNamedParameter($rootPageId, Connection::PARAM_INT)),
+                    $queryBuilder->expr()->eq('integration_type', $queryBuilder->createNamedParameter($type)),
+                    $queryBuilder->expr()->neq('component_id', $queryBuilder->createNamedParameter(''))
+                )
+                ->executeQuery()
+                ->fetchAllAssociative();
+        } catch (Exception) {
+            return [];
+        }
 
         return array_map(
             static fn(array $row): array => ['id' => (string)$row['component_id'], 'signals' => (string)$row['consent_mode_signals']],
@@ -189,16 +196,20 @@ class ConsentModeRenderer
     {
         $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable(self::BANNER_TABLE);
 
-        $row = $queryBuilder
-            ->select('gtm_container_id', 'matomo_url', 'matomo_site_id', 'matomo_mtm_url')
-            ->from(self::BANNER_TABLE)
-            ->where(
-                $queryBuilder->expr()->eq('pid', $queryBuilder->createNamedParameter($rootPageId, Connection::PARAM_INT))
-            )
-            ->orderBy('sys_language_uid')
-            ->setMaxResults(1)
-            ->executeQuery()
-            ->fetchAssociative();
+        try {
+            $row = $queryBuilder
+                ->select('gtm_container_id', 'matomo_url', 'matomo_site_id', 'matomo_mtm_url')
+                ->from(self::BANNER_TABLE)
+                ->where(
+                    $queryBuilder->expr()->eq('pid', $queryBuilder->createNamedParameter($rootPageId, Connection::PARAM_INT))
+                )
+                ->orderBy('sys_language_uid')
+                ->setMaxResults(1)
+                ->executeQuery()
+                ->fetchAssociative();
+        } catch (Exception) {
+            $row = false;
+        }
 
         return [
             'gtm' => is_array($row) ? trim((string)$row['gtm_container_id']) : '',
@@ -226,7 +237,7 @@ class ConsentModeRenderer
     {
         try {
             return GeneralUtility::makeInstance(RequestId::class)->nonce->consume();
-        } catch (\Throwable) {
+        } catch (Throwable) {
             return '';
         }
     }
