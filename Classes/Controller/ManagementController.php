@@ -24,6 +24,9 @@ use TYPO3\CMS\Core\Localization\LanguageService;
 use TYPO3\CMS\Core\Localization\LanguageServiceFactory;
 use TYPO3\CMS\Core\Messaging\FlashMessage;
 use TYPO3\CMS\Core\Messaging\FlashMessageService;
+use TYPO3\CMS\Core\Database\Connection;
+use TYPO3\CMS\Core\Database\ConnectionPool;
+use TYPO3\CMS\Core\Database\Query\Restriction\DeletedRestriction;
 use TYPO3\CMS\Core\Site\Entity\Site;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Page\PageRenderer;
@@ -174,6 +177,7 @@ class ManagementController extends ActionController
 
         $moduleTemplate->assignMultiple([
             'data' => $this->banner,
+            'groupsOverview' => $this->buildGroupsOverview($this->rootPageId, $this->current_sys_language),
             'moduleName' => $this->moduleName,
             'defaultValues' => $this->getDefVals(),
             'returnUrl' => $this->uriBuilder->reset()->uriFor($this->request->getControllerActionName(), ['site' => $this->rootPageId, 'language' => 0], $this->request->getControllerName()),
@@ -182,6 +186,92 @@ class ManagementController extends ActionController
         ]);
 
         return $moduleTemplate->renderResponse('Management/Banner');
+    }
+
+    /**
+     * Baut die Gruppen-Übersicht für das Banner-Modul: alle Gruppen mit mindestens
+     * einer Component, jeweils mit Aktiv-Status (hidden-Flag) und ihren Components –
+     * inklusive inaktiver (versteckter) Datensätze. Direkte Query mit ausschließlich
+     * der DeletedRestriction, weil die Extbase-Relationen des Banners versteckte
+     * Datensätze herausfiltern und so „alle Components/Groups" nicht abbildbar wären.
+     *
+     * @return array<int, array{title: string, active: bool, components: array<int, array{title: string, active: bool}>}>
+     */
+    protected function buildGroupsOverview(int $rootPageId, int $languageId): array
+    {
+        if (!$this->banner instanceof Banner) {
+            return [];
+        }
+
+        $connectionPool = GeneralUtility::makeInstance(ConnectionPool::class);
+        $componentTable = 'tx_consentbanner_domain_model_consent_components';
+        $groupTable = 'tx_consentbanner_domain_model_consent_groups';
+
+        // Components inkl. hidden (nur deleted ausgeschlossen) laden.
+        $cQb = $connectionPool->getQueryBuilderForTable($componentTable);
+        $cQb->getRestrictions()->removeAll()->add(GeneralUtility::makeInstance(DeletedRestriction::class));
+        $componentRows = $cQb
+            ->select('component_title', 'hidden', 'group_id', 'group_parent')
+            ->from($componentTable)
+            ->where(
+                $cQb->expr()->eq('pid', $cQb->createNamedParameter($rootPageId, Connection::PARAM_INT)),
+                $cQb->expr()->eq('sys_language_uid', $cQb->createNamedParameter($languageId, Connection::PARAM_INT))
+            )
+            ->orderBy('sorting_foreign', 'ASC')
+            ->addOrderBy('uid', 'ASC')
+            ->executeQuery()
+            ->fetchAllAssociative();
+
+        $essentialComponents = [];
+        $componentsByGroup = [];
+        foreach ($componentRows as $row) {
+            $entry = ['title' => (string)$row['component_title'], 'active' => (int)$row['hidden'] === 0];
+            if ($row['group_parent'] === 'essential') {
+                $essentialComponents[] = $entry;
+            } else {
+                $componentsByGroup[(int)$row['group_id']][] = $entry;
+            }
+        }
+
+        $overview = [];
+
+        // Essential-Gruppe (aus Banner-Feld, kein eigener Datensatz -> immer aktiv).
+        if ($essentialComponents !== []) {
+            $overview[] = [
+                'title' => $this->banner->getEssentialTitle(),
+                'active' => true,
+                'components' => $essentialComponents,
+            ];
+        }
+
+        // Weitere Gruppen inkl. hidden; nur solche mit mindestens einer Component.
+        $gQb = $connectionPool->getQueryBuilderForTable($groupTable);
+        $gQb->getRestrictions()->removeAll()->add(GeneralUtility::makeInstance(DeletedRestriction::class));
+        $groupRows = $gQb
+            ->select('uid', 'group_title', 'hidden')
+            ->from($groupTable)
+            ->where(
+                $gQb->expr()->eq('pid', $gQb->createNamedParameter($rootPageId, Connection::PARAM_INT)),
+                $gQb->expr()->eq('sys_language_uid', $gQb->createNamedParameter($languageId, Connection::PARAM_INT))
+            )
+            ->orderBy('sorting_foreign', 'ASC')
+            ->addOrderBy('uid', 'ASC')
+            ->executeQuery()
+            ->fetchAllAssociative();
+
+        foreach ($groupRows as $group) {
+            $components = $componentsByGroup[(int)$group['uid']] ?? [];
+            if ($components === []) {
+                continue;
+            }
+            $overview[] = [
+                'title' => (string)$group['group_title'],
+                'active' => (int)$group['hidden'] === 0,
+                'components' => $components,
+            ];
+        }
+
+        return $overview;
     }
 
 

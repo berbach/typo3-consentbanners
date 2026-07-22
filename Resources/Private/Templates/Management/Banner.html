@@ -56,12 +56,12 @@
                                 </th>
                                 <td class="col-content col-responsive nowrap">
                                     <f:switch expression="{data.bannerLayout}">
-                                        <f:case value="bb-cb-overlay">
+                                        <f:case value="cb-overlay">
                                             <span>
                                                 <f:translate key="LLL:EXT:consent_banner/Resources/Private/Language/locallang_mod.xlf:field.banner_layout.overlay" />
                                             </span>
                                         </f:case>
-                                        <f:case value="bb-cb-bottom">
+                                        <f:case value="cb-bottom">
                                             <span>
                                                 <f:translate key="LLL:EXT:consent_banner/Resources/Private/Language/locallang_mod.xlf:field.banner_layout.fullWidthBottom" />
                                             </span>
@@ -74,10 +74,31 @@
                                 <th class="col-label col-responsive">
                                     <span>Consent groups</span>
                                 </th>
-                                <td class="col-content col-responsive nowrap">
-                                    {data.essentialTitle}<f:if condition="{data.consentOtherGroups}">, </f:if>
-                                    <f:for each="{data.consentOtherGroups}" as="groupData" iteration="i">
-                                        {groupData.groupTitle}<f:if condition="!{i.isLast}">, </f:if>
+                                <td class="col-content col-responsive">
+                                    <f:comment><!-- groupsOverview (Controller): alle Gruppen mit >=1 Component, inkl. inaktiver. Icon (actions-toggle-on/off) = Aktiv-Status je Gruppe und je Component (hidden-Flag). --></f:comment>
+                                    <f:for each="{groupsOverview}" as="group">
+                                        <div class="mb-2">
+                                            <span class="me-1">
+                                                <f:if condition="{group.active}">
+                                                    <f:then><core:icon identifier="actions-eye" size="small" title="aktiv"/></f:then>
+                                                    <f:else><core:icon identifier="actions-minus-circle" size="small" title="inaktiv"/></f:else>
+                                                </f:if>
+                                            </span>
+                                            <strong>{group.title}</strong>
+                                            <div>
+                                                <f:for each="{group.components}" as="component">
+                                                    <span class="badge badge-info">
+                                                        <span class="me-1">
+                                                            <f:if condition="{component.active}">
+                                                                <f:then><core:icon identifier="actions-eye" size="small" title="aktiv"/></f:then>
+                                                                <f:else><core:icon identifier="actions-minus-circle" size="small" title="inaktiv"/></f:else>
+                                                            </f:if>
+                                                        </span>
+                                                        {component.title}
+                                                    </span>
+                                                </f:for>
+                                            </div>
+                                        </div>
                                     </f:for>
                                 </td>
                                 <td class="col-control nowrap">&nbsp;</td>
