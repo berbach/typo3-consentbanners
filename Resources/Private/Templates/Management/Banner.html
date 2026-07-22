@@ -87,7 +87,7 @@
                                             <strong>{group.title}</strong>
                                             <div class="bb-cb--components">
                                                 <f:for each="{group.components}" as="component">
-                                                    <span class="badge badge-info bb-cb--component">
+                                                    <span class="badge bb-cb--component {f:if(condition: component.active, then: 'badge-primary', else: 'badge-warning')}">
                                                         <span class="me-1">
                                                             <f:if condition="{component.active}">
                                                                 <f:then><core:icon identifier="actions-eye" size="small" title="aktiv"/></f:then>
