@@ -159,3 +159,18 @@ th.col-icon {
 input:not(:valid) + button.close {
     visibility: hidden;
 }
+
+/* Banner-Modul: Gruppen-Uebersicht (Consent groups) */
+.bb-cb--components {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .35rem;
+    margin-top: .5rem;
+}
+.bb-cb--component {
+    display: inline-flex;
+    align-items: center;
+}
+.bb-cb--component-label {
+    font-weight: 400;
+}

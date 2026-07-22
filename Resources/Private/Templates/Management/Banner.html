@@ -77,7 +77,7 @@
                                 <td class="col-content col-responsive">
                                     <f:comment><!-- groupsOverview (Controller): alle Gruppen mit >=1 Component, inkl. inaktiver. Icon (actions-toggle-on/off) = Aktiv-Status je Gruppe und je Component (hidden-Flag). --></f:comment>
                                     <f:for each="{groupsOverview}" as="group">
-                                        <div class="mb-2">
+                                        <div class="bb-cb--group mb-2">
                                             <span class="me-1">
                                                 <f:if condition="{group.active}">
                                                     <f:then><core:icon identifier="actions-eye" size="small" title="aktiv"/></f:then>
@@ -85,16 +85,16 @@
                                                 </f:if>
                                             </span>
                                             <strong>{group.title}</strong>
-                                            <div>
+                                            <div class="bb-cb--components">
                                                 <f:for each="{group.components}" as="component">
-                                                    <span class="badge badge-info">
+                                                    <span class="badge badge-info bb-cb--component">
                                                         <span class="me-1">
                                                             <f:if condition="{component.active}">
                                                                 <f:then><core:icon identifier="actions-eye" size="small" title="aktiv"/></f:then>
                                                                 <f:else><core:icon identifier="actions-minus-circle" size="small" title="inaktiv"/></f:else>
                                                             </f:if>
                                                         </span>
-                                                        {component.title}
+                                                        <span class="bb-cb--component-label">{component.title}</span>
                                                     </span>
                                                 </f:for>
                                             </div>
