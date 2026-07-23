@@ -146,6 +146,8 @@ const CbManager = function ()  {
                 focusTarget.focus()
             }
         }
+        // Unlock page scroll when the banner is closed.
+        document.documentElement.classList.remove(CB_NAME + '--page-locked')
     }
 
     /**
@@ -279,6 +281,15 @@ const CbManager = function ()  {
             document.querySelector('.' + CB_PREFIX + 'body').appendChild(this.bannerStage)
             document.querySelector('.' + CB_NAME).classList.add('visible')
         }
+
+        // Full-viewport backdrop as the last child of the banner wrapper.
+        createElementWithAttrs('div', {
+            className: CB_NAME + '--page-disabled',
+            'aria-hidden': 'true'
+        }, this.banner)
+
+        // Lock page scroll while the banner is open/active.
+        document.documentElement.classList.add(CB_NAME + '--page-locked')
 
         this.focusBanner()
     }
