@@ -47,7 +47,7 @@ Dieses Repository führt keine Tags — installiert wird immer über den Branch-
 | Constraint         | Branch         | TYPO3                | PHP                 |
 |--------------------|----------------|----------------------|---------------------|
 | `v13.x-dev`        | `v13`          | ^13.4                | >= 8.2.0 <= 8.5.99  |
-| `v12.x-dev`        | `v12`          | ^11.5.24 \|\| ^12    | >= 8.1 < 8.3        |
+| `v12.x-dev`        | `v12`          | ^11.5.24 \|\| ^12    | >= 8.1.0 <= 8.4.99  |
 | `v11.x-dev`        | `v11`          | ^11                  | >= 8.1 < 8.3        |
 | `dev-fix-deps-v13` | `fix-deps-v13` | ^13.4                | >= 8.2 <= 8.4       |
 | `dev-fix-deps-v12` | `fix-deps-v12` | ^11.5.24 \|\| ^12    | >= 8.1 < 8.3        |
