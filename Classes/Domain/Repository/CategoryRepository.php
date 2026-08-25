@@ -52,7 +52,7 @@ class CategoryRepository extends Repository
      * @param bool $useIgnoreEnable
      * @return object|null
      */
-    public function findByStorageIds(array $storageIds, int $languageId = null, bool $useIgnoreEnable = false): ?object
+    public function findByStorageIds(array $storageIds, int $languageId, bool $useIgnoreEnable = false): ?object
     {
         $query = $this->createQuery();
         /* @var $querySettings Typo3QuerySettings */
