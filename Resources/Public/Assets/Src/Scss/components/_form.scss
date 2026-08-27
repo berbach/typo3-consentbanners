@@ -54,13 +54,43 @@
     .#{variables.$prefix}control-checkbox {
       display: flex;
       justify-content: space-between;
+      position: relative;
 
       $toggleHeight: 1.5em;
       $toggleKnobSize: $toggleHeight - .25em;
 
       input {
+        // Die Checkbox wird visuell durch .bb-toggle ersetzt, darf aber nicht
+        // per display:none entfernt werden - sonst ist sie nicht fokussierbar
+        // und damit nicht per Tastatur bedienbar (Barrierefreiheit).
         &:not(:last-child) {
-          display: none;
+          position: absolute;
+          top: 0;
+          left: 0;
+
+          height: 100%;
+          width: 100%;
+          margin: 0;
+
+          opacity: 0;
+          cursor: pointer;
+        }
+
+        &:disabled:not(:last-child) {
+          cursor: default;
+        }
+
+        // sichtbarer Fokusindikator auf dem stellvertretenden Toggle
+        &:focus-visible + .#{variables.$prefix}toggle {
+          outline: unit.bb-calc-rem(2) solid variables.$secondary;
+          outline-offset: unit.bb-calc-rem(2);
+        }
+
+        @supports not selector(:focus-visible) {
+          &:focus + .#{variables.$prefix}toggle {
+            outline: unit.bb-calc-rem(2) solid variables.$secondary;
+            outline-offset: unit.bb-calc-rem(2);
+          }
         }
 
         &:checked + .#{variables.$prefix}toggle {

@@ -21,6 +21,9 @@
             <trans-unit id="cookiebanner.closeBtn">
                 <source>Close settings</source>
             </trans-unit>
+            <trans-unit id="cookiebanner.widgetBtn">
+                <source>Open cookie settings</source>
+            </trans-unit>
             <trans-unit id="placeholder.removed.html">
                 <source>Third-party HTML has been removed.</source>
             </trans-unit>
