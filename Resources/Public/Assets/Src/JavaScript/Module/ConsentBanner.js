@@ -144,12 +144,11 @@ function ConsentBanner(node) {
      */
     this.handleKeydown = (e) => {
         if (e.key === 'Escape' || e.key === 'Esc') {
-            const closeButton = this.form?.querySelector(`.${cbPrefix}close`)
-            // Escape spiegelt nur den sichtbaren Schliessen-Button - im Bottom-Layout gibt es keinen
-            if (closeButton && closeButton.offsetParent !== null) {
-                e.preventDefault()
-                closeButton.click()
-            }
+            // Escape speichert die aktuelle Auswahl und laedt neu - identisch zu
+            // "speichern & schliessen" bzw. "Auswahl bestaetigen". Damit ist Escape
+            // eine bewusste Entscheidung und loest die Fokus-Falle regulaer auf.
+            e.preventDefault()
+            this.saveButton?.click()
             return
         }
 
