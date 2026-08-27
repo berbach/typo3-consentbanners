@@ -9,6 +9,10 @@
   &-content {
     &.#{variables.$prefix}type-scroll {
       overflow-y: auto;
+      // overflow-y erzwingt auch ein Clipping in der Breite. Ohne diesen
+      // Innenabstand wird der Fokusring der rechts sitzenden Toggles
+      // abgeschnitten (2px Offset + 2px Linienbreite).
+      padding-right: unit.bb-calc-rem(5);
     }
 
     #{$self}-categories {

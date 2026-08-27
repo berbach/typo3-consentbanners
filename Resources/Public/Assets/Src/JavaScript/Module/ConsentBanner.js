@@ -119,10 +119,16 @@ function ConsentBanner(node) {
         .filter(el => el.offsetWidth > 0 || el.offsetHeight > 0 || el.getClientRects().length > 0)
 
     /**
-     * Der Banner blockiert die Seite nur im Overlay-Layout - nur dann darf der
-     * Fokus festgehalten werden, sonst waere die Seite nicht mehr navigierbar.
+     * Solange keine Einwilligung vorliegt, muss zuerst entschieden werden - der
+     * Banner haelt den Fokus dann fest, unabhaengig vom Layout. Im Overlay
+     * blockiert er die Seite ohnehin und verhaelt sich wie ein modaler Dialog.
      */
-    this.isModal = () => this.banner?.classList.contains('bb-cb-overlay') === true
+    this.mustKeepFocus = () => {
+        if (!this.banner)
+            return false
+        return Object.keys(this.preferences).length === 0
+            || this.banner.classList.contains('bb-cb-overlay')
+    }
 
     /** Setzt den Fokus in den Banner, damit Screenreader Titel und Text vorlesen. */
     this.focusBanner = () => {
@@ -147,7 +153,7 @@ function ConsentBanner(node) {
             return
         }
 
-        if (e.key !== 'Tab' || !this.isModal())
+        if (e.key !== 'Tab' || !this.mustKeepFocus())
             return
 
         const focusable = this.getFocusableElements()
@@ -166,6 +172,23 @@ function ConsentBanner(node) {
         }
     }
 
+    /**
+     * Holt den Fokus zurueck, wenn er den Banner verlassen hat - etwa nach einem
+     * Mausklick in die Seite. Die Tab-Falle allein greift dort nicht, weil das
+     * keydown-Ereignis dann ausserhalb des Banners entsteht.
+     * @param {FocusEvent} e
+     */
+    this.handleFocusIn = (e) => {
+        if (!this.mustKeepFocus() || !this.banner?.classList.contains('visible'))
+            return
+        if (this.banner.contains(e.target))
+            return
+
+        const focusable = this.getFocusableElements()
+        // preventScroll: der Banner ist fixiert und ohnehin sichtbar - kein Sprung
+        ;(focusable[0] ?? this.banner).focus({preventScroll: true})
+    }
+
     /** Macht den Banner fuer Screenreader als Dialog erkennbar. */
     this.applyDialogSemantics = (labelId, descriptionId) => {
         if (!this.banner)
@@ -174,7 +197,8 @@ function ConsentBanner(node) {
         this.banner.setAttribute('role', 'dialog')
         this.banner.setAttribute('tabindex', '-1')
 
-        if (this.isModal())
+        // Wird der Fokus festgehalten, ist der Banner fuer Screenreader auch modal
+        if (this.mustKeepFocus())
             this.banner.setAttribute('aria-modal', 'true')
         else
             this.banner.removeAttribute('aria-modal')
@@ -325,9 +349,6 @@ function ConsentBanner(node) {
                 this.lastTrigger?.focus()
             }
         })
-
-        // Fokus im modalen Banner halten und Escape behandeln
-        this.banner?.addEventListener('keydown', this.handleKeydown)
 
         const collectData = () => Object.fromEntries(
             Array.from(
@@ -544,12 +565,21 @@ function ConsentBanner(node) {
         this.form.appendChild(formFooter)
 
         this.attachBannerEventListeners()
-        if(document.querySelector('.bb-consentbanner-body') == null) {
-            document.querySelector('.bb-consentbanner').appendChild(this.form)
-            document.querySelector('.bb-consentbanner').classList.add('visible')
-        }
+
+        // Pro Seite werden mehrere Instanzen initialisiert (Banner und Footer-Link),
+        // aber nur eine haengt ihr Formular tatsaechlich ins DOM. Nur diese darf die
+        // Dialog-Semantik und die Fokussteuerung uebernehmen - sonst zeigen
+        // aria-labelledby/-describedby auf IDs, die es im DOM nicht gibt.
+        if (document.querySelector('.bb-consentbanner-body') !== null)
+            return
+
+        document.querySelector('.bb-consentbanner').appendChild(this.form)
+        document.querySelector('.bb-consentbanner').classList.add('visible')
 
         this.applyDialogSemantics(headingId, descriptionId)
+        this.banner?.addEventListener('keydown', this.handleKeydown)
+        document.addEventListener('focusin', this.handleFocusIn)
+
         if (this.lastTrigger === null)
             this.focusBanner()
     }
