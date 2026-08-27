@@ -255,6 +255,11 @@ $max-width: $container-max-width !default;
                             opacity: .7;
                         }
 
+                        &:focus-visible {
+                            outline: unit.bb-calc-rem(2) solid variables.$secondary;
+                            outline-offset: unit.bb-calc-rem(-2);
+                        }
+
                         &:last-child {
                             //padding-right: bb-calc-rem(5);
 
@@ -348,6 +353,11 @@ $max-width: $container-max-width !default;
 
             cursor: pointer;
 
+            &:focus-visible {
+                outline: unit.bb-calc-rem(2) solid variables.$secondary;
+                outline-offset: unit.bb-calc-rem(-2);
+            }
+
             $icon-height: $size * .5;
 
             &:before, &:after {
@@ -398,6 +408,11 @@ $max-width: $container-max-width !default;
             &:hover {
                 color: variables.$secondary;
             }
+
+            &:focus-visible {
+                outline: unit.bb-calc-rem(2) solid variables.$secondary;
+                outline-offset: unit.bb-calc-rem(2);
+            }
         }
     }
 
@@ -409,11 +424,16 @@ $max-width: $container-max-width !default;
 
 
         .#{variables.$prefix}button {
-            outline: none;
             padding: 0.625rem;
             border: 0.125rem solid transparent;
             display: inline-block;
             font-size: unit.bb-calc-rem(16);
+            cursor: pointer;
+
+            &:focus-visible {
+                outline: unit.bb-calc-rem(2) solid variables.$secondary;
+                outline-offset: unit.bb-calc-rem(2);
+            }
 
             &.#{variables.$prefix}btn {
                 &--typeP {
@@ -507,6 +527,11 @@ $max-width: $container-max-width !default;
         cursor: pointer;
 
         z-index: 50;
+
+        &:focus-visible {
+            outline: unit.bb-calc-rem(2) solid variables.$secondary;
+            outline-offset: unit.bb-calc-rem(2);
+        }
 
         &.hidden {
             display: none;

@@ -10,7 +10,10 @@
         <f:if condition="{data.consentBanner.consentAccepted}">
             <f:then>
                 <f:if condition="!{data.consentBanner.isTextLink}">
-                    <button class="bb-widget bb-consentbanner-button" data-module-cb="ConsentBanner"></button>
+                    <button class="bb-widget bb-consentbanner-button" type="button"
+                            title="{data.consentBanner.widgetBtn}"
+                            aria-label="{data.consentBanner.widgetBtn}"
+                            data-module-cb="ConsentBanner"></button>
                 </f:if>
             </f:then>
             <f:else>

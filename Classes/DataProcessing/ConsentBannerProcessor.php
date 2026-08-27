@@ -79,6 +79,7 @@ class ConsentBannerProcessor implements DataProcessorInterface
                 'description'           => $banner->getDescription(),
                 'privacyPage'           => $privacyPage,
                 'closeBtn'              => LocalizationUtility::translate('LLL:EXT:consentbanners/Resources/Private/Language/locallang.xlf:cookiebanner.closeBtn'),
+                'widgetBtn'             => LocalizationUtility::translate('LLL:EXT:consentbanners/Resources/Private/Language/locallang.xlf:cookiebanner.widgetBtn'),
                 'buttonsDisplayNames'   => [
                     'acceptAll'             => !empty($banner->getAcceptAll()) ? $banner->getAcceptAll() : LocalizationUtility::translate('LLL:EXT:consentbanners/Resources/Private/Language/locallang.xlf:cookiebanner.acceptAll'),
                     'saveAndClose'          => !empty($banner->getSaveAndClose()) ? $banner->getSaveAndClose() : LocalizationUtility::translate('LLL:EXT:consentbanners/Resources/Private/Language/locallang.xlf:cookiebanner.saveAndClose'),

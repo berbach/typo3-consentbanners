@@ -3,6 +3,20 @@ const cookieUtils = require('../Lib/cookie')
 const cbPrefix = 'bb-consentbanner-';
 const categoryPrefix = 'bb-consentbanner-';
 
+// Elemente, die per Tastatur erreichbar sind (fuer Fokus-Falle und Fokussteuerung)
+const focusableSelector = [
+    'a[href]',
+    'button:not([disabled])',
+    'input:not([disabled])',
+    'select:not([disabled])',
+    'textarea:not([disabled])',
+    '[tabindex]:not([tabindex="-1"])'
+].join(', ')
+
+// laufende Nummer fuer eindeutige IDs (aria-labelledby / aria-describedby)
+let elementIdCounter = 0
+const nextElementId = (suffix) => `${cbPrefix}${suffix}-${++elementIdCounter}`
+
 // IE has no Array.from :((
 // DON'T USE! BAD POLYFILL
 if (!('from' in Array))
@@ -59,6 +73,7 @@ if (!('fromEntries' in Object))
  * @property {string} description
  * @property {Object} privacyPage
  * @property {string} closeBtn
+ * @property {string} widgetBtn
  * @property {ConsentBannerButtonsDisplayNames} buttonsDisplayNames
  * @property {ConsentBannerCategoryData[]} categories
  * @property {Object[]} modules
@@ -91,8 +106,84 @@ function ConsentBanner(node) {
     this.moreButton = null
     this.confirmButton = null
     this.rejectButton = null
+    // Element, das den Banner geoeffnet hat - dorthin geht der Fokus beim Schliessen zurueck
+    this.lastTrigger = null
 
     this.preferences = JSON.parse(cookieUtils.get(this.cookieName));
+
+    /**
+     * Alle sichtbaren, per Tastatur erreichbaren Elemente innerhalb des Banners.
+     * @returns {HTMLElement[]}
+     */
+    this.getFocusableElements = () => Array.from(this.banner?.querySelectorAll(focusableSelector) ?? [])
+        .filter(el => el.offsetWidth > 0 || el.offsetHeight > 0 || el.getClientRects().length > 0)
+
+    /**
+     * Der Banner blockiert die Seite nur im Overlay-Layout - nur dann darf der
+     * Fokus festgehalten werden, sonst waere die Seite nicht mehr navigierbar.
+     */
+    this.isModal = () => this.banner?.classList.contains('bb-cb-overlay') === true
+
+    /** Setzt den Fokus in den Banner, damit Screenreader Titel und Text vorlesen. */
+    this.focusBanner = () => {
+        if (!this.banner)
+            return
+        // Fokus erst nach dem Rendern setzen, sonst ignorieren manche Browser den Aufruf
+        window.setTimeout(() => this.banner.focus(), 0)
+    }
+
+    /**
+     * Haelt den Tastaturfokus im modalen Banner (Fokus-Falle) und behandelt Escape.
+     * @param {KeyboardEvent} e
+     */
+    this.handleKeydown = (e) => {
+        if (e.key === 'Escape' || e.key === 'Esc') {
+            const closeButton = this.form?.querySelector(`.${cbPrefix}close`)
+            // Escape spiegelt nur den sichtbaren Schliessen-Button - im Bottom-Layout gibt es keinen
+            if (closeButton && closeButton.offsetParent !== null) {
+                e.preventDefault()
+                closeButton.click()
+            }
+            return
+        }
+
+        if (e.key !== 'Tab' || !this.isModal())
+            return
+
+        const focusable = this.getFocusableElements()
+        if (focusable.length === 0)
+            return
+
+        const first = focusable[0]
+        const last = focusable[focusable.length - 1]
+
+        if (!e.shiftKey && e.target === last) {
+            e.preventDefault()
+            first.focus()
+        } else if (e.shiftKey && (e.target === first || e.target === this.banner)) {
+            e.preventDefault()
+            last.focus()
+        }
+    }
+
+    /** Macht den Banner fuer Screenreader als Dialog erkennbar. */
+    this.applyDialogSemantics = (labelId, descriptionId) => {
+        if (!this.banner)
+            return
+
+        this.banner.setAttribute('role', 'dialog')
+        this.banner.setAttribute('tabindex', '-1')
+
+        if (this.isModal())
+            this.banner.setAttribute('aria-modal', 'true')
+        else
+            this.banner.removeAttribute('aria-modal')
+
+        if (labelId)
+            this.banner.setAttribute('aria-labelledby', labelId)
+        if (descriptionId)
+            this.banner.setAttribute('aria-describedby', descriptionId)
+    }
 
     this.init = () => {
         if (this.bbConsentBanner.isTextLink === false && node.classList.contains("bb-text-widget")) {
@@ -118,8 +209,13 @@ function ConsentBanner(node) {
             });
             this.banner = node;
         } else if (this.bbConsentBanner.isTextLink === false) {
+            // Der Button hat keinen Text (nur ein Hintergrundbild) und braucht
+            // deshalb einen zugaenglichen Namen.
+            const widgetLabel = this.bbConsentBanner.widgetBtn
             this.widget = createElementWithAttrs("button", {
-                className: ["bb-widget", cbPrefix + "button"].join(" ")
+                className: ["bb-widget", cbPrefix + "button"].join(" "),
+                type: "button",
+                ...(widgetLabel ? {title: widgetLabel, 'aria-label': widgetLabel} : {})
             });
         }
 
@@ -134,6 +230,9 @@ function ConsentBanner(node) {
         }
 
         this.widget?.addEventListener('click', () => {
+            // Fokus geht beim Schliessen wieder auf das ausloesende Element zurueck
+            this.lastTrigger = this.widget
+
             if (this.form === null)
                 this.generateBanner()
             else
@@ -186,6 +285,8 @@ function ConsentBanner(node) {
             // force overlay layout
             this.banner.classList.remove('bb-cb-bottom')
             this.banner.classList.add('bb-cb-overlay')
+            // ab hier blockiert der Banner die Seite -> als modaler Dialog auszeichnen
+            this.banner.setAttribute('aria-modal', 'true')
 
             // convert one-click buttons to secondary
             const convertToSecondary = (button) => {
@@ -207,15 +308,26 @@ function ConsentBanner(node) {
 
             this.form.querySelector(`.${cbPrefix}buttons`).classList.remove('not-categories')
             this.form.querySelector(`.${cbPrefix}buttons`).classList.add('is-categories')
+
+            // Der ausloesende Button wurde entfernt - der Fokus muss auf die nun
+            // sichtbaren Einstellungen wandern, sonst landet er auf <body>.
+            const firstToggle = this.form.querySelector(`.${cbPrefix}category input:not([disabled])`)
+            ;(firstToggle ?? this.saveButton)?.focus()
         })
 
         // closes the banner
         this.form.querySelector(`.${cbPrefix}close`)?.addEventListener('click', () => {
-            if (Object.keys(this.preferences).length === 0)
+            if (Object.keys(this.preferences).length === 0) {
                 setCookieAndReload(collectAndModifyData(false))
-            else
+            } else {
                 this.form.parentElement.classList.remove('visible')
+                // Fokus zurueck auf das ausloesende Element, sonst verliert er sich
+                this.lastTrigger?.focus()
+            }
         })
+
+        // Fokus im modalen Banner halten und Escape behandeln
+        this.banner?.addEventListener('keydown', this.handleKeydown)
 
         const collectData = () => Object.fromEntries(
             Array.from(
@@ -282,11 +394,20 @@ function ConsentBanner(node) {
         this.form = _el('form', {className: [cbPrefix + 'body'].join(' ')})
 
         const formHeader = _el('div', {className: cbPrefix + 'header'})
-        _el('button', {className: cbPrefix + 'close', title: this.bbConsentBanner.closeBtn}, formHeader)
+        _el('button', {
+            className: cbPrefix + 'close',
+            // type="button" verhindert, dass Enter das Formular abschickt
+            type: 'button',
+            title: this.bbConsentBanner.closeBtn,
+            'aria-label': this.bbConsentBanner.closeBtn
+        }, formHeader)
 
+        let headingId = ''
         if (this.bbConsentBanner.title !== '') {
+            headingId = nextElementId('heading')
             _el('h3', {
                 className: cbPrefix + '-heading',
+                id: headingId,
                 innerText: this.bbConsentBanner.title
             }, formHeader)
         }
@@ -300,9 +421,12 @@ function ConsentBanner(node) {
             ].join(' ')
         })
 
+        let descriptionId = ''
         if (this.bbConsentBanner.description !== '') {
+            descriptionId = nextElementId('text')
             _el('p', {
                 className: cbPrefix + '-text',
+                id: descriptionId,
                 innerHTML: this.bbConsentBanner.description // innerHTML to decode html entities
             }, formContent)
         }
@@ -314,7 +438,9 @@ function ConsentBanner(node) {
 
             this.bbConsentBanner.categories?.forEach(category => {
                 const categoryModules = _el('div', {
-                    className: [cbPrefix + 'category-modules', 'hidden'].join(' ')
+                    className: [cbPrefix + 'category-modules', 'hidden'].join(' '),
+                    role: 'group',
+                    'aria-label': category.name
                 })
                 const modules = this.bbConsentBanner.modules?.filter(module => module.category.uid === category.uid)
 
@@ -422,6 +548,10 @@ function ConsentBanner(node) {
             document.querySelector('.bb-consentbanner').appendChild(this.form)
             document.querySelector('.bb-consentbanner').classList.add('visible')
         }
+
+        this.applyDialogSemantics(headingId, descriptionId)
+        if (this.lastTrigger === null)
+            this.focusBanner()
     }
 }
 
@@ -497,16 +627,28 @@ function createToggle(isCategory, label, inputName, description, inputAttributes
         'aria-label': label
     })
 
+    // Beschreibung mit der Checkbox verknuepfen, damit Screenreader sie mitlesen
+    const descriptionId = description ? nextElementId('description') : ''
+
     labelEl.appendChild(_el('span', {
         className: ['bb-control-label', (isCategory ? 'bb-label-category' : 'bb-label-module')].join(' '),
         innerText: label
     }))
-    labelEl.appendChild(_el('input', {...inputAttributes, type: 'checkbox', name: inputName}))
+    labelEl.appendChild(_el('input', {
+        ...inputAttributes,
+        type: 'checkbox',
+        name: inputName,
+        ...(descriptionId ? {'aria-describedby': descriptionId} : {})
+    }))
     labelEl.appendChild(_el('span', {className: 'bb-toggle'}))
     main.appendChild(labelEl)
 
     if (description)
-        main.appendChild(_el('p', {className: cbPrefix + 'description', innerText: description}))
+        main.appendChild(_el('p', {
+            className: cbPrefix + 'description',
+            id: descriptionId,
+            innerText: description
+        }))
 
     if (appendModules)
         main.appendChild(appendModules);
