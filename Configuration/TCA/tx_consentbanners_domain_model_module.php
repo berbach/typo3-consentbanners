@@ -11,7 +11,6 @@ return [
         'adminOnly' => true,
         'versioningWS' => false,
         'hideAtCopy' => true,
-        'searchFields' => '',
         'typeicon_classes' => [
             'default' => 'module-cookie'
         ],
@@ -31,16 +30,16 @@ return [
     'types' => [
         '0' => [
             'showitem' => '
-                --div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:general,
+                --div--;core.form.tabs:general,
                     --palette--;;header,
                     --palette--;;content,
                 --div--;LLL:EXT:consentbanners/Resources/Private/Language/locallang_mod.xlf:tab.javascript,
                     --palette--;;javascript,
                 --div--;LLL:EXT:consentbanners/Resources/Private/Language/locallang_mod.xlf:field.placeholder,
                     --palette--;;placeholder,
-                --div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:language,
+                --div--;core.form.tabs:language,
                     --palette--;;language,
-                --div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:access,
+                --div--;core.form.tabs:access,
                     --palette--;;hidden,    
                 '
         ]
@@ -140,7 +139,8 @@ return [
                 'type' => 'input',
                 'size' => 50,
                 'eval' => 'trim',
-                'required' => true
+                'required' => true,
+                'searchable' => false
             ],
         ],
 
@@ -151,7 +151,8 @@ return [
                 'type' => 'text',
                 'eval' => 'trim',
                 'cols' => 50,
-                'rows' => 10
+                'rows' => 10,
+                'searchable' => false
             ]
         ],
 
@@ -172,7 +173,8 @@ return [
             'config' => [
                 'type' => 'input',
                 'size' => 50,
-                'eval' => 'trim'
+                'eval' => 'trim',
+                'searchable' => false
             ],
         ],
 
@@ -182,7 +184,8 @@ return [
             'config' => [
                 'type' => 'text',
                 'eval' => 'trim',
-                'rows' => 5
+                'rows' => 5,
+                'searchable' => false
             ]
         ],
 
@@ -193,7 +196,8 @@ return [
                 'type' => 'text',
                 'eval' => 'trim',
                 'cols' => 80,
-                'rows' => 20
+                'rows' => 20,
+                'searchable' => false
             ]
         ],
 
@@ -204,7 +208,8 @@ return [
                 'type' => 'text',
                 'eval' => 'trim',
                 'cols' => 80,
-                'rows' => 20
+                'rows' => 20,
+                'searchable' => false
             ]
         ],
     ],

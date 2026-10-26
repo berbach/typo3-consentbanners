@@ -11,7 +11,9 @@ return [
         'access' => 'admin',
         'workspaces' => 'live',
         'path' => '/module/site/consentbanners',
-        'labels' => 'LLL:EXT:consentbanners/Resources/Private/Language/locallang_mod.xlf:module.label',
+        'labels' => [
+            'title' => 'LLL:EXT:consentbanners/Resources/Private/Language/locallang_mod.xlf:module.label',
+        ],
         'extensionName' => 'Consentbanners',
         'iconIdentifier' => 'module-cookie',
         'controllerActions' => [

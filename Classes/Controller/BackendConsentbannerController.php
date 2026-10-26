@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Bb\Consentbanners\Controller;
 
+use TYPO3\CMS\Backend\Template\Components\ComponentFactory;
 use Bb\Consentbanners\Domain\Model\Settings;
 use Bb\Consentbanners\Domain\Repository\CategoryRepository;
 use Bb\Consentbanners\Domain\Repository\ModuleRepository;
@@ -124,6 +125,7 @@ class BackendConsentbannerController extends ActionController
         protected readonly ModuleRepository   $moduleRepository,
         private readonly IconFactory $iconFactory,
         private readonly LanguageServiceFactory $languageServiceFactory,
+        private readonly ComponentFactory $componentFactory,
     )
     {}
 
@@ -456,8 +458,8 @@ class BackendConsentbannerController extends ActionController
         $this->addButtons($buttonBar);
 
         $metaInformation = $this->getMetaInformation();
-        if (is_array($metaInformation)) {
-            $view->getDocHeaderComponent()->setMetaInformation($metaInformation);
+        if (is_array($metaInformation) && $metaInformation !== []) {
+            $view->getDocHeaderComponent()->setPageBreadcrumb($metaInformation);
         }
     }
 
@@ -468,23 +470,23 @@ class BackendConsentbannerController extends ActionController
                 'controller' => 'BackendConsentbanner',
                 'controllerArguments' => ['site' => $this->rootPageId],
                 'action' => 'settings',
-                'label' => $this->getLanguageService()->sL('LLL:EXT:consentbanners/Resources/Private/Language/locallang_mod.xlf:settings.headline'),
+                'label' => $this->getLanguageService()->sL('consentbanners.mod:settings.headline'),
             ],
             'categories' => [
                 'controller' => 'BackendConsentbanner',
                 'controllerArguments' => ['site' => $this->rootPageId],
                 'action' => 'categories',
-                'label' => $this->getLanguageService()->sL('LLL:EXT:consentbanners/Resources/Private/Language/locallang_mod.xlf:categories.headline'),
+                'label' => $this->getLanguageService()->sL('consentbanners.mod:categories.headline'),
             ],
             'modules' => [
                 'controller' => 'BackendConsentbanner',
                 'controllerArguments' => ['site' => $this->rootPageId],
                 'action' => 'modules',
-                'label' => $this->getLanguageService()->sL('LLL:EXT:consentbanners/Resources/Private/Language/locallang_mod.xlf:modules.headline'),
+                'label' => $this->getLanguageService()->sL('consentbanners.mod:modules.headline'),
             ],
         ];
 
-        $menu = $view->getDocHeaderComponent()->getMenuRegistry()->makeMenu();
+        $menu = $this->componentFactory->createMenu();
         $menu->setIdentifier('ManagementBannerMenu');
 
         foreach ($menuItems as $menuItemConfig) {
@@ -495,7 +497,7 @@ class BackendConsentbannerController extends ActionController
                 $menuItemConfig['controller'],
             );
 
-            $menuItem = $menu->makeMenuItem()
+            $menuItem = $this->componentFactory->createMenuItem()
                 ->setTitle($menuItemConfig['label'])
                 ->setHref($uri)
                 ->setActive($isActive);
@@ -516,6 +518,7 @@ class BackendConsentbannerController extends ActionController
 
     private function buildMenuSites(ModuleTemplate $view, array &$titleComponents): Menu
     {
+        $menuItems = [];
         foreach ($this->sites as $site) {
             $menuItems['rootPageId::'.$site->getRootPageId()] = [
                 'controller' => 'BackendConsentbanner',
@@ -525,12 +528,12 @@ class BackendConsentbannerController extends ActionController
             ];
         }
 
-        $menu = $view->getDocHeaderComponent()->getMenuRegistry()->makeMenu();
+        $menu = $this->componentFactory->createMenu();
         $menu->setIdentifier('ManagementRootPagesMenu');
 
         foreach ($menuItems as $menuItemConfig) {
             $isActive = $this->rootPageId === (int)$menuItemConfig['controllerArguments']['site'];
-            $menuItem = $menu->makeMenuItem()
+            $menuItem = $this->componentFactory->createMenuItem()
                 ->setTitle($menuItemConfig['label'])
                 ->setHref($this->uriBuilder->reset()->uriFor(
                     $menuItemConfig['action'],
@@ -562,7 +565,7 @@ class BackendConsentbannerController extends ActionController
             'returnUrl' => $this->uriBuilder->reset()->uriFor($this->request->getControllerActionName(), ['site' => $this->rootPageId, 'language' => 0], $this->request->getControllerName()),
         ];
 
-        $createButton = $buttonBar->makeLinkButton()
+        $createButton = $this->componentFactory->createLinkButton()
             ->setHref($this->getBuildRoute('record_edit', $new))
             ->setTitle('Create Consent Banner')
             ->setShowLabelText(true)
@@ -581,11 +584,11 @@ class BackendConsentbannerController extends ActionController
      */
     protected function createDocHeaderLanguageMenu(ModuleTemplate $moduleTemplate): void
     {
-        $menu = $moduleTemplate->getDocHeaderComponent()->getMenuRegistry()->makeMenu();
+        $menu = $this->componentFactory->createMenu();
         $menu->setIdentifier('actionLanguages');
 
         foreach ($this->docHeaderMenu[$this->current_root_pid]['languageMenu'] as $menuItem) {
-            $item = $menu->makeMenuItem()
+            $item = $this->componentFactory->createMenuItem()
                 ->setTitle($menuItem['title'])
                 ->setHref($menuItem['uri'])
                 ->setActive($this->current_sys_language === $menuItem['sysLanguageUid']);
@@ -664,7 +667,7 @@ class BackendConsentbannerController extends ActionController
                 continue;
             }
 
-            $viewButton = $buttonBar->makeLinkButton()
+            $viewButton = $this->componentFactory->createLinkButton()
                 ->setHref($button['href'])
                 ->setTitle($button['title'])
                 ->setShowLabelText(true)
@@ -765,7 +768,7 @@ class BackendConsentbannerController extends ActionController
     protected function createNewRecordButton(string $table, string $title, string $returnUrl, array $displayConditions = [], bool $showLabelText = false, string $iconIdentifier = 'actions-add', array $dataAttributes = []): array
     {
 
-        $icon = $this->iconFactory->getIcon($iconIdentifier, Icon::SIZE_SMALL);
+        $icon = $this->iconFactory->getIcon($iconIdentifier, IconSize::SMALL);
 
         $url = $this->getBuildRoute('record_edit', [
             'edit[' . $table . '][' . $this->current_root_pid . ']' => 'new',
@@ -800,7 +803,7 @@ class BackendConsentbannerController extends ActionController
     protected function createEditRecordButton(string $table, string $title, int $recordId, string $returnUrl, array $displayConditions = [], bool $showLabelText = false, string $iconIdentifier = 'actions-open', array $dataAttributes = []): array
     {
 
-        $icon = $this->iconFactory->getIcon($iconIdentifier, Icon::SIZE_SMALL);
+        $icon = $this->iconFactory->getIcon($iconIdentifier, IconSize::SMALL);
 
         $url = $this->getBuildRoute('record_edit', [
             'edit[' . $table . '][' . $recordId . ']' => 'edit',

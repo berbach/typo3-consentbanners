@@ -19,7 +19,6 @@ use TYPO3\CMS\Core\Utility\MathUtility;
 use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
 use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
 use TYPO3\CMS\Frontend\ContentObject\DataProcessorInterface;
-use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
 
 class ConsentBannerProcessor implements DataProcessorInterface
 {
@@ -211,13 +210,5 @@ class ConsentBannerProcessor implements DataProcessorInterface
     protected function resolveNonceValue(): string
     {
         return GeneralUtility::makeInstance(RequestId::class)->nonce->consume();
-    }
-
-    /**
-     * @return TypoScriptFrontendController
-     */
-    protected function getTypoScriptFrontendController(): TypoScriptFrontendController
-    {
-        return $GLOBALS['TSFE'];
     }
 }

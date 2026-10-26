@@ -190,14 +190,15 @@ class AllowCookieViewHelper extends AbstractViewHelper
      * @param TemplateCompiler $compiler
      */
     public function compile(
-        $argumentsName,
-        $closureName,
-        &$initializationPhpCode,
+        string $argumentsName,
+        string $closureName,
+        string &$initializationPhpCode,
         ViewHelperNode $node,
         TemplateCompiler $compiler
-    )
+    ): string
     {
         $compiler->disable();
+        return '\'\'';
     }
 
     public function replaceExternalIframes(string $htmlContent, string $replacementHtml): string

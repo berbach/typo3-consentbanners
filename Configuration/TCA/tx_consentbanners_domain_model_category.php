@@ -10,7 +10,6 @@ return [
         'adminOnly' => true,
         'versioningWS' => false,
         'hideAtCopy' => true,
-        'searchFields' => '',
         'typeicon_classes' => [
             'default' => 'module-cookie'
         ],
@@ -30,11 +29,11 @@ return [
     'types' => [
         '0' => [
             'showitem' => '
-                --div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:general,
+                --div--;core.form.tabs:general,
                     name,description,locked_and_active,modules,
-                --div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:language,
+                --div--;core.form.tabs:language,
                     --palette--;;language,
-                --div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:access,
+                --div--;core.form.tabs:access,
                     --palette--;;hidden,        
                 '
         ]
@@ -108,7 +107,8 @@ return [
                 'type' => 'input',
                 'size' => 50,
                 'eval' => 'trim',
-                'required' => true
+                'required' => true,
+                'searchable' => false
             ],
         ],
 
@@ -120,7 +120,8 @@ return [
                 'type' => 'text',
                 'eval' => 'trim',
                 'cols' => 80,
-                'rows' => 20
+                'rows' => 20,
+                'searchable' => false
             ]
         ],
 

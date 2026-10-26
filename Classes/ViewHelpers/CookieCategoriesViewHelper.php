@@ -9,12 +9,9 @@ use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
-use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithRenderStatic;
 
 class CookieCategoriesViewHelper extends AbstractViewHelper
 {
-    use CompileWithRenderStatic;
-
     /**
      * @var boolean
      */
@@ -24,9 +21,9 @@ class CookieCategoriesViewHelper extends AbstractViewHelper
      * @throws Exception
      * @throws DBALException
      */
-    public static function renderStatic(array $arguments, \Closure $renderChildrenClosure, RenderingContextInterface $renderingContext)
+    public function render()
     {
-        $templateVariableContainer = $renderingContext->getVariableProvider();
+        $templateVariableContainer = $this->renderingContext->getVariableProvider();
         $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)
             ->getQueryBuilderForTable('tx_cookiebanner_domain_model_category');
         $queryBuilder->getRestrictions()->removeAll();
@@ -46,9 +43,8 @@ class CookieCategoriesViewHelper extends AbstractViewHelper
             )
             ->addOrderBy('category.order')
             ->groupBy('category.uid')
-            ->execute()
+            ->executeQuery()
             ->fetchAllAssociative();
-
         $res = array_map(function ($o) {
             $options = ['module_key', 'module_name', 'module_description'];
             foreach ($options as $option)
@@ -57,8 +53,7 @@ class CookieCategoriesViewHelper extends AbstractViewHelper
                     : null;
             return $o;
         }, $res);
-
         $templateVariableContainer->add('categories', $res);
-        return $renderChildrenClosure();
+        return $this->renderChildren();
     }
 }

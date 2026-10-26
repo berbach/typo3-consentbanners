@@ -13,7 +13,6 @@ return [
         'adminOnly' => true,
         'versioningWS' => false,
         'hideAtCopy' => true,
-        'searchFields' => '',
         'typeicon_classes' => [
             'default' => 'module-cookie'
         ],
@@ -33,17 +32,17 @@ return [
     'types' => [
         '0' => [
             'showitem' => '
-                --div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:general,
+                --div--;core.form.tabs:general,
                     --palette--;;content,
                     --palette--;;settings,
                 --div--;LLL:EXT:consentbanners/Resources/Private/Language/locallang_mod.xlf:tab.buttons,
                     --palette--;LLL:EXT:consentbanners/Resources/Private/Language/locallang_mod.xlf:palette.buttonsDisplayName;buttonsDisplayName,
                     --palette--;LLL:EXT:consentbanners/Resources/Private/Language/locallang_mod.xlf:palette.privacyPage;privacyPage,
-                --div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:categories,
+                --div--;core.form.tabs:categories,
                     categories,
-                --div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:language,    
+                --div--;core.form.tabs:language,    
                     --palette--;;language,
-                --div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:access,
+                --div--;core.form.tabs:access,
                     --palette--;;hidden,                
                 '
         ]
@@ -145,7 +144,8 @@ return [
                 'type' => 'input',
                 'size' => 50,
                 'eval' => 'trim',
-                'required' => true
+                'required' => true,
+                'searchable' => false
             ],
         ],
 
@@ -157,7 +157,8 @@ return [
                 'type' => 'text',
                 'eval' => 'trim',
                 'cols' => 100,
-                'rows' => 10
+                'rows' => 10,
+                'searchable' => false
             ]
         ],
 
@@ -223,7 +224,8 @@ return [
             'config' => [
                 'type' => 'input',
                 'size' => 50,
-                'eval' => 'trim'
+                'eval' => 'trim',
+                'searchable' => false
             ],
         ],
 
@@ -233,7 +235,8 @@ return [
             'config' => [
                 'type' => 'input',
                 'size' => 30,
-                'eval' => 'trim'
+                'eval' => 'trim',
+                'searchable' => false
             ],
         ],
 
@@ -243,7 +246,8 @@ return [
             'config' => [
                 'type' => 'input',
                 'size' => 30,
-                'eval' => 'trim'
+                'eval' => 'trim',
+                'searchable' => false
             ],
         ],
 
@@ -253,7 +257,8 @@ return [
             'config' => [
                 'type' => 'input',
                 'size' => 30,
-                'eval' => 'trim'
+                'eval' => 'trim',
+                'searchable' => false
             ],
         ],
 
@@ -263,7 +268,8 @@ return [
             'config' => [
                 'type' => 'input',
                 'size' => 30,
-                'eval' => 'trim'
+                'eval' => 'trim',
+                'searchable' => false
             ],
         ],
 
@@ -273,7 +279,8 @@ return [
             'config' => [
                 'type' => 'input',
                 'size' => 30,
-                'eval' => 'trim'
+                'eval' => 'trim',
+                'searchable' => false
             ],
         ],
 
